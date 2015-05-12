@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7549" systemVersion="14D136" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="BalanceSheet" representedClassName="BalanceSheet" syncable="YES">
+        <attribute name="accountsPayable" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="cashAndCashEquivalents" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="cashCashEquivalentsAndShortTermInvestments" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="commonStock" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="currentPortionOfLongTermDebt" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="deferredCharges" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="deferredLiabilityCharges" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="edgarEntityId" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="goodwill" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="intangibleAssets" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="inventoriesNet" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="longTermDebt" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="minorityInterest" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="otherAssets" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="otherCurrentAssets" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="otherCurrentLiabilities" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="otherEquity" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="otherLiabilities" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="periodEndDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="preferredStock" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="propertyPlantEquipmentNet" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="retainedEarnings" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="rowNum" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="totalAssets" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="totalCurrentAssets" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="totalCurrentLiabilities" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="totalDebt" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="totalLiabilities" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="totalLongTermAssets" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="totalLongTermDebt" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="totalLongTermLiabilities" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="totalReceivablesNet" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="totalShortTermDebt" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="totalStockholdersEquity" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="treasuryStock" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <relationship name="report" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Report" inverseName="balanceSheet" inverseEntity="Report" syncable="YES"/>
+    </entity>
+    <entity name="CashFlow" representedClassName="CashFlow" syncable="YES">
+        <attribute name="capitalExpenditures" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="cashFromFinancingActivities" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="cashFromInvestingActivities" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="cashFromOperatingActivities" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="cfDepreciationAmortization" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="cfNetIncome" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="changeInAccountsReceivable" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="changeInCurrentAssets" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="changeInCurrentLiabilities" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="changeInInventories" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="dividendsPaid" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="edgarEntityId" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="effectOfExchangeRateOnCash" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="investmentChangesNet" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="netChangeInCash" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="periodEndDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="rowNum" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="totalAdjustments" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <relationship name="report" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Report" inverseName="cashFlow" inverseEntity="Report" syncable="YES"/>
+    </entity>
+    <entity name="Company" representedClassName="Company" syncable="YES">
+        <attribute name="edgarEntityId" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sicCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sicDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ticker" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="prices" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Price" inverseName="company" inverseEntity="Price" syncable="YES"/>
+        <relationship name="reports" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Report" inverseName="company" inverseEntity="Report" syncable="YES"/>
+    </entity>
+    <entity name="IncomeStatement" representedClassName="IncomeStatement" syncable="YES">
+        <attribute name="accountingChange" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="costOfRevenue" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="discontinuedOperations" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="ebit" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="edgarEntityId" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="equityEarnings" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="extraordinaryItems" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="grossProfit" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="incomeBeforeTaxes" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="interestExpense" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="netIncome" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="netIncomeApplicableToCommon" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="netIncomeFromContinuingOperationsApplicableToCommon" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="noncontrollingInterest" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="operatingExpenses" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="periodEndDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="researchDevelopmentExpense" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="rowNum" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="sellingGeneralAdministrativeExpenses" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="totalNonoperatingIncomeExpense" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="totalOperatingExpenses" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="totalRevenue" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <relationship name="report" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Report" inverseName="incomeStatement" inverseEntity="Report" syncable="YES"/>
+    </entity>
+    <entity name="Price" representedClassName="Price" syncable="YES">
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="price" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="ticker" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="company" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Company" inverseName="prices" inverseEntity="Company" syncable="YES"/>
+    </entity>
+    <entity name="Report" representedClassName="Report" syncable="YES">
+        <attribute name="edgarEntityId" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="filingDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="outstandingShares" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="periodEndDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="periodType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="rowNum" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <relationship name="balanceSheet" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BalanceSheet" inverseName="report" inverseEntity="BalanceSheet" syncable="YES"/>
+        <relationship name="cashFlow" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CashFlow" inverseName="report" inverseEntity="CashFlow" syncable="YES"/>
+        <relationship name="company" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Company" inverseName="reports" inverseEntity="Company" syncable="YES"/>
+        <relationship name="incomeStatement" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IncomeStatement" inverseName="report" inverseEntity="IncomeStatement" syncable="YES"/>
+    </entity>
+    <entity name="Scenario" representedClassName="Scenario" syncable="YES">
+        <attribute name="companyTickersStr" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="descriptionForScenario" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="endingDataDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="endingScenarioDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="initialDataDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="initialScenarioDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="marketTickersStr" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="referenceId" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="BalanceSheet" positionX="-432" positionY="56" width="128" height="583"/>
+        <element name="CashFlow" positionX="-117" positionY="54" width="128" height="328"/>
+        <element name="Company" positionX="-108" positionY="-342" width="128" height="148"/>
+        <element name="IncomeStatement" positionX="-279" positionY="54" width="128" height="388"/>
+        <element name="Price" positionX="-11" positionY="-88" width="128" height="103"/>
+        <element name="Report" positionX="-272" positionY="-198" width="128" height="193"/>
+        <element name="Scenario" positionX="-414" positionY="-279" width="128" height="178"/>
+    </elements>
+</model>
