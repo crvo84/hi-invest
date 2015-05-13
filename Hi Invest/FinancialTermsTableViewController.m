@@ -37,7 +37,7 @@
         // Operating
      */
     
-    return 4;
+    return 5;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -46,6 +46,7 @@
     if (section == 1) return [FinancialRatioCategoryProfitabilyIdentifiersArray count];
     if (section == 2) return [FinancialRatioCategoryDebtIdentifiersArray count];
     if (section == 3) return [FinancialRatioCategoryInvestmentValuationIdentifiersArray count];
+    if (section == 4) return [FinancialRatioCategoryCashFlowIdentifiersArray count];
     
     return 0;
 }
@@ -60,6 +61,7 @@
     else if (indexPath.section == 1) financialTermStr = FinancialRatioCategoryProfitabilyIdentifiersArray[indexPath.row];
     else if (indexPath.section == 2) financialTermStr = FinancialRatioCategoryDebtIdentifiersArray[indexPath.row];
     else if (indexPath.section == 3) financialTermStr = FinancialRatioCategoryInvestmentValuationIdentifiersArray[indexPath.row];
+    else if (indexPath.section == 4) financialTermStr = FinancialRatioCategoryCashFlowIdentifiersArray[indexPath.row];
     
     cell.textLabel.text = financialTermStr;
     
@@ -84,6 +86,7 @@
     if (section == 1) return @"Profitability Ratios";
     if (section == 2) return @"Debt Ratios";
     if (section == 3) return @"Investment Valuation Ratios";
+    if (section == 4) return @"Cash Flow Ratios";
     
     return nil;
 }
@@ -106,6 +109,8 @@
                 definitionId = FinancialRatioCategoryDebtIdentifiersArray[indexPath.row];
             } else if (indexPath.section == 3) {
                 definitionId = FinancialRatioCategoryInvestmentValuationIdentifiersArray[indexPath.row];
+            } else if (indexPath.section == 4) {
+                definitionId = FinancialRatioCategoryCashFlowIdentifiersArray[indexPath.row];
             }
 
             [self prepareDefinitionViewController:segue.destinationViewController withDefinitionId:definitionId];

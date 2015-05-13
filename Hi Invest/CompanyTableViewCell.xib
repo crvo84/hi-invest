@@ -25,7 +25,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" alpha="0.90000000000000002" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kYT-G2-hHg">
-                        <rect key="frame" x="83" y="9" width="25" height="25"/>
+                        <rect key="frame" x="79" y="9" width="25" height="25"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="25" id="p6t-AL-vvf"/>
                             <constraint firstAttribute="height" constant="25" id="zxa-lw-38d"/>
@@ -43,8 +43,11 @@
                         <color key="textColor" red="0.12549019607843137" green="0.12549019607843137" blue="0.12549019607843137" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$999.00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="sL6-Oi-so9">
-                        <rect key="frame" x="144" y="11" width="62" height="21"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$999.00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="sL6-Oi-so9">
+                        <rect key="frame" x="136" y="11" width="62" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="width" priority="750" constant="62" id="Hy5-Yb-eCf"/>
+                        </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
@@ -54,11 +57,11 @@
                     <constraint firstAttribute="trailingMargin" secondItem="EaU-gD-7Ef" secondAttribute="trailing" constant="-8" id="73y-2W-M3f"/>
                     <constraint firstAttribute="centerY" secondItem="sL6-Oi-so9" secondAttribute="centerY" id="ATq-Kb-Ie2"/>
                     <constraint firstItem="zZG-ah-o7w" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="8" id="ChP-bB-Nq8"/>
+                    <constraint firstItem="kYT-G2-hHg" firstAttribute="leading" secondItem="zZG-ah-o7w" secondAttribute="trailing" constant="12" id="KfL-CC-i6M"/>
                     <constraint firstAttribute="centerY" secondItem="zZG-ah-o7w" secondAttribute="centerY" id="Nsx-TI-njz"/>
                     <constraint firstAttribute="centerY" secondItem="kYT-G2-hHg" secondAttribute="centerY" id="OIv-T0-flb"/>
                     <constraint firstItem="EaU-gD-7Ef" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="sL6-Oi-so9" secondAttribute="trailing" constant="16" id="dZz-tu-obf"/>
-                    <constraint firstItem="kYT-G2-hHg" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" priority="750" constant="75" id="fl7-s2-WHf"/>
-                    <constraint firstItem="sL6-Oi-so9" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="centerXWithinMargins" constant="-16" id="j9v-Nr-ZGe"/>
+                    <constraint firstItem="sL6-Oi-so9" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="centerXWithinMargins" constant="-24" id="j9v-Nr-ZGe"/>
                     <constraint firstAttribute="centerY" secondItem="EaU-gD-7Ef" secondAttribute="centerY" id="uze-TO-JuH"/>
                 </constraints>
             </tableViewCellContentView>

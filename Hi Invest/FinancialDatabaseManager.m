@@ -1328,7 +1328,6 @@
     
     NSNumber *netIncomeFromContinuingOperationsNumber = report.incomeStatement.netIncomeFromContinuingOperationsApplicableToCommon;
     if (!netIncomeFromContinuingOperationsNumber) {
-        // netIncomeFromContinuingOperationsApplicableToCommon is nil. Maybe an error when loading the database. So it needs to be calculated in a different way
         NSNumber *netIncomeApplicableToCommonNumber = report.incomeStatement.netIncomeApplicableToCommon;
         if (netIncomeApplicableToCommonNumber) {
             

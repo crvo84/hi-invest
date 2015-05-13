@@ -36,7 +36,7 @@
 {
     [super viewDidLoad];
     
-    self.infoLabelBackgroundView.backgroundColor = [[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:[DefaultColors UIElementsBackgroundAlpha]];
+//    self.infoLabelBackgroundView.backgroundColor = [[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:[DefaultColors UIElementsBackgroundAlpha]];
 }
 
 - (void)viewWillAppear:(BOOL)animated

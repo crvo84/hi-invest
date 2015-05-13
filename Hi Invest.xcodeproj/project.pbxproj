@@ -198,6 +198,7 @@
 		739ABD971B01675C009EFC0E /* TimeSimulationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeSimulationViewController.h; sourceTree = "<group>"; };
 		739ABD981B01675C009EFC0E /* TimeSimulationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeSimulationViewController.m; sourceTree = "<group>"; };
 		739ABD9A1B016769009EFC0E /* UserDefaultsKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserDefaultsKeys.h; sourceTree = "<group>"; };
+		73EEC5761B04038900FAA1FE /* GlossaryKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GlossaryKeys.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -425,6 +426,7 @@
 		739ABD101B016409009EFC0E /* Keys Headers */ = {
 			isa = PBXGroup;
 			children = (
+				73EEC5761B04038900FAA1FE /* GlossaryKeys.h */,
 				739ABD9A1B016769009EFC0E /* UserDefaultsKeys.h */,
 				739ABD7E1B016697009EFC0E /* RatiosKeys.h */,
 				739ABD5D1B016626009EFC0E /* PortfolioKeys.h */,
@@ -873,6 +875,7 @@
 				739ABCD51B0162F7009EFC0E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		739ABCD61B0162F7009EFC0E /* Build configuration list for PBXNativeTarget "Hi InvestTests" */ = {
 			isa = XCConfigurationList;
@@ -881,6 +884,7 @@
 				739ABCD81B0162F7009EFC0E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

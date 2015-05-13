@@ -58,12 +58,6 @@
     
     NSURL *fileAtBundleURL = [[NSBundle mainBundle] URLForResource:@"scenario_DJI001A" withExtension:@"sqlite"];
     
-    // FOR TESTING
-    // Gets url for the database in the documents directory
-    NSURL *storeURL = [self applicationDocumentsDirectory];
-    NSLog(@"DOCUMENTS DIRECTORY: %@", storeURL);
-    NSLog(@"BUNDLE DIRECTORY: %@", fileAtBundleURL);
-    
     NSError *error = nil;
     persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:managedObjectModel];
     

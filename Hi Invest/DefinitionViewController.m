@@ -12,10 +12,12 @@
 
 @interface DefinitionViewController ()
 
-@property (weak, nonatomic) IBOutlet UIView *subview; // For the standard app bubble color
+@property (weak, nonatomic) IBOutlet UIView *definitionSubview; // For the standard app bubble color
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UITextView *textView;
-@property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (weak, nonatomic) IBOutlet UIImageView *formulaImageView;
+@property (weak, nonatomic) IBOutlet UIView *formulaSubview;
+@property (weak, nonatomic) IBOutlet UIImageView *cartoonImageView;
 
 @end
 
@@ -30,20 +32,34 @@
     // Title label
     self.titleLabel.textColor = [DefaultColors navigationBarWithSegueTitleColor];
     
-    // Subview
-    self.subview.layer.cornerRadius = 8; // Magic number
-    self.subview.layer.masksToBounds = YES;
-    self.subview.layer.borderWidth = [DefaultColors speechBubbleBorderWidth];
-    self.subview.layer.borderColor = [UIColor darkGrayColor].CGColor;
-    self.subview.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]];
+    // Definition Subview
+    self.definitionSubview.layer.cornerRadius = 8; // Magic number
+    self.definitionSubview.layer.masksToBounds = YES;
+    self.definitionSubview.layer.borderWidth = [DefaultColors speechBubbleBorderWidth];
+    self.definitionSubview.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    self.definitionSubview.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]];
 
     // Text View
     [self.textView scrollRangeToVisible:NSMakeRange(0, 0)]; // To avoid initial offset
     
-    // Image View
+    // Formula Subview
+    self.formulaSubview.layer.cornerRadius = 8; // Magic number
+    self.formulaSubview.layer.masksToBounds = YES;
+    self.formulaSubview.layer.borderWidth = [DefaultColors speechBubbleBorderWidth];
+    self.formulaSubview.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    self.formulaSubview.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]];
+    
+    // Formula Image View
+    NSString *formulaImageFilename = FinancialRatioImageFilenamesDictionary[self.definitionId];
+    UIImage *formulaImage = [UIImage imageNamed:formulaImageFilename];
+    if (formulaImage) {
+        [self.formulaImageView setImage:formulaImage];
+    }
+    
+    // Cartoon Image View
     NSArray *imageSufixes = @[@"B", @"C", @"F"];
     NSInteger randomIndex = arc4random() % [imageSufixes count];
-    self.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"ninja%@", imageSufixes[randomIndex]]];
+    self.cartoonImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"ninja%@", imageSufixes[randomIndex]]];
     
     [self updateUI];
 }
@@ -74,7 +90,7 @@
     if ([[FinancialRatiosDefinitionsDictionary allKeys] containsObject:definitionId]) {
         return FinancialRatiosDefinitionsDictionary[definitionId];
     }
-    
+
     return nil;
 }
 

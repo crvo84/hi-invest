@@ -127,7 +127,7 @@
 
 + (CGFloat)speechBubbleBorderWidth
 {
-    return 3.0;
+    return 1.0;
 }
 
 + (UIColor *)speechBubbleBorderColor

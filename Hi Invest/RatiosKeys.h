@@ -92,8 +92,8 @@
 #define FinancialRatioCategoryOperatingPerformanceIdentifiersArray @[]
 #define FinancialRatioCategoryCashFlowIdentifiersArray @[FinancialRatioDividendPayout]
 
-
-
+// Dictionary mapping each Sorting Value Identifier with its corresponding definition
+#define FinancialRatioImageFilenamesDictionary @{ FinancialRatioROA : FinancialRatioROA, FinancialRatioROE : FinancialRatioROE, FinancialRatioPriceEarnings : @"Price:Earnings", FinancialRatioPriceSales : @"Price:Sales", FinancialRatioDividendYield : FinancialRatioDividendYield, FinancialRatioDividendPayout : FinancialRatioDividendPayout, FinancialRatioDebtEquity : @"Debt:Equity", FinancialRatioPriceBook : @"Price:Book",FinancialRatioCurrentRatio : FinancialRatioCurrentRatio, FinancialRatioQuickRatio : FinancialRatioQuickRatio, FinancialRatioCashRatio : FinancialRatioCashRatio, FinancialRatioGrossMargin : FinancialRatioGrossMargin, FinancialRatioEBITDAMargin : FinancialRatioEBITDAMargin, FinancialRatioOperatingMargin : FinancialRatioOperatingMargin, FinancialRatioEffectiveTaxRate : FinancialRatioEffectiveTaxRate, FinancialRatioProfitMargin : FinancialRatioProfitMargin, FinancialRatioFinancialLeverage : FinancialRatioFinancialLeverage }
 
 
 
