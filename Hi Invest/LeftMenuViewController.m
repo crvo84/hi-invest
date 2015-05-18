@@ -9,8 +9,9 @@
 #import "LeftMenuViewController.h"
 #import "RESideMenu.h"
 #import "SideMenuRootViewController.h"
-#import "FinancialTermsTableViewController.h"
+#import "GlossarySelectionViewController.h"
 #import "QuizSelectionViewController.h"
+#import "UserAccount.h"
 #import "InvestingGame.h"
 #import "DefaultColors.h"
 #import "Scenario.h"
@@ -64,7 +65,7 @@
     if (indexPath.row == 0) {
         
         cell.textLabel.text = @"Simulator";
-        cell.detailTextLabel.text = self.game.scenario.name;
+        cell.detailTextLabel.text = self.game.scenarioInfo.name;
         cell.imageView.image = [[UIImage imageNamed:@"controller25x25"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         
     } else if (indexPath.row == 1) {
@@ -146,8 +147,8 @@
             break;
             
         case 2:
-            if (![currentContentViewController isKindOfClass:[FinancialTermsTableViewController class]]) {
-                [self.sideMenuViewController setContentViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"Learn UINavigationController"] animated:YES];
+            if (![currentContentViewController isKindOfClass:[GlossarySelectionViewController class]]) {
+                [self.sideMenuViewController setContentViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"Glossary UINavigationController"] animated:YES];
             }
             break;
             
@@ -198,23 +199,8 @@
         viewController = [((UINavigationController *)viewController).viewControllers firstObject];
     }
     
-    if ([viewController isKindOfClass:[FinancialTermsTableViewController class]]) {
-        if ([self.sideMenuViewController isKindOfClass:[SideMenuRootViewController class]]) {
-            InvestingGame *game = ((SideMenuRootViewController *)self.sideMenuViewController).game;
-            [self prepareFinancialTermsTableViewController:(FinancialTermsTableViewController *)viewController withInvestingGame:game];
-        }
-    }
 }
 
-- (void)prepareFinancialTermsTableViewController:(FinancialTermsTableViewController *)financialTermsTableViewController withInvestingGame:(InvestingGame *)game
-{
-    financialTermsTableViewController.game = game;
-}
-
-- (void)prepareQuizSelectionViewController:(QuizSelectionViewController *)quizSelectionViewController withInvestingGame:(InvestingGame *)game
-{
-    quizSelectionViewController.game = game;
-}
 
 - (IBAction)closeMenuButtonPressed:(UIButton *)sender {
     [self.sideMenuViewController hideMenuViewController];

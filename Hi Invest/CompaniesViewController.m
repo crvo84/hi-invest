@@ -11,6 +11,7 @@
 #import "SelectOrderingValueViewController.h"
 #import "PortfolioStockInfoContainerViewController.h"
 #import "CompaniesInfoKeys.h"
+#import "DefaultColors.h"
 #import "PortfolioKeys.h"
 #import "RatiosKeys.h"
 #import "CompanyTableViewCell.h"
@@ -18,6 +19,7 @@
 
 @interface CompaniesViewController () <UITableViewDataSource, UITableViewDelegate>
 
+@property (weak, nonatomic) IBOutlet UIView *headerSubview;
 @property (weak, nonatomic) IBOutlet UIButton *selectRatioButton;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *companies; // of NSDictionary
@@ -31,6 +33,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // Header Subview
+    self.headerSubview.layer.borderWidth = 1;
+    self.headerSubview.layer.borderColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.5].CGColor;
+    self.headerSubview.backgroundColor = [DefaultColors tableViewCellBackgroundColor];
     
     // Load CompanyCell NIB file
     UINib *nib = [UINib nibWithNibName:@"CompanyTableViewCell" bundle:nil];
@@ -135,8 +142,6 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     CompanyTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"Company Cell"];
-    
-    cell.backgroundColor = [UIColor whiteColor];
     
     // Get the corresponding NSDictionary from array with companies information
     NSDictionary *companyInfo = self.companies[indexPath.row];

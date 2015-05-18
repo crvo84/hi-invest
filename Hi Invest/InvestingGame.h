@@ -26,7 +26,7 @@
 @property (strong, nonatomic, readonly) NSMutableArray *portfolioPictures; // of PortfolioPicture
 @property (strong, nonatomic, readonly) NSMutableArray *portfolioHistoricalValues; // of PortfolioHistoricalValue
 @property (nonatomic, readonly) double initialNetworth;
-@property (strong, nonatomic) Scenario *scenario;
+@property (strong, nonatomic) Scenario *scenarioInfo;
 
 // Designated Initializer
 // Return a initialized InvestingGame with initial cash and initial date

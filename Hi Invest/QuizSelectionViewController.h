@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@class InvestingGame;
+@class UserAccount;
 
 @interface QuizSelectionViewController : UIViewController
 
-@property (strong, nonatomic) InvestingGame *game;
+@property (strong, nonatomic) UserAccount *userAccount;
 
 @end

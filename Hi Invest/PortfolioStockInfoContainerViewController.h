@@ -6,12 +6,12 @@
 //  Copyright (c) 2015 Villou. All rights reserved.
 //
 
-#import "ContainerViewController.h"
+#import <UIKit/UIKit.h>
 
 @class InvestingGame;
 @class Price;
 
-@interface PortfolioStockInfoContainerViewController : ContainerViewController
+@interface PortfolioStockInfoContainerViewController : UIViewController
 
 @property (strong, nonatomic) InvestingGame *game;
 @property (copy, nonatomic) NSString *ticker;

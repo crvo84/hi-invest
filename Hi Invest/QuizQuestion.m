@@ -8,30 +8,33 @@
 
 #import "QuizQuestion.h"
 
+@interface QuizQuestion ()
+
+@property (nonatomic, readwrite) QuizQuestionType questionType;
+@property (strong, nonatomic, readwrite) NSString *question;
+@property (strong, nonatomic, readwrite) NSArray *answers; // of NSString
+@property (nonatomic, readwrite) NSInteger correctAnswerIndex;
+@end
+
 @implementation QuizQuestion
 
-#pragma mark - Getters
-
-- (NSInteger)correctScore
+// Designated Initializer.
+// question parameter must contain a NSString with the question or with the image filename
+// answers array parameter must contain NSStrings with the answers or with the image filenames
+- (instancetype)initWithType:(QuizQuestionType)questionType withQuestion:(NSString *)question withAnswers:(NSArray *)answers withCorrectAnswerIndex:(NSInteger)correctAnswerIndex;
 {
-    if (self.questionType == QuizQuestionTypeTermDefinition) {
-        return 2;
-    } else if (self.questionType == QuizQuestionTypeMarketCountry) {
-        return 2;
+    self = [super init];
+    
+    if (self) {
+        self.questionType = questionType;
+        self.question = question;
+        self.answers = answers;
+        self.correctAnswerIndex = correctAnswerIndex;
     }
     
-    return 0;
+    return self;
 }
 
-- (NSInteger)wrongScore
-{
-    if (self.questionType == QuizQuestionTypeTermDefinition) {
-        return -1;
-    } else if (self.questionType == QuizQuestionTypeMarketCountry) {
-        return -1;
-    }
-    
-    return 0;
-}
+
 
 @end

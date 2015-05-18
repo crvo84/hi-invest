@@ -8,16 +8,29 @@
 
 #import "PortfolioStockInfoContainerViewController.h"
 #import "PortfolioStockInfoViewController.h"
+#import "DefaultColors.h"
 #import "InvestingGame.h"
 #import "Price.h"
 
 @interface PortfolioStockInfoContainerViewController ()
 
 @property (strong, nonatomic) PortfolioStockInfoViewController *portfolioStockInfoViewController;
+@property (weak, nonatomic) IBOutlet UIView *container;
 
 @end
 
 @implementation PortfolioStockInfoContainerViewController
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    self.view.backgroundColor = [DefaultColors translucentLightBackgroundColor];
+    
+    // Set rounded corners for pickerView
+    self.container.layer.cornerRadius = 8; // Magic number
+    self.container.layer.masksToBounds = YES;
+}
 
 #pragma mark - Setters
 
@@ -68,7 +81,15 @@
     portfolioStockInfoViewController.game = game;
 }
 
-
+// Exit View Controller when the user touches the screen outside the subview
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    CGPoint locationInView = [[touches anyObject] locationInView:self.view];
+    UIView *viewTouched = [self.view hitTest:locationInView withEvent:event];
+    if (viewTouched == self.view) {
+        [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    }
+}
 
 
 

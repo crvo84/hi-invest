@@ -8,7 +8,9 @@
 
 #import "QuizSelectionViewController.h"
 #import "QuizViewController.h"
-#import "QuizQuestionGenerator.h"
+#import "QuizGenerator.h"
+#import "UserAccount.h"
+#import "Quiz.h"
 
 @interface QuizSelectionViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -17,6 +19,19 @@
 @end
 
 @implementation QuizSelectionViewController
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self updateUI];
+}
+
+- (void)updateUI
+{
+    [self.tableView reloadData];
+    
+}
 
 #pragma mark - UITableView Data Source
 
@@ -28,7 +43,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     
-    return 1;
+    return 4;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -36,7 +51,13 @@
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"Category Cell"];
     
     if (indexPath.row == 0) {
-        cell.textLabel.text = @"Financial Ratios";
+        cell.textLabel.text = @"Financial Ratio Definitions";
+    } else if (indexPath.row == 1) {
+        cell.textLabel.text = @"Financial Ratio Calculation";
+    } else if (indexPath.row == 2) {
+        cell.textLabel.text = @"Financial Statement Definitions";
+    } else if (indexPath.row == 3) {
+        cell.textLabel.text = @"Stock Market Definitions";
     }
     
     return cell;
@@ -46,7 +67,7 @@
 {
 
     if (section == 0) {
-        return @"Definitions";
+        return @"Select quiz";
     }
     
     return nil;
@@ -56,7 +77,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 56;
+    return 52;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -79,24 +100,37 @@
                 
                 UITableViewCell *cell = sender;
                 NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-                NSMutableArray *questions;
+                QuizGenerator *quizGenerator = [[QuizGenerator alloc] init];
+                Quiz *quiz;
                 
+                // CREATE QUIZ WITH OPTIONS GOT FROM ROW SELECTED
                 if (indexPath.row == 0) {
-                    questions = [QuizQuestionGenerator generateTermDefinitionQuestions];
-
+                    
+                    quiz = [quizGenerator getQuizWithType:QuizTypeFinancialRatioDefinitions andLevel:1];
+                    
+                } else if (indexPath.row == 1) {
+                    
+                    quiz = [quizGenerator getQuizWithType:QuizTypeFinancialRatioFormulas andLevel:1];
+                    
+                } else if (indexPath.row == 2) {
+                    
+                    quiz = [quizGenerator getQuizWithType:QuizTypeFinancialStatementDefinitions andLevel:1];
+                    
+                } else if (indexPath.row == 3) {
+                    
+                    quiz = [quizGenerator getQuizWithType:QuizTypeStockMarketDefinitions andLevel:1];
+                    
                 }
                 
-                [self prepareQuizViewController:(QuizViewController *)viewController withInvestingGame:self.game withArrayOfQuestions:questions withCategoryName:cell.textLabel.text];
+                [self prepareQuizViewController:(QuizViewController *)viewController withQuiz:quiz];
             }
         }
 }
 
-- (void)prepareQuizViewController:(QuizViewController *)quizViewController withInvestingGame:(InvestingGame *)game withArrayOfQuestions:(NSMutableArray *)questions withCategoryName:(NSString *)categoryName
+- (void)prepareQuizViewController:(QuizViewController *)quizViewController withQuiz:(Quiz *)quiz
 {
-    
-    quizViewController.game = game;
-    quizViewController.questions = questions;
-    quizViewController.title = [NSString stringWithFormat:@"QUIZ  |  %@", categoryName];
+    quizViewController.quiz = quiz;
+    quizViewController.title = [NSString stringWithFormat:@"QUIZ  |  %@", quiz.title];
 }
 
 - (IBAction)unwindToQuizSelectionViewController:(UIStoryboardSegue *)unwindSegue

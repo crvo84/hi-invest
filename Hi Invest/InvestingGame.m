@@ -46,7 +46,7 @@
     
     if (self) {
         self.initialNetworth = initialCash;
-        self.scenario = scenario;
+        self.scenarioInfo = scenario;
 //        self.tickersOfCompaniesAvailable = CompaniesAllAvailableArrayOfTickers;
         self.tickersOfCompaniesAvailable = [scenario.companyTickersStr componentsSeparatedByString:@","];
         self.initialDate = scenario.initialScenarioDate;
@@ -93,7 +93,7 @@
         return NO;
     }
     
-    while (![FinancialDatabaseManager arePricesAvailableForDate:newDate fromScenario:self.scenario]) {
+    while (![FinancialDatabaseManager arePricesAvailableForDate:newDate fromScenario:self.scenarioInfo]) {
         newDate = [FinancialDatabaseManager dateWithTimeDifferenceinYears:0 months:0 days:1 hours:0 fromDate:newDate];
         
         if ([newDate timeIntervalSinceDate:self.endDate] > (60*60*12)) {

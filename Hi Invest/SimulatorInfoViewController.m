@@ -37,8 +37,8 @@
     /* SUBVIEW */
 //    self.subview.layer.cornerRadius = 8;
 //    self.subview.layer.masksToBounds = YES;
-    self.subview.layer.borderWidth = [DefaultColors speechBubbleBorderWidth];
-    self.subview.layer.borderColor = [UIColor darkGrayColor].CGColor;
+//    self.subview.layer.borderWidth = [DefaultColors speechBubbleBorderWidth];
+//    self.subview.layer.borderColor = [UIColor darkGrayColor].CGColor;
     self.subview.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]];
     
     /* INFO VIEW */
@@ -85,7 +85,7 @@
 
 - (void)updateUI
 {
-    self.scenarioLabel.text = [self.game.scenario.name uppercaseString];
+    self.scenarioLabel.text = [self.game.scenarioInfo.name uppercaseString];
     
     UIViewController *viewController = [self.infoPageViewController.viewControllers firstObject];
     if (viewController && [viewController respondsToSelector:@selector(updateUI)]) {

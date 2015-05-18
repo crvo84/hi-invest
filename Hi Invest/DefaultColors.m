@@ -147,7 +147,7 @@
 
 + (CGFloat)definitionTextViewFontSize
 {
-    return 18.0;
+    return 20.0;
 }
 
 + (UIColor *)definitionTextViewTextColor

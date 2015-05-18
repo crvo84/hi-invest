@@ -216,7 +216,9 @@
     
     // DEFINITION VIEW CONTROLLER SEGUE
     if ([segue.destinationViewController isKindOfClass:[DefinitionViewController class]]) {
-        [self prepareDefinitionViewController:segue.destinationViewController withDefinitionId:self.valueId];
+        NSString *definition = FinancialRatiosDefinitionsDictionary[self.valueId];
+        NSString *formulaImageFilename = FinancialRatiosImageFilenamesDictionary[self.valueId];
+        [self prepareDefinitionViewController:segue.destinationViewController withDefinitionId:self.valueId withDefinition:definition withFormulaImageFilename:formulaImageFilename];
     }
 }
 
@@ -226,9 +228,11 @@
     buySellTableViewController.ticker = ticker;
 }
 
-- (void)prepareDefinitionViewController:(DefinitionViewController *)definitionViewController withDefinitionId:(NSString *)definitionId
+- (void)prepareDefinitionViewController:(DefinitionViewController *)definitionViewController withDefinitionId:(NSString *)definitionId withDefinition:(NSString *)definition withFormulaImageFilename:(NSString *)formulaImageFilename
 {
     definitionViewController.definitionId = definitionId;
+    definitionViewController.definition = definition;
+    definitionViewController.formulaImageFilename = formulaImageFilename;
 }
 
 

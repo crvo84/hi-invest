@@ -20,15 +20,23 @@
  */
 
 typedef enum : NSInteger {
-    QuizQuestionTypeTermDefinition,
-    QuizQuestionTypeMarketCountry
+    QuizQuestionTypeTextQuestionTextAnswers,
+    QuizQuestionTypeImageQuestionTextAnswers,
+    QuizQuestionTypeTextQuestionImageAnswers,
+    QuizQuestionTypeImageQuestionImageAnswers
 } QuizQuestionType;
 
-@property (copy, nonatomic) NSString *question;
-@property (nonatomic) QuizQuestionType questionType;
-@property (copy, nonatomic) NSArray *answers;
-@property (nonatomic) NSInteger correctAnswerIndex;
-@property (nonatomic, readonly) NSInteger correctScore;
-@property (nonatomic, readonly) NSInteger wrongScore;
+@property (nonatomic, readonly) QuizQuestionType questionType;
+@property (strong, nonatomic, readonly) NSString *question;
+@property (strong, nonatomic, readonly) NSArray *answers;
+@property (nonatomic, readonly) NSInteger correctAnswerIndex;
+
+// Designated Initializer.
+// question parameter must contain a NSString with the question or with the image filename
+// answers array parameter must contain NSStrings with the answers or with the image filenames
+- (instancetype)initWithType:(QuizQuestionType)questionType withQuestion:(NSString *)question withAnswers:(NSArray *)answers withCorrectAnswerIndex:(NSInteger)correctAnswerIndex;
+
+
+
 
 @end

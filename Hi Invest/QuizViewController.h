@@ -8,13 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@class InvestingGame;
+@class Quiz;
 
 @interface QuizViewController : UIViewController
 
-@property (strong, nonatomic) InvestingGame *game;
-@property (strong, nonatomic) NSMutableArray *questions; // of QuizQuestion
-@property (strong, nonatomic) NSString *categoryName;
-@property (nonatomic) NSUInteger finalScore;
+@property (strong, nonatomic) Quiz *quiz;
 
 @end
