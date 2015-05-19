@@ -9,11 +9,10 @@
 #import "RESideMenu.h"
 
 @class InvestingGame;
+@class UserAccount;
 
 @interface SideMenuRootViewController : RESideMenu <RESideMenuDelegate>
 
-@property (strong, nonatomic) InvestingGame *game;
-
-- (UITabBarController *)getInvestTabBarViewControllerWithGame:(InvestingGame *)game;
+@property (strong, nonatomic) UserAccount *userAccount;
 
 @end

@@ -8,7 +8,8 @@
 
 #import "LeftMenuViewController.h"
 #import "RESideMenu.h"
-#import "SideMenuRootViewController.h"
+#import "SimulatorTabBarController.h"
+#import "UserAccountViewController.h"
 #import "GlossarySelectionViewController.h"
 #import "QuizSelectionViewController.h"
 #import "UserAccount.h"
@@ -31,8 +32,7 @@
 {
     [super viewDidLoad];
 
-//    self.selectedRowIndex = -1;
-    self.selectedRowIndex = 0;
+    self.selectedRowIndex = -1;
 }
 
 - (void)updateUI
@@ -65,7 +65,7 @@
     if (indexPath.row == 0) {
         
         cell.textLabel.text = @"Simulator";
-        cell.detailTextLabel.text = self.game.scenarioInfo.name;
+        cell.detailTextLabel.text = [self.userAccount currentInvestingGame].scenarioInfo.name;
         cell.imageView.image = [[UIImage imageNamed:@"controller25x25"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         
     } else if (indexPath.row == 1) {
@@ -127,28 +127,38 @@
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     UIViewController *currentContentViewController = self.sideMenuViewController.contentViewController;
+    if ([currentContentViewController isKindOfClass:[UINavigationController class]]) {
+        currentContentViewController = [((UINavigationController *)currentContentViewController).viewControllers firstObject];
+    }
     
     switch (indexPath.row) {
         case 0:
+            
             if (![currentContentViewController isKindOfClass:[UITabBarController class]]) {
-                if ([self.sideMenuViewController isKindOfClass:[SideMenuRootViewController class]]) {
-                    SideMenuRootViewController *sideMenuRootViewController = (SideMenuRootViewController *)self.sideMenuViewController;
-                    // Use the method from SideMenuRootViewController to set all tabs from the tab bar controller with the given game
-                    [self.sideMenuViewController setContentViewController:[sideMenuRootViewController getInvestTabBarViewControllerWithGame:self.game] animated:YES];
-                }
+                SimulatorTabBarController *simulatorTabBarController = [self.storyboard instantiateViewControllerWithIdentifier:@"SimulatorTabBarController"];
+                simulatorTabBarController.userAccount = self.userAccount;
+                [self.sideMenuViewController setContentViewController:simulatorTabBarController animated:YES];
                 [self.sideMenuViewController performSegueWithIdentifier:@"Simulator Info" sender:self];
             }
             break;
             
         case 1:
+            
             if (![currentContentViewController isKindOfClass:[QuizSelectionViewController class]]) {
-                [self.sideMenuViewController setContentViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"Quiz UINavigationController"] animated:YES];
+                UINavigationController *quizNavigationController = [self.storyboard instantiateViewControllerWithIdentifier:@"Quiz UINavigationController"];
+                QuizSelectionViewController *quizSelectionViewController = [quizNavigationController.viewControllers firstObject];
+                quizSelectionViewController.userAccount = self.userAccount;
+                [self.sideMenuViewController setContentViewController:quizNavigationController animated:YES];
             }
             break;
             
         case 2:
+            
             if (![currentContentViewController isKindOfClass:[GlossarySelectionViewController class]]) {
-                [self.sideMenuViewController setContentViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"Glossary UINavigationController"] animated:YES];
+                UINavigationController *glossaryNavigationController = [self.storyboard instantiateViewControllerWithIdentifier:@"Glossary UINavigationController"];
+                GlossarySelectionViewController *glossarySelectionViewController = [glossaryNavigationController.viewControllers firstObject];
+                glossarySelectionViewController.userAccount = self.userAccount;
+                [self.sideMenuViewController setContentViewController:glossaryNavigationController animated:YES];
             }
             break;
             
@@ -167,44 +177,22 @@
 
 #pragma mark - Navigation
 - (IBAction)userButtonPressed {
+    
     self.selectedRowIndex = -1;
-    [self updateUI];
-//    [self presentQuitGameRequest];
-}
-
-- (void)presentQuitGameRequest
-{
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Log Out"
-                                                                   message:@"Are you sure you want to log out?"
-                                                            preferredStyle:UIAlertControllerStyleAlert];
     
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
-    
-    UIAlertAction *quitAction = [UIAlertAction actionWithTitle:@"Exit" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
-        
-        [self performSegueWithIdentifier:@"unwindToInitialViewController" sender:self];
-        
-    }];
-    
-    [alert addAction:cancelAction];
-    [alert addAction:quitAction];
-    
-    [self presentViewController:alert animated:YES completion:nil];
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    UIViewController *viewController = segue.destinationViewController;
-    if ([viewController isKindOfClass:[UINavigationController class]]) {
-        viewController = [((UINavigationController *)viewController).viewControllers firstObject];
+    if (![self.sideMenuViewController.contentViewController isKindOfClass:[UserAccountViewController class]]) {
+        UINavigationController *userAccountNavigationController = [self.storyboard instantiateViewControllerWithIdentifier:@"User Account UINavigationController"];
+        UserAccountViewController *userAccountViewController = [userAccountNavigationController.viewControllers firstObject];
+        userAccountViewController.userAccount = self.userAccount;
+        [self.sideMenuViewController setContentViewController:userAccountNavigationController animated:YES];
     }
     
-}
-
-
-- (IBAction)closeMenuButtonPressed:(UIButton *)sender {
+    [self updateUI];
     [self.sideMenuViewController hideMenuViewController];
 }
+
+
+
 
 
 

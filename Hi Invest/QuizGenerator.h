@@ -11,8 +11,15 @@
 
 @interface QuizGenerator : NSObject
 
-
+#define QuizInfoTitleKey @"Title"
+#define QuizInfoNumberOfQuestionsKey @"Number of questions"
+#define QuizInfoSecondsPerQuestionKey @"Seconds per question"
+#define QuizInfoMistakesAllowedKey @"Mistakes allowed"
+#define QuizInfoMaxScoreKey @"Max score"
+#define QuizInfoMinScoreKey @"Min score"
 
 - (Quiz *)getQuizWithType:(QuizType)quizType andLevel:(NSUInteger)quizLevel;
+
+- (NSDictionary *)quizInfoWithType:(QuizType)quizType andLevel:(NSUInteger)quizLevel;
 
 @end

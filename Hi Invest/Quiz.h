@@ -13,8 +13,8 @@
 @interface Quiz : NSObject
 
 typedef enum : NSInteger {
-    QuizTypeFinancialRatioFormulas,
     QuizTypeFinancialRatioDefinitions,
+    QuizTypeFinancialRatioFormulas,
     QuizTypeFinancialRatioDefinitionsAndFormulas,
     QuizTypeFinancialStatementDefinitions,
     QuizTypeStockMarketDefinitions,

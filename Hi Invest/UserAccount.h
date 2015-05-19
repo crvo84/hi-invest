@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+@class InvestingGame;
+
 @interface UserAccount : NSObject
+
+@property (nonatomic, readonly) NSInteger userLevel;
+@property (strong, nonatomic, readonly) InvestingGame *currentInvestingGame;
 
 @end

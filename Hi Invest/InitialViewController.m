@@ -113,14 +113,14 @@
 
 #pragma mark - Navigation
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    InvestingGame *game = [self createNewInvestingGame];
-    
-    if ([segue.destinationViewController isKindOfClass:[SideMenuRootViewController class]]) {
-        ((SideMenuRootViewController *)segue.destinationViewController).game = game;
-    }
-}
+//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+//{
+//    InvestingGame *game = [self createNewInvestingGame];
+//    
+//    if ([segue.destinationViewController isKindOfClass:[SideMenuRootViewController class]]) {
+//        ((SideMenuRootViewController *)segue.destinationViewController).game = game;
+//    }
+//}
 
 - (InvestingGame *)createNewInvestingGame;
 {

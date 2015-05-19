@@ -65,6 +65,11 @@
 		739ABD991B01675C009EFC0E /* TimeSimulationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABD981B01675C009EFC0E /* TimeSimulationViewController.m */; };
 		73D7C3691B096A6B00653A4C /* GlossarySelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D7C3681B096A6B00653A4C /* GlossarySelectionViewController.m */; };
 		73D7C36C1B0971A700653A4C /* GlossaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D7C36B1B0971A700653A4C /* GlossaryViewController.m */; };
+		73D7C36F1B0A717F00653A4C /* UserAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D7C36E1B0A717F00653A4C /* UserAccountViewController.m */; };
+		73D7C3731B0A7E0700653A4C /* SignupLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D7C3721B0A7E0700653A4C /* SignupLoginViewController.m */; };
+		73D7C3861B0AD86C00653A4C /* SimulatorTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D7C3851B0AD86C00653A4C /* SimulatorTabBarController.m */; };
+		73D7C38B1B0AFB2800653A4C /* QuizTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D7C3891B0AFB2800653A4C /* QuizTableViewCell.m */; };
+		73D7C38C1B0AFB2800653A4C /* QuizTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 73D7C38A1B0AFB2800653A4C /* QuizTableViewCell.xib */; };
 		73EEC57C1B040E9300FAA1FE /* UserAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 73EEC57B1B040E9300FAA1FE /* UserAccount.m */; };
 		73EEC5801B042FEA00FAA1FE /* Quiz.m in Sources */ = {isa = PBXBuildFile; fileRef = 73EEC57F1B042FEA00FAA1FE /* Quiz.m */; };
 		73EEC5861B0449EE00FAA1FE /* QuizGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 73EEC5851B0449EE00FAA1FE /* QuizGenerator.m */; };
@@ -198,6 +203,15 @@
 		73D7C3681B096A6B00653A4C /* GlossarySelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlossarySelectionViewController.m; sourceTree = "<group>"; };
 		73D7C36A1B0971A700653A4C /* GlossaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlossaryViewController.h; sourceTree = "<group>"; };
 		73D7C36B1B0971A700653A4C /* GlossaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlossaryViewController.m; sourceTree = "<group>"; };
+		73D7C36D1B0A717F00653A4C /* UserAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserAccountViewController.h; sourceTree = "<group>"; };
+		73D7C36E1B0A717F00653A4C /* UserAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserAccountViewController.m; sourceTree = "<group>"; };
+		73D7C3711B0A7E0700653A4C /* SignupLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignupLoginViewController.h; sourceTree = "<group>"; };
+		73D7C3721B0A7E0700653A4C /* SignupLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignupLoginViewController.m; sourceTree = "<group>"; };
+		73D7C3841B0AD86C00653A4C /* SimulatorTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimulatorTabBarController.h; sourceTree = "<group>"; };
+		73D7C3851B0AD86C00653A4C /* SimulatorTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimulatorTabBarController.m; sourceTree = "<group>"; };
+		73D7C3881B0AFB2800653A4C /* QuizTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuizTableViewCell.h; sourceTree = "<group>"; };
+		73D7C3891B0AFB2800653A4C /* QuizTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuizTableViewCell.m; sourceTree = "<group>"; };
+		73D7C38A1B0AFB2800653A4C /* QuizTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QuizTableViewCell.xib; sourceTree = "<group>"; };
 		73EEC5761B04038900FAA1FE /* GlossaryKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GlossaryKeys.h; sourceTree = "<group>"; };
 		73EEC57A1B040E9300FAA1FE /* UserAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserAccount.h; sourceTree = "<group>"; };
 		73EEC57B1B040E9300FAA1FE /* UserAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserAccount.m; sourceTree = "<group>"; };
@@ -246,17 +260,18 @@
 		739ABCB21B0162F6009EFC0E /* Hi Invest */ = {
 			isa = PBXGroup;
 			children = (
+				739ABD511B0165EE009EFC0E /* Main_iPhone.storyboard */,
 				739ABCDC1B016390009EFC0E /* AppDelegate.h */,
 				739ABCDD1B016390009EFC0E /* AppDelegate.m */,
-				739ABD511B0165EE009EFC0E /* Main_iPhone.storyboard */,
-				739ABD2C1B0164DB009EFC0E /* DefaultColors.h */,
-				739ABD2D1B0164DB009EFC0E /* DefaultColors.m */,
-				739ABCDB1B016370009EFC0E /* MODEL */,
-				739ABCD91B01635C009EFC0E /* VIEW */,
-				739ABCDA1B016362009EFC0E /* CONTROLLER */,
-				739ABD361B01650E009EFC0E /* CORE DATA */,
+				73D7C3751B0AD36E00653A4C /* User Info */,
+				73D7C37B1B0AD49B00653A4C /* Menu */,
+				73D7C3781B0AD43100653A4C /* Simulator */,
+				73D7C3801B0AD56B00653A4C /* Glossary */,
+				739ABD711B016674009EFC0E /* Quizzes */,
+				739ABD361B01650E009EFC0E /* Core Data */,
 				739ABCEA1B0163EF009EFC0E /* Classes */,
 				739ABD101B016409009EFC0E /* Keys Headers */,
+				739ABCD91B01635C009EFC0E /* VIEW */,
 				739ABD3D1B016536009EFC0E /* Images.xcassets */,
 				739ABCB31B0162F6009EFC0E /* Supporting Files */,
 			);
@@ -266,6 +281,7 @@
 		739ABCB31B0162F6009EFC0E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				73D7C3741B0AD31A00653A4C /* Unused */,
 				739ABD4B1B0165C0009EFC0E /* LaunchScreen.xib */,
 				739ABCB41B0162F6009EFC0E /* Info.plist */,
 				739ABCB51B0162F6009EFC0E /* main.m */,
@@ -293,41 +309,13 @@
 		739ABCD91B01635C009EFC0E /* VIEW */ = {
 			isa = PBXGroup;
 			children = (
+				73D7C3871B0AFAD900653A4C /* Quiz Cell */,
 				739ABD1F1B016478009EFC0E /* Company Cell */,
 				739ABD901B01672D009EFC0E /* Speech Bubble */,
+				739ABD2C1B0164DB009EFC0E /* DefaultColors.h */,
+				739ABD2D1B0164DB009EFC0E /* DefaultColors.m */,
 			);
 			name = VIEW;
-			sourceTree = "<group>";
-		};
-		739ABCDA1B016362009EFC0E /* CONTROLLER */ = {
-			isa = PBXGroup;
-			children = (
-				739ABD451B0165A8009EFC0E /* InitialViewController.h */,
-				739ABD461B0165A8009EFC0E /* InitialViewController.m */,
-				739ABD4D1B0165DD009EFC0E /* Menu */,
-				739ABCE31B0163C4009EFC0E /* Simulator */,
-				739ABD2F1B0164E6009EFC0E /* Glossary */,
-				739ABD711B016674009EFC0E /* Quizzes */,
-			);
-			name = CONTROLLER;
-			sourceTree = "<group>";
-		};
-		739ABCDB1B016370009EFC0E /* MODEL */ = {
-			isa = PBXGroup;
-			children = (
-				73EEC57D1B040EDC00FAA1FE /* Account Management */,
-				739ABD331B016505009EFC0E /* FinancialDatabaseManager.h */,
-				739ABD341B016505009EFC0E /* FinancialDatabaseManager.m */,
-				739ABD571B01660D009EFC0E /* Portfolio.h */,
-				739ABD581B01660D009EFC0E /* Portfolio.m */,
-				739ABD5A1B016616009EFC0E /* PortfolioHistoricalValue.h */,
-				739ABD5B1B016616009EFC0E /* PortfolioHistoricalValue.m */,
-				739ABD5E1B01662E009EFC0E /* PortfolioPicture.h */,
-				739ABD5F1B01662E009EFC0E /* PortfolioPicture.m */,
-				739ABD941B01674E009EFC0E /* StockInvestment.h */,
-				739ABD951B01674E009EFC0E /* StockInvestment.m */,
-			);
-			name = MODEL;
 			sourceTree = "<group>";
 		};
 		739ABCDF1B01639C009EFC0E /* NSManagedObject Subclasses */ = {
@@ -349,21 +337,6 @@
 				739ABD171B016453009EFC0E /* Company.m */,
 			);
 			name = "NSManagedObject Subclasses";
-			sourceTree = "<group>";
-		};
-		739ABCE31B0163C4009EFC0E /* Simulator */ = {
-			isa = PBXGroup;
-			children = (
-				739ABD121B01643F009EFC0E /* Companies */,
-				739ABD611B01664C009EFC0E /* Portfolio */,
-				739ABD971B01675C009EFC0E /* TimeSimulationViewController.h */,
-				739ABD981B01675C009EFC0E /* TimeSimulationViewController.m */,
-				739ABD8D1B01671E009EFC0E /* SimulatorInfoViewController.h */,
-				739ABD8E1B01671E009EFC0E /* SimulatorInfoViewController.m */,
-				739ABD421B01656B009EFC0E /* InfoPageContentViewController.h */,
-				739ABD431B01656B009EFC0E /* InfoPageContentViewController.m */,
-			);
-			name = Simulator;
 			sourceTree = "<group>";
 		};
 		739ABCEA1B0163EF009EFC0E /* Classes */ = {
@@ -440,7 +413,141 @@
 			name = "Keys Headers";
 			sourceTree = "<group>";
 		};
-		739ABD121B01643F009EFC0E /* Companies */ = {
+		739ABD1F1B016478009EFC0E /* Company Cell */ = {
+			isa = PBXGroup;
+			children = (
+				739ABD201B01647F009EFC0E /* CompanyTableViewCell.h */,
+				739ABD211B01647F009EFC0E /* CompanyTableViewCell.m */,
+				739ABD221B01647F009EFC0E /* CompanyTableViewCell.xib */,
+			);
+			name = "Company Cell";
+			sourceTree = "<group>";
+		};
+		739ABD361B01650E009EFC0E /* Core Data */ = {
+			isa = PBXGroup;
+			children = (
+				739ABCDF1B01639C009EFC0E /* NSManagedObject Subclasses */,
+				739ABD821B0166C2009EFC0E /* scenario_DJI001A.sqlite */,
+				739ABD371B01651F009EFC0E /* FinancialDataModel.xcdatamodeld */,
+				739ABD531B0165FC009EFC0E /* ManagedObjectContextCreator.h */,
+				739ABD541B0165FC009EFC0E /* ManagedObjectContextCreator.m */,
+			);
+			name = "Core Data";
+			sourceTree = "<group>";
+		};
+		739ABD711B016674009EFC0E /* Quizzes */ = {
+			isa = PBXGroup;
+			children = (
+				73D7C3821B0AD58E00653A4C /* Controller */,
+				73D7C3831B0AD59900653A4C /* Model */,
+			);
+			name = Quizzes;
+			sourceTree = "<group>";
+		};
+		739ABD901B01672D009EFC0E /* Speech Bubble */ = {
+			isa = PBXGroup;
+			children = (
+				739ABD911B016740009EFC0E /* SpeechBubbleView.h */,
+				739ABD921B016740009EFC0E /* SpeechBubbleView.m */,
+			);
+			name = "Speech Bubble";
+			sourceTree = "<group>";
+		};
+		73D7C3741B0AD31A00653A4C /* Unused */ = {
+			isa = PBXGroup;
+			children = (
+				739ABD451B0165A8009EFC0E /* InitialViewController.h */,
+				739ABD461B0165A8009EFC0E /* InitialViewController.m */,
+			);
+			name = Unused;
+			sourceTree = "<group>";
+		};
+		73D7C3751B0AD36E00653A4C /* User Info */ = {
+			isa = PBXGroup;
+			children = (
+				73EEC57A1B040E9300FAA1FE /* UserAccount.h */,
+				73EEC57B1B040E9300FAA1FE /* UserAccount.m */,
+				73D7C3771B0AD37B00653A4C /* Controller */,
+			);
+			name = "User Info";
+			sourceTree = "<group>";
+		};
+		73D7C3771B0AD37B00653A4C /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				73D7C3711B0A7E0700653A4C /* SignupLoginViewController.h */,
+				73D7C3721B0A7E0700653A4C /* SignupLoginViewController.m */,
+				73D7C36D1B0A717F00653A4C /* UserAccountViewController.h */,
+				73D7C36E1B0A717F00653A4C /* UserAccountViewController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		73D7C3781B0AD43100653A4C /* Simulator */ = {
+			isa = PBXGroup;
+			children = (
+				73D7C37A1B0AD44000653A4C /* Controller */,
+				73D7C3791B0AD43B00653A4C /* Model */,
+			);
+			name = Simulator;
+			sourceTree = "<group>";
+		};
+		73D7C3791B0AD43B00653A4C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				739ABD481B0165B9009EFC0E /* InvestingGame.h */,
+				739ABD491B0165B9009EFC0E /* InvestingGame.m */,
+				739ABD331B016505009EFC0E /* FinancialDatabaseManager.h */,
+				739ABD341B016505009EFC0E /* FinancialDatabaseManager.m */,
+				739ABD571B01660D009EFC0E /* Portfolio.h */,
+				739ABD581B01660D009EFC0E /* Portfolio.m */,
+				739ABD5A1B016616009EFC0E /* PortfolioHistoricalValue.h */,
+				739ABD5B1B016616009EFC0E /* PortfolioHistoricalValue.m */,
+				739ABD5E1B01662E009EFC0E /* PortfolioPicture.h */,
+				739ABD5F1B01662E009EFC0E /* PortfolioPicture.m */,
+				739ABD941B01674E009EFC0E /* StockInvestment.h */,
+				739ABD951B01674E009EFC0E /* StockInvestment.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		73D7C37A1B0AD44000653A4C /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				73D7C3841B0AD86C00653A4C /* SimulatorTabBarController.h */,
+				73D7C3851B0AD86C00653A4C /* SimulatorTabBarController.m */,
+				73D7C37E1B0AD4F600653A4C /* Companies */,
+				73D7C37F1B0AD50900653A4C /* Portfolio */,
+				739ABD971B01675C009EFC0E /* TimeSimulationViewController.h */,
+				739ABD981B01675C009EFC0E /* TimeSimulationViewController.m */,
+				739ABD8D1B01671E009EFC0E /* SimulatorInfoViewController.h */,
+				739ABD8E1B01671E009EFC0E /* SimulatorInfoViewController.m */,
+				739ABD421B01656B009EFC0E /* InfoPageContentViewController.h */,
+				739ABD431B01656B009EFC0E /* InfoPageContentViewController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		73D7C37B1B0AD49B00653A4C /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				73D7C37D1B0AD4AA00653A4C /* Controller */,
+			);
+			name = Menu;
+			sourceTree = "<group>";
+		};
+		73D7C37D1B0AD4AA00653A4C /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				739ABD8A1B01670B009EFC0E /* SideMenuRootViewController.h */,
+				739ABD8B1B01670B009EFC0E /* SideMenuRootViewController.m */,
+				739ABD4E1B0165E6009EFC0E /* LeftMenuViewController.h */,
+				739ABD4F1B0165E6009EFC0E /* LeftMenuViewController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		73D7C37E1B0AD4F600653A4C /* Companies */ = {
 			isa = PBXGroup;
 			children = (
 				739ABD871B0166FC009EFC0E /* SelectOrderingValueViewController.h */,
@@ -457,53 +564,7 @@
 			name = Companies;
 			sourceTree = "<group>";
 		};
-		739ABD1F1B016478009EFC0E /* Company Cell */ = {
-			isa = PBXGroup;
-			children = (
-				739ABD201B01647F009EFC0E /* CompanyTableViewCell.h */,
-				739ABD211B01647F009EFC0E /* CompanyTableViewCell.m */,
-				739ABD221B01647F009EFC0E /* CompanyTableViewCell.xib */,
-			);
-			name = "Company Cell";
-			sourceTree = "<group>";
-		};
-		739ABD2F1B0164E6009EFC0E /* Glossary */ = {
-			isa = PBXGroup;
-			children = (
-				73D7C3671B096A6B00653A4C /* GlossarySelectionViewController.h */,
-				73D7C3681B096A6B00653A4C /* GlossarySelectionViewController.m */,
-				73D7C36A1B0971A700653A4C /* GlossaryViewController.h */,
-				73D7C36B1B0971A700653A4C /* GlossaryViewController.m */,
-				739ABD301B0164F8009EFC0E /* DefinitionViewController.h */,
-				739ABD311B0164F8009EFC0E /* DefinitionViewController.m */,
-			);
-			name = Glossary;
-			sourceTree = "<group>";
-		};
-		739ABD361B01650E009EFC0E /* CORE DATA */ = {
-			isa = PBXGroup;
-			children = (
-				739ABD821B0166C2009EFC0E /* scenario_DJI001A.sqlite */,
-				739ABD371B01651F009EFC0E /* FinancialDataModel.xcdatamodeld */,
-				739ABD531B0165FC009EFC0E /* ManagedObjectContextCreator.h */,
-				739ABD541B0165FC009EFC0E /* ManagedObjectContextCreator.m */,
-				739ABCDF1B01639C009EFC0E /* NSManagedObject Subclasses */,
-			);
-			name = "CORE DATA";
-			sourceTree = "<group>";
-		};
-		739ABD4D1B0165DD009EFC0E /* Menu */ = {
-			isa = PBXGroup;
-			children = (
-				739ABD8A1B01670B009EFC0E /* SideMenuRootViewController.h */,
-				739ABD8B1B01670B009EFC0E /* SideMenuRootViewController.m */,
-				739ABD4E1B0165E6009EFC0E /* LeftMenuViewController.h */,
-				739ABD4F1B0165E6009EFC0E /* LeftMenuViewController.m */,
-			);
-			name = Menu;
-			sourceTree = "<group>";
-		};
-		739ABD611B01664C009EFC0E /* Portfolio */ = {
+		73D7C37F1B0AD50900653A4C /* Portfolio */ = {
 			isa = PBXGroup;
 			children = (
 				739ABD621B016656009EFC0E /* PortfolioPieChartViewController.h */,
@@ -518,7 +579,39 @@
 			name = Portfolio;
 			sourceTree = "<group>";
 		};
-		739ABD711B016674009EFC0E /* Quizzes */ = {
+		73D7C3801B0AD56B00653A4C /* Glossary */ = {
+			isa = PBXGroup;
+			children = (
+				73D7C3811B0AD57900653A4C /* Controller */,
+			);
+			name = Glossary;
+			sourceTree = "<group>";
+		};
+		73D7C3811B0AD57900653A4C /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				73D7C3671B096A6B00653A4C /* GlossarySelectionViewController.h */,
+				73D7C3681B096A6B00653A4C /* GlossarySelectionViewController.m */,
+				73D7C36A1B0971A700653A4C /* GlossaryViewController.h */,
+				73D7C36B1B0971A700653A4C /* GlossaryViewController.m */,
+				739ABD301B0164F8009EFC0E /* DefinitionViewController.h */,
+				739ABD311B0164F8009EFC0E /* DefinitionViewController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		73D7C3821B0AD58E00653A4C /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				739ABD761B016686009EFC0E /* QuizSelectionViewController.h */,
+				739ABD771B016686009EFC0E /* QuizSelectionViewController.m */,
+				739ABD781B016686009EFC0E /* QuizViewController.h */,
+				739ABD791B016686009EFC0E /* QuizViewController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		73D7C3831B0AD59900653A4C /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				739ABD721B016686009EFC0E /* QuizQuestion.h */,
@@ -527,32 +620,18 @@
 				73EEC57F1B042FEA00FAA1FE /* Quiz.m */,
 				73EEC5841B0449EE00FAA1FE /* QuizGenerator.h */,
 				73EEC5851B0449EE00FAA1FE /* QuizGenerator.m */,
-				739ABD761B016686009EFC0E /* QuizSelectionViewController.h */,
-				739ABD771B016686009EFC0E /* QuizSelectionViewController.m */,
-				739ABD781B016686009EFC0E /* QuizViewController.h */,
-				739ABD791B016686009EFC0E /* QuizViewController.m */,
 			);
-			name = Quizzes;
+			name = Model;
 			sourceTree = "<group>";
 		};
-		739ABD901B01672D009EFC0E /* Speech Bubble */ = {
+		73D7C3871B0AFAD900653A4C /* Quiz Cell */ = {
 			isa = PBXGroup;
 			children = (
-				739ABD911B016740009EFC0E /* SpeechBubbleView.h */,
-				739ABD921B016740009EFC0E /* SpeechBubbleView.m */,
+				73D7C3881B0AFB2800653A4C /* QuizTableViewCell.h */,
+				73D7C3891B0AFB2800653A4C /* QuizTableViewCell.m */,
+				73D7C38A1B0AFB2800653A4C /* QuizTableViewCell.xib */,
 			);
-			name = "Speech Bubble";
-			sourceTree = "<group>";
-		};
-		73EEC57D1B040EDC00FAA1FE /* Account Management */ = {
-			isa = PBXGroup;
-			children = (
-				73EEC57A1B040E9300FAA1FE /* UserAccount.h */,
-				73EEC57B1B040E9300FAA1FE /* UserAccount.m */,
-				739ABD481B0165B9009EFC0E /* InvestingGame.h */,
-				739ABD491B0165B9009EFC0E /* InvestingGame.m */,
-			);
-			name = "Account Management";
+			name = "Quiz Cell";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -635,6 +714,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73D7C38C1B0AFB2800653A4C /* QuizTableViewCell.xib in Resources */,
 				739ABD831B0166D0009EFC0E /* scenario_DJI001A.sqlite in Resources */,
 				739ABD521B0165EE009EFC0E /* Main_iPhone.storyboard in Resources */,
 				739ABD241B01647F009EFC0E /* CompanyTableViewCell.xib in Resources */,
@@ -667,12 +747,14 @@
 				739ABD0E1B0163EF009EFC0E /* UIViewController+RESideMenu.m in Sources */,
 				739ABD0C1B0163EF009EFC0E /* RECommonFunctions.m in Sources */,
 				739ABD551B0165FC009EFC0E /* ManagedObjectContextCreator.m in Sources */,
+				73D7C3861B0AD86C00653A4C /* SimulatorTabBarController.m in Sources */,
 				739ABD231B01647F009EFC0E /* CompanyTableViewCell.m in Sources */,
 				739ABD861B0166E3009EFC0E /* Scenario.m in Sources */,
 				739ABD7D1B016686009EFC0E /* QuizViewController.m in Sources */,
 				73D7C3691B096A6B00653A4C /* GlossarySelectionViewController.m in Sources */,
 				739ABD0B1B0163EF009EFC0E /* BEMSimpleLineGraphView.m in Sources */,
 				739ABCE21B0163B4009EFC0E /* BalanceSheet.m in Sources */,
+				73D7C38B1B0AFB2800653A4C /* QuizTableViewCell.m in Sources */,
 				739ABD8F1B01671E009EFC0E /* SimulatorInfoViewController.m in Sources */,
 				739ABD351B016505009EFC0E /* FinancialDatabaseManager.m in Sources */,
 				739ABD5C1B016616009EFC0E /* PortfolioHistoricalValue.m in Sources */,
@@ -698,6 +780,7 @@
 				739ABD701B016661009EFC0E /* Price.m in Sources */,
 				739ABD441B01656B009EFC0E /* InfoPageContentViewController.m in Sources */,
 				739ABD151B01644B009EFC0E /* CompaniesViewController.m in Sources */,
+				73D7C36F1B0A717F00653A4C /* UserAccountViewController.m in Sources */,
 				739ABD931B016740009EFC0E /* SpeechBubbleView.m in Sources */,
 				739ABD051B0163EF009EFC0E /* BEMAnalogClockView.m in Sources */,
 				739ABCE91B0163E1009EFC0E /* CashFlow.m in Sources */,
@@ -706,6 +789,7 @@
 				739ABD961B01674E009EFC0E /* StockInvestment.m in Sources */,
 				739ABD991B01675C009EFC0E /* TimeSimulationViewController.m in Sources */,
 				739ABD1E1B016466009EFC0E /* CompanyRatioInfoViewController.m in Sources */,
+				73D7C3731B0A7E0700653A4C /* SignupLoginViewController.m in Sources */,
 				739ABD8C1B01670B009EFC0E /* SideMenuRootViewController.m in Sources */,
 				739ABD4A1B0165B9009EFC0E /* InvestingGame.m in Sources */,
 				739ABD891B0166FC009EFC0E /* SelectOrderingValueViewController.m in Sources */,

@@ -7,6 +7,7 @@
 //
 
 #import "GlossarySelectionViewController.h"
+#import "UserAccount.h"
 #import "GlossaryViewController.h"
 #import "DefaultColors.h"
 #import "RatiosKeys.h"

@@ -8,6 +8,7 @@
 
 #import "QuizSelectionViewController.h"
 #import "QuizViewController.h"
+#import "QuizTableViewCell.h"
 #import "QuizGenerator.h"
 #import "UserAccount.h"
 #import "Quiz.h"
@@ -19,6 +20,16 @@
 @end
 
 @implementation QuizSelectionViewController
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    // Load CompanyCell NIB file
+    UINib *nib = [UINib nibWithNibName:@"QuizTableViewCell" bundle:nil];
+    // Register the cell NIB
+    [self.tableView registerNib:nib forCellReuseIdentifier:@"Quiz Cell"];
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -43,24 +54,44 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     
-    return 4;
+    return 6;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"Category Cell"];
+    QuizTableViewCell *quizCell = [self.tableView dequeueReusableCellWithIdentifier:@"Quiz Cell"];
+
+    QuizType quizType;
     
     if (indexPath.row == 0) {
-        cell.textLabel.text = @"Financial Ratio Definitions";
+        quizType = QuizTypeFinancialRatioDefinitions;
+        
     } else if (indexPath.row == 1) {
-        cell.textLabel.text = @"Financial Ratio Calculation";
+        quizType = QuizTypeFinancialRatioFormulas;
+        
     } else if (indexPath.row == 2) {
-        cell.textLabel.text = @"Financial Statement Definitions";
+        quizType = QuizTypeFinancialRatioDefinitionsAndFormulas;
+        
     } else if (indexPath.row == 3) {
-        cell.textLabel.text = @"Stock Market Definitions";
+        quizType = QuizTypeFinancialStatementDefinitions;
+        
+    } else if (indexPath.row == 4) {
+        quizType = QuizTypeStockMarketDefinitions;
+        
+    } else if (indexPath.row == 5) {
+        quizType = QuizTypeAllDefinitions;
     }
     
-    return cell;
+    QuizGenerator *quizGenerator = [[QuizGenerator alloc] init];
+    NSDictionary *quizInfo = [quizGenerator quizInfoWithType:quizType andLevel:1];
+    
+    quizCell.titleLabel.text = quizInfo[QuizInfoTitleKey];
+    quizCell.numberOfQuestionsLabel.text = [NSString stringWithFormat:@"Questions: %@", quizInfo[QuizInfoNumberOfQuestionsKey]];
+    quizCell.pointsLabel.text = [NSString stringWithFormat:@"Points: %@", quizInfo[QuizInfoMaxScoreKey]];
+    quizCell.mistakesAllowedLabel.hidden = YES;
+    quizCell.secondsPerQuestionLabel.hidden = YES;
+    
+    return quizCell;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -77,7 +108,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 52;
+    return 83;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -105,20 +136,22 @@
                 
                 // CREATE QUIZ WITH OPTIONS GOT FROM ROW SELECTED
                 if (indexPath.row == 0) {
-                    
                     quiz = [quizGenerator getQuizWithType:QuizTypeFinancialRatioDefinitions andLevel:1];
                     
                 } else if (indexPath.row == 1) {
-                    
                     quiz = [quizGenerator getQuizWithType:QuizTypeFinancialRatioFormulas andLevel:1];
                     
                 } else if (indexPath.row == 2) {
-                    
-                    quiz = [quizGenerator getQuizWithType:QuizTypeFinancialStatementDefinitions andLevel:1];
+                    quiz = [quizGenerator getQuizWithType:QuizTypeFinancialRatioDefinitionsAndFormulas andLevel:1];
                     
                 } else if (indexPath.row == 3) {
+                    quiz = [quizGenerator getQuizWithType:QuizTypeFinancialStatementDefinitions andLevel:1];
                     
+                } else if (indexPath.row == 4) {
                     quiz = [quizGenerator getQuizWithType:QuizTypeStockMarketDefinitions andLevel:1];
+                    
+                } else if (indexPath.row == 5) {
+                    quiz = [quizGenerator getQuizWithType:QuizTypeAllDefinitions andLevel:1];
                     
                 }
                 

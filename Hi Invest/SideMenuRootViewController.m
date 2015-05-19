@@ -7,11 +7,12 @@
 //
 
 #import "SideMenuRootViewController.h"
+#import "UserAccount.h"
 #import "InvestingGame.h"
+#import "UserAccountViewController.h"
+#import "SimulatorTabBarController.h"
 #import "CompaniesViewController.h"
 #import "SelectOrderingValueViewController.h"
-#import "PortfolioTableViewController.h"
-#import "SimulatorInfoViewController.h"
 #import "LeftMenuViewController.h"
 #import "TimeSimulationViewController.h"
 #import "SimulatorInfoViewController.h"
@@ -42,98 +43,55 @@
     self.delegate = self;
 }
 
-#pragma mark - Setters
-
-- (void)setGame:(InvestingGame *)game
-{
-    _game = game;
-    
-    self.contentViewController = [self getInvestTabBarViewControllerWithGame:game];
-    
-    self.leftMenuViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"LeftMenuViewController"];
-    if ([self.leftMenuViewController isKindOfClass:[LeftMenuViewController class]]) {
-        [self prepareLeftMenuViewController:(LeftMenuViewController *)self.leftMenuViewController withInvestingGame:game];
-    }
-}
-
-
-- (void)prepareInvestTabBarViewController:(UIViewController *)viewController withInvestingGame:(InvestingGame *)game
-{
-    /* FIND THE TAB BAR CONTROLLER */
-    
-    // Is it a split view controller (IPAD) ?
-    if ([viewController isKindOfClass:[UISplitViewController class]]) {
-        // In a split view controller, the UITabBarContrller will be at the master view controller
-        viewController = ((UISplitViewController *)viewController).viewControllers[0];
-    }
-    
-    // Is it a tab bar controller ?
-    if ([viewController isKindOfClass:[UITabBarController class]]) {
-        // Tab bar controller found
-        
-        UITabBarController *tabBarController = (UITabBarController *)viewController;
-        NSUInteger tabsCount = [tabBarController.viewControllers count];
-        
-        if (tabsCount > 0) {
-            /* COMPANIES VIEW CONTROLLER PREPARATION */
-            // CompaniesViewController will be the first view controller (or embedded inside a Navigation Controller)
-            UIViewController *companiesTabViewController = tabBarController.viewControllers[0];
-            // Is it a navigation controller?
-            if ([companiesTabViewController isKindOfClass:[UINavigationController class]]) {
-                companiesTabViewController = [((UINavigationController *)companiesTabViewController).viewControllers firstObject];
-            }
-            if ([companiesTabViewController isKindOfClass:[CompaniesViewController class]]) {
-                // Found the CompaniesViewController
-                CompaniesViewController *companiesViewController = (CompaniesViewController *)companiesTabViewController;
-                companiesViewController.game = game;
-            }
-        }
-        
-        if (tabsCount > 1) {
-            /* PORFOLIO VIEW CONTROLLER PREPARATION */
-            // PortfolioViewController will be the second view controller (or embedded inside a Navigation Controller)
-            UIViewController *portfolioTabViewController = tabBarController.viewControllers[1];
-            // Is it a navigation controller?
-            if ([portfolioTabViewController isKindOfClass:[UINavigationController class]]) {
-                portfolioTabViewController = [((UINavigationController *)portfolioTabViewController).viewControllers firstObject];
-            }
-            if ([portfolioTabViewController isKindOfClass:[PortfolioTableViewController class]]) {
-                // Found the portfolioViewController
-                PortfolioTableViewController *porfolioViewController = (PortfolioTableViewController *)portfolioTabViewController;
-                porfolioViewController.game = game;
-            }
-        }
-    
-    }
-}
-
-- (void)prepareLeftMenuViewController:(LeftMenuViewController *)leftMenuViewController withInvestingGame:(InvestingGame *)game
-{
-    leftMenuViewController.game = game;
-}
-
 
 #pragma mark - Content View Controllers Initialization
 
-- (UITabBarController *)getInvestTabBarViewControllerWithGame:(InvestingGame *)game
+- (UITabBarController *)getSimulatorTabBarControllerWithUserAccount:(UserAccount *)userAccount
 {
-    UIViewController *viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"Invest UITabBarController"];
-    if ([viewController isKindOfClass:[UITabBarController class]]) {
-        UITabBarController *investTabBarViewController = (UITabBarController *)viewController;
-        [self prepareInvestTabBarViewController:investTabBarViewController withInvestingGame:game];
-        return investTabBarViewController;
-    } else {
-        return nil;
+    SimulatorTabBarController *simulatorTabBarController = [self.storyboard instantiateViewControllerWithIdentifier:@"SimulatorTabBarController"];
+    
+    simulatorTabBarController.userAccount = userAccount;
+    
+    return simulatorTabBarController;
+}
+
+// For Initial Content View Controller
+- (UINavigationController *)getUserAccountNavigationControllerWithUserAccount:(UserAccount *)userAccount
+{
+    UINavigationController *userAccountNavigationController = [self.storyboard instantiateViewControllerWithIdentifier:@"User Account UINavigationController"];
+    if ([[userAccountNavigationController.viewControllers firstObject] isKindOfClass:[UserAccountViewController class]]) {
+        UserAccountViewController *userAccountViewController = [userAccountNavigationController.viewControllers firstObject];
+        userAccountViewController.userAccount = userAccount;
     }
+    
+    return userAccountNavigationController;
+}
+
+#pragma mark - Setters
+
+- (void)setUserAccount:(UserAccount *)userAccount
+{
+    _userAccount = userAccount;
+    
+    
+    // Initialize LeftMenuViewController
+    LeftMenuViewController *leftMenuViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"LeftMenuViewController"];
+    leftMenuViewController.userAccount = userAccount;
+    self.leftMenuViewController = leftMenuViewController;
+    
+    // Initialize Initial ContentViewController (UserAccountViewController)
+    UINavigationController *userAccountNavigationController = [self.storyboard instantiateViewControllerWithIdentifier:@"User Account UINavigationController"];
+    UserAccountViewController *userAccountViewController = [userAccountNavigationController.viewControllers firstObject];
+    userAccountViewController.userAccount = userAccount;
+    [self setContentViewController:userAccountNavigationController animated:NO];
+    
 }
 
 #pragma mark RESideMenu Delegate
 
 - (void)sideMenu:(RESideMenu *)sideMenu willShowMenuViewController:(UIViewController *)menuViewController
 {
-    // FOR TESTING
-    self.contentViewInPortraitOffsetCenterX = 100.0f;
-    self.contentViewInLandscapeOffsetCenterX = 100.0f;
+
 }
 
 - (void)sideMenu:(RESideMenu *)sideMenu didShowMenuViewController:(UIViewController *)menuViewController
@@ -156,7 +114,9 @@
 
 - (IBAction)presentTimeSimulationMenu:(id)sender
 {
-    NSInteger daysLeft = [self.game daysLeft];
+    InvestingGame *game = self.userAccount.currentInvestingGame;
+    
+    NSInteger daysLeft = [game daysLeft];
     
     NSString *message = [NSString stringWithFormat:@"Days left: %ld  |  Select a period of time.", (long)daysLeft];
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Time Simulation"
@@ -164,31 +124,31 @@
                                                             preferredStyle:UIAlertControllerStyleActionSheet];
     
     UIAlertAction *dayAction = [UIAlertAction actionWithTitle:@"Day" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        if ([self.game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:0 andDays:1]) {
+        if ([game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:0 andDays:1]) {
             [self performSegueWithIdentifier:@"Time Simulation" sender:@(1)];
         }
     }];
     
     UIAlertAction *weekAction = [UIAlertAction actionWithTitle:@"Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        if ([self.game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:0 andDays:7]) {
+        if ([game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:0 andDays:7]) {
             [self performSegueWithIdentifier:@"Time Simulation" sender:@(7)];
         }
     }];
     
     UIAlertAction *monthAction = [UIAlertAction actionWithTitle:@"Month" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        if ([self.game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:1 andDays:0]) {
+        if ([game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:1 andDays:0]) {
             [self performSegueWithIdentifier:@"Time Simulation" sender:@(30)];
         }
     }];
     
     UIAlertAction *sixMonthsAction = [UIAlertAction actionWithTitle:@"Six Months" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        if ([self.game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:6 andDays:0]) {
+        if ([game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:6 andDays:0]) {
             [self performSegueWithIdentifier:@"Time Simulation" sender:@(180)];
         }
     }];
     
     UIAlertAction *yearAction = [UIAlertAction actionWithTitle:@"Year" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        if ([self.game changeCurrentDateToDateWithTimeDifferenceInYears:1 months:0 andDays:0]) {
+        if ([game changeCurrentDateToDateWithTimeDifferenceInYears:1 months:0 andDays:0]) {
             [self performSegueWithIdentifier:@"Time Simulation" sender:@(365)];
         }
     }];
@@ -259,7 +219,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.destinationViewController isKindOfClass:[SimulatorInfoViewController class]]) {
-        [self prepareSimulatorInfoViewController:segue.destinationViewController withInvestingGame:self.game];
+        [self prepareSimulatorInfoViewController:segue.destinationViewController withInvestingGame:[self.userAccount currentInvestingGame]];
     }
     
     if ([segue.destinationViewController isKindOfClass:[TimeSimulationViewController class]]) {
@@ -282,12 +242,6 @@
 {
     timeSimulationViewController.daysNum = numberOfDays;
 }
-
-
-
-
-
-
 
 
 @end

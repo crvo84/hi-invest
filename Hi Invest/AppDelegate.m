@@ -7,10 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import <CoreData/CoreData.h>
-#import "ManagedObjectContextCreator.h"
-#import "OpeningDatabaseFileKeys.h"
-#import "UserDefaultsKeys.h"
 #import "DefaultColors.h"
 
 
@@ -27,8 +23,6 @@
     // Override point for customization after application launch.
 
     [self setDefaultUIColors];
-    
-    [self setDefaultSettings];
     
     return YES;
 }
@@ -61,15 +55,7 @@
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
 
-// Set the default settings for the application, or the user configuration from previous launches.
-- (void)setDefaultSettings
-{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
-    if (![defaults doubleForKey:SettingsInitialCashKey]) {
-        [defaults setDouble:SettingsDefaultInitialCash forKey:SettingsInitialCashKey];
-    }
-}
+
 
 
 
