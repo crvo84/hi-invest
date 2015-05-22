@@ -29,7 +29,6 @@
 		739ABD1B1B01645F009EFC0E /* CompanyInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABD1A1B01645F009EFC0E /* CompanyInfoViewController.m */; };
 		739ABD1E1B016466009EFC0E /* CompanyRatioInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABD1D1B016466009EFC0E /* CompanyRatioInfoViewController.m */; };
 		739ABD231B01647F009EFC0E /* CompanyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABD211B01647F009EFC0E /* CompanyTableViewCell.m */; };
-		739ABD241B01647F009EFC0E /* CompanyTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 739ABD221B01647F009EFC0E /* CompanyTableViewCell.xib */; };
 		739ABD2E1B0164DB009EFC0E /* DefaultColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABD2D1B0164DB009EFC0E /* DefaultColors.m */; };
 		739ABD321B0164F8009EFC0E /* DefinitionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABD311B0164F8009EFC0E /* DefinitionViewController.m */; };
 		739ABD351B016505009EFC0E /* FinancialDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABD341B016505009EFC0E /* FinancialDatabaseManager.m */; };
@@ -69,7 +68,6 @@
 		73D7C3731B0A7E0700653A4C /* SignupLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D7C3721B0A7E0700653A4C /* SignupLoginViewController.m */; };
 		73D7C3861B0AD86C00653A4C /* SimulatorTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D7C3851B0AD86C00653A4C /* SimulatorTabBarController.m */; };
 		73D7C38B1B0AFB2800653A4C /* QuizTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D7C3891B0AFB2800653A4C /* QuizTableViewCell.m */; };
-		73D7C38C1B0AFB2800653A4C /* QuizTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 73D7C38A1B0AFB2800653A4C /* QuizTableViewCell.xib */; };
 		73EEC57C1B040E9300FAA1FE /* UserAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 73EEC57B1B040E9300FAA1FE /* UserAccount.m */; };
 		73EEC5801B042FEA00FAA1FE /* Quiz.m in Sources */ = {isa = PBXBuildFile; fileRef = 73EEC57F1B042FEA00FAA1FE /* Quiz.m */; };
 		73EEC5861B0449EE00FAA1FE /* QuizGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 73EEC5851B0449EE00FAA1FE /* QuizGenerator.m */; };
@@ -133,7 +131,6 @@
 		739ABD1D1B016466009EFC0E /* CompanyRatioInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CompanyRatioInfoViewController.m; sourceTree = "<group>"; };
 		739ABD201B01647F009EFC0E /* CompanyTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompanyTableViewCell.h; sourceTree = "<group>"; };
 		739ABD211B01647F009EFC0E /* CompanyTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CompanyTableViewCell.m; sourceTree = "<group>"; };
-		739ABD221B01647F009EFC0E /* CompanyTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CompanyTableViewCell.xib; sourceTree = "<group>"; };
 		739ABD2C1B0164DB009EFC0E /* DefaultColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultColors.h; sourceTree = "<group>"; };
 		739ABD2D1B0164DB009EFC0E /* DefaultColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DefaultColors.m; sourceTree = "<group>"; };
 		739ABD301B0164F8009EFC0E /* DefinitionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefinitionViewController.h; sourceTree = "<group>"; };
@@ -211,7 +208,6 @@
 		73D7C3851B0AD86C00653A4C /* SimulatorTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimulatorTabBarController.m; sourceTree = "<group>"; };
 		73D7C3881B0AFB2800653A4C /* QuizTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuizTableViewCell.h; sourceTree = "<group>"; };
 		73D7C3891B0AFB2800653A4C /* QuizTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuizTableViewCell.m; sourceTree = "<group>"; };
-		73D7C38A1B0AFB2800653A4C /* QuizTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QuizTableViewCell.xib; sourceTree = "<group>"; };
 		73EEC5761B04038900FAA1FE /* GlossaryKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GlossaryKeys.h; sourceTree = "<group>"; };
 		73EEC57A1B040E9300FAA1FE /* UserAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserAccount.h; sourceTree = "<group>"; };
 		73EEC57B1B040E9300FAA1FE /* UserAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserAccount.m; sourceTree = "<group>"; };
@@ -309,8 +305,7 @@
 		739ABCD91B01635C009EFC0E /* VIEW */ = {
 			isa = PBXGroup;
 			children = (
-				73D7C3871B0AFAD900653A4C /* Quiz Cell */,
-				739ABD1F1B016478009EFC0E /* Company Cell */,
+				73D7C3871B0AFAD900653A4C /* Custom Cells */,
 				739ABD901B01672D009EFC0E /* Speech Bubble */,
 				739ABD2C1B0164DB009EFC0E /* DefaultColors.h */,
 				739ABD2D1B0164DB009EFC0E /* DefaultColors.m */,
@@ -411,16 +406,6 @@
 				739ABD111B016426009EFC0E /* CompaniesInfoKeys.h */,
 			);
 			name = "Keys Headers";
-			sourceTree = "<group>";
-		};
-		739ABD1F1B016478009EFC0E /* Company Cell */ = {
-			isa = PBXGroup;
-			children = (
-				739ABD201B01647F009EFC0E /* CompanyTableViewCell.h */,
-				739ABD211B01647F009EFC0E /* CompanyTableViewCell.m */,
-				739ABD221B01647F009EFC0E /* CompanyTableViewCell.xib */,
-			);
-			name = "Company Cell";
 			sourceTree = "<group>";
 		};
 		739ABD361B01650E009EFC0E /* Core Data */ = {
@@ -624,14 +609,15 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
-		73D7C3871B0AFAD900653A4C /* Quiz Cell */ = {
+		73D7C3871B0AFAD900653A4C /* Custom Cells */ = {
 			isa = PBXGroup;
 			children = (
+				739ABD201B01647F009EFC0E /* CompanyTableViewCell.h */,
+				739ABD211B01647F009EFC0E /* CompanyTableViewCell.m */,
 				73D7C3881B0AFB2800653A4C /* QuizTableViewCell.h */,
 				73D7C3891B0AFB2800653A4C /* QuizTableViewCell.m */,
-				73D7C38A1B0AFB2800653A4C /* QuizTableViewCell.xib */,
 			);
-			name = "Quiz Cell";
+			name = "Custom Cells";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -714,10 +700,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73D7C38C1B0AFB2800653A4C /* QuizTableViewCell.xib in Resources */,
 				739ABD831B0166D0009EFC0E /* scenario_DJI001A.sqlite in Resources */,
 				739ABD521B0165EE009EFC0E /* Main_iPhone.storyboard in Resources */,
-				739ABD241B01647F009EFC0E /* CompanyTableViewCell.xib in Resources */,
 				739ABD4C1B0165C0009EFC0E /* LaunchScreen.xib in Resources */,
 				739ABD3E1B016536009EFC0E /* Images.xcassets in Resources */,
 			);

@@ -84,6 +84,34 @@
 // Dictionary mapping each Sorting Value Identifier with its corresponding interpretation
 #define FinancialRatiosInterpretationsDictionary @{ FinancialRatioROA : FinancialRatioROAInterpretation, FinancialRatioROE : FinancialRatioROEInterpretation, FinancialRatioPriceEarnings : FinancialRatioPriceEarningsInterpretation, FinancialRatioPriceSales : FinancialRatioPriceSalesInterpretation, FinancialRatioDividendYield : FinancialRatioDividendYieldInterpretation, FinancialRatioDividendPayout : FinancialRatioDividendPayoutInterpretation, FinancialRatioDebtEquity : FinancialRatioDebtEquityInterpretation, FinancialRatioPriceBook : FinancialRatioPriceBookInterpretation, FinancialRatioCurrentRatio : FinancialRatioCurrentRatioInterpretation, FinancialRatioQuickRatio : FinancialRatioQuickRatioInterpretation, FinancialRatioCashRatio : FinancialRatioCashRatioInterpretation, FinancialRatioGrossMargin : FinancialRatioGrossMarginInterpretation, FinancialRatioEBITDAMargin : FinancialRatioEBITDAMarginInterpretation, FinancialRatioOperatingMargin : FinancialRatioOperatingMarginInterpretation, FinancialRatioEffectiveTaxRate : FinancialRatioEffectiveTaxRateInterpretation, FinancialRatioProfitMargin : FinancialRatioProfitMarginInterpretation, FinancialRatioFinancialLeverage : FinancialRatioFinancialLeverageInterpretation, FinancialRatioWeightInPortfolio : FinancialRatioWeightInPortfolioInterpretation }
 
+// Financial Ratio Maximum and Minimum values for quiz questions
+#define FinancialRatioMaxValueKey @"Max ratio value"
+#define FinancialRatioMinValueKey @"Min ratio value"
+// ----------
+#define FinancialRatioROAMaxMinValues @{ FinancialRatioMinValueKey : @(0.05), FinancialRatioMaxValueKey : @(0.3) }
+#define FinancialRatioROEMaxMinValues @{ FinancialRatioMinValueKey : @(0.05), FinancialRatioMaxValueKey : @(0.75) }
+#define FinancialRatioPriceEarningsMaxMinValues @{ FinancialRatioMinValueKey : @(1.0), FinancialRatioMaxValueKey : @(30.0) }
+#define FinancialRatioPriceSalesMaxMinValues @{ FinancialRatioMinValueKey : @(0.2), FinancialRatioMaxValueKey : @(7.0) }
+#define FinancialRatioDividendYieldMaxMinValues @{ FinancialRatioMinValueKey : @(0.05), FinancialRatioMaxValueKey : @(0.1) }
+#define FinancialRatioDividendPayoutMaxMinValues @{ FinancialRatioMinValueKey : @(0.05), FinancialRatioMaxValueKey : @(1.0) }
+#define FinancialRatioDebtEquityMaxMinValues @{ FinancialRatioMinValueKey : @(0.05), FinancialRatioMaxValueKey : @(5.0) }
+#define FinancialRatioPriceBookMaxMinValues @{ FinancialRatioMinValueKey : @(0.2), FinancialRatioMaxValueKey : @(10.0) }
+#define FinancialRatioCurrentRatioMaxMinValues @{ FinancialRatioMinValueKey : @(0.2), FinancialRatioMaxValueKey : @(5.0) }
+#define FinancialRatioQuickRatioMaxMinValues @{ FinancialRatioMinValueKey : @(0.2), FinancialRatioMaxValueKey : @(5.0) }
+#define FinancialRatioCashRatioMaxMinValues @{ FinancialRatioMinValueKey : @(0.05), FinancialRatioMaxValueKey : @(3.0) }
+#define FinancialRatioGrossMarginMaxMinValues @{ FinancialRatioMinValueKey : @(0.05), FinancialRatioMaxValueKey : @(0.85) }
+#define FinancialRatioEBITDAMarginMaxMinValues @{ FinancialRatioMinValueKey : @(0.05), FinancialRatioMaxValueKey : @(0.75) }
+#define FinancialRatioOperatingMarginMaxMinValues @{ FinancialRatioMinValueKey : @(0.05), FinancialRatioMaxValueKey : @(0.5) }
+#define FinancialRatioEffectiveTaxRateMaxMinValues @{ FinancialRatioMinValueKey : @(0.1), FinancialRatioMaxValueKey : @(0.5) }
+#define FinancialRatioProfitMarginMaxMinValues @{ FinancialRatioMinValueKey : @(0.02), FinancialRatioMaxValueKey : @(0.4) }
+#define FinancialRatioFinancialLeverageMaxMinValues @{ FinancialRatioMinValueKey : @(1.0), FinancialRatioMaxValueKey : @(15.0) }
+// ----------
+
+// Mapping Ratio identifiers with ratio dictionary with max and min values for quiz questions
+#define FinancialRatioMaxAndMinValuesDictionary @{ FinancialRatioROA : FinancialRatioROAMaxMinValues, FinancialRatioROE : FinancialRatioROEMaxMinValues, FinancialRatioPriceEarnings : FinancialRatioPriceEarningsMaxMinValues, FinancialRatioPriceSales : FinancialRatioPriceSalesMaxMinValues, FinancialRatioDividendYield : FinancialRatioDividendYieldMaxMinValues, FinancialRatioDividendPayout : FinancialRatioDividendPayoutMaxMinValues, FinancialRatioDebtEquity : FinancialRatioDebtEquityMaxMinValues, FinancialRatioPriceBook : FinancialRatioPriceBookMaxMinValues, FinancialRatioCurrentRatio : FinancialRatioCurrentRatioMaxMinValues, FinancialRatioQuickRatio : FinancialRatioQuickRatioMaxMinValues, FinancialRatioCashRatio : FinancialRatioCashRatioMaxMinValues, FinancialRatioGrossMargin : FinancialRatioGrossMarginMaxMinValues, FinancialRatioEBITDAMargin : FinancialRatioEBITDAMarginMaxMinValues, FinancialRatioOperatingMargin : FinancialRatioOperatingMarginMaxMinValues, FinancialRatioEffectiveTaxRate : FinancialRatioEffectiveTaxRateMaxMinValues, FinancialRatioProfitMargin : FinancialRatioProfitMarginMaxMinValues, FinancialRatioFinancialLeverage : FinancialRatioFinancialLeverageMaxMinValues }
+// ----------
+
+
 // Financial Ratios Category Arrays
 #define FinancialRatioCategoryLiquidityIdentifiersArray @[FinancialRatioCurrentRatio, FinancialRatioQuickRatio, FinancialRatioCashRatio]
 #define FinancialRatioCategoryProfitabilyIdentifiersArray @[FinancialRatioROA, FinancialRatioROE, FinancialRatioPriceEarnings, FinancialRatioGrossMargin, FinancialRatioEBITDAMargin, FinancialRatioOperatingMargin, FinancialRatioEffectiveTaxRate, FinancialRatioProfitMargin]

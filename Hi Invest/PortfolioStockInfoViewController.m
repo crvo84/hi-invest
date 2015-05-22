@@ -180,6 +180,13 @@
     return heightPerCell < 44 ? 44 : heightPerCell;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    // Since there is only one section.
+    // Return a very small height to avoid initial table view offset
+    return 0.1;
+}
+
 
 #pragma mark - Getters
 

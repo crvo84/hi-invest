@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@class Quiz;
+#import "Quiz.h"
 
 @interface QuizViewController : UIViewController
 
 @property (strong, nonatomic) Quiz *quiz;
+@property (nonatomic) QuizType quizType;
 
 @end

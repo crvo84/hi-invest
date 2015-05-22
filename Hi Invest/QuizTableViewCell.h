@@ -15,5 +15,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *pointsLabel;
 @property (weak, nonatomic) IBOutlet UILabel *mistakesAllowedLabel;
 @property (weak, nonatomic) IBOutlet UILabel *secondsPerQuestionLabel;
+@property (weak, nonatomic) IBOutlet UILabel *levelLabel;
 
 @end

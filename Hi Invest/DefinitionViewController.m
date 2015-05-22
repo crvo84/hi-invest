@@ -28,7 +28,7 @@
     [super viewDidLoad];
     
 //    self.view.backgroundColor = [DefaultColors translucentLightBackgroundColor];
-    self.view.backgroundColor = [DefaultColors translucentDarkBackgroundColor];
+    self.view.backgroundColor = [DefaultColors translucentLightBackgroundColor];
     
     // Title label
     self.titleLabel.textColor = [DefaultColors navigationBarWithSegueTitleColor];

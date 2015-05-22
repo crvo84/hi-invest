@@ -39,11 +39,6 @@
     self.headerSubview.layer.borderColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.5].CGColor;
     self.headerSubview.backgroundColor = [DefaultColors tableViewCellBackgroundColor];
     
-    // Load CompanyCell NIB file
-    UINib *nib = [UINib nibWithNibName:@"CompanyTableViewCell" bundle:nil];
-    // Register the cell NIB
-    [self.tableView registerNib:nib forCellReuseIdentifier:@"Company Cell"];
-    
     self.descendingOrder = YES;
     self.showValueAsPercent = NO;
 }
@@ -191,17 +186,11 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.companies[indexPath.row][companyPriceNumber]) {
-        return 56;
-    } else { // if it has no price, then it is the market average
-        return 36;
-    }
+    return 56;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self performSegueWithIdentifier:@"Company Info" sender:[self.tableView cellForRowAtIndexPath:indexPath]];
-    
     // Deselects the table view cell so it wont be selected when returning from the segued view controller
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
@@ -244,9 +233,9 @@
     }
 }
 
-  //-------------------------------/
- /* View Controllers Preparation */
-//-------------------------------/
+  //------------------------------/
+ /* View Controller Preparation */
+//------------------------------/
 
 - (void)prepareCompanyInfoViewController:(CompanyInfoViewController *)companyInfoViewController withTicker:(NSString *)ticker andInvestingGame:(InvestingGame *)game
 {

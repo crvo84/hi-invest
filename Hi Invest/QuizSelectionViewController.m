@@ -21,16 +21,6 @@
 
 @implementation QuizSelectionViewController
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    // Load CompanyCell NIB file
-    UINib *nib = [UINib nibWithNibName:@"QuizTableViewCell" bundle:nil];
-    // Register the cell NIB
-    [self.tableView registerNib:nib forCellReuseIdentifier:@"Quiz Cell"];
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -41,8 +31,13 @@
 - (void)updateUI
 {
     [self.tableView reloadData];
-    
 }
+
+#pragma mark - Quizzes Info
+
+
+#pragma mark - Getters
+
 
 #pragma mark - UITableView Data Source
 
@@ -53,62 +48,47 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    
-    return 6;
+    return QuizTypeCount - 1; // Remove the "-1" when all QuizTypes are implemented in QuizGenerator
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     QuizTableViewCell *quizCell = [self.tableView dequeueReusableCellWithIdentifier:@"Quiz Cell"];
-
-    QuizType quizType;
     
-    if (indexPath.row == 0) {
-        quizType = QuizTypeFinancialRatioDefinitions;
-        
-    } else if (indexPath.row == 1) {
-        quizType = QuizTypeFinancialRatioFormulas;
-        
-    } else if (indexPath.row == 2) {
-        quizType = QuizTypeFinancialRatioDefinitionsAndFormulas;
-        
-    } else if (indexPath.row == 3) {
-        quizType = QuizTypeFinancialStatementDefinitions;
-        
-    } else if (indexPath.row == 4) {
-        quizType = QuizTypeStockMarketDefinitions;
-        
-    } else if (indexPath.row == 5) {
-        quizType = QuizTypeAllDefinitions;
-    }
+    QuizType quizType = indexPath.row;
+    NSInteger quizTypeLevel = [self.userAccount currentQuizLevelForQuizType:quizType];
     
     QuizGenerator *quizGenerator = [[QuizGenerator alloc] init];
-    NSDictionary *quizInfo = [quizGenerator quizInfoWithType:quizType andLevel:1];
+    NSDictionary *quizInfo = [quizGenerator quizInfoWithType:quizType andLevel:quizTypeLevel];
     
-    quizCell.titleLabel.text = quizInfo[QuizInfoTitleKey];
-    quizCell.numberOfQuestionsLabel.text = [NSString stringWithFormat:@"Questions: %@", quizInfo[QuizInfoNumberOfQuestionsKey]];
-    quizCell.pointsLabel.text = [NSString stringWithFormat:@"Points: %@", quizInfo[QuizInfoMaxScoreKey]];
-    quizCell.mistakesAllowedLabel.hidden = YES;
-    quizCell.secondsPerQuestionLabel.hidden = YES;
+    if (quizInfo) {
+        
+        quizCell.accessoryType = UITableViewCellAccessoryNone;
+        quizCell.titleLabel.text = quizInfo[QuizInfoTitleKey];
+        quizCell.levelLabel.text = [NSString stringWithFormat:@"Level %ld", (long)quizTypeLevel];
+        quizCell.numberOfQuestionsLabel.hidden = NO;
+  
+    } else { // No new level available
+        
+        quizCell.levelLabel.hidden = YES;
+        quizCell.accessoryType = UITableViewCellAccessoryCheckmark;
+        quizCell.titleLabel.text = [quizGenerator titleForQuizType:quizType];
+        
+    }
     
     return quizCell;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-
-    if (section == 0) {
-        return @"Select quiz";
-    }
-    
-    return nil;
+    return @"Select Quiz";
 }
 
 #pragma mark - UITableView Delegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 83;
+    return 58;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -126,52 +106,45 @@
         viewController = [((UINavigationController *)viewController).viewControllers firstObject];
     }
     
-        if ([viewController isKindOfClass:[QuizViewController class]]) {
-            if ([sender isKindOfClass:[UITableViewCell class]]) {
-                
-                UITableViewCell *cell = sender;
-                NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-                QuizGenerator *quizGenerator = [[QuizGenerator alloc] init];
-                Quiz *quiz;
-                
-                // CREATE QUIZ WITH OPTIONS GOT FROM ROW SELECTED
-                if (indexPath.row == 0) {
-                    quiz = [quizGenerator getQuizWithType:QuizTypeFinancialRatioDefinitions andLevel:1];
-                    
-                } else if (indexPath.row == 1) {
-                    quiz = [quizGenerator getQuizWithType:QuizTypeFinancialRatioFormulas andLevel:1];
-                    
-                } else if (indexPath.row == 2) {
-                    quiz = [quizGenerator getQuizWithType:QuizTypeFinancialRatioDefinitionsAndFormulas andLevel:1];
-                    
-                } else if (indexPath.row == 3) {
-                    quiz = [quizGenerator getQuizWithType:QuizTypeFinancialStatementDefinitions andLevel:1];
-                    
-                } else if (indexPath.row == 4) {
-                    quiz = [quizGenerator getQuizWithType:QuizTypeStockMarketDefinitions andLevel:1];
-                    
-                } else if (indexPath.row == 5) {
-                    quiz = [quizGenerator getQuizWithType:QuizTypeAllDefinitions andLevel:1];
-                    
-                }
-                
-                [self prepareQuizViewController:(QuizViewController *)viewController withQuiz:quiz];
+    if ([viewController isKindOfClass:[QuizViewController class]]) {
+        if ([sender isKindOfClass:[UITableViewCell class]]) {
+            
+            UITableViewCell *cell = sender;
+            NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+            
+            // CREATE QUIZ WITH OPTIONS GOT FROM ROW SELECTED
+            QuizGenerator *quizGenerator = [[QuizGenerator alloc] init];
+            QuizType quizType = indexPath.row;
+            NSInteger quizTypeLevel = [self.userAccount currentQuizLevelForQuizType:quizType];
+            NSInteger maxQuizTypeLevelAvailable = [quizGenerator maximumLevelForQuizType:quizType];
+            if (quizTypeLevel > maxQuizTypeLevelAvailable) {
+                quizTypeLevel = maxQuizTypeLevelAvailable;
             }
+            
+            Quiz *quiz = [quizGenerator getQuizWithType:quizType andLevel:quizTypeLevel];
+            
+            [self prepareQuizViewController:(QuizViewController *)viewController withQuiz:quiz withQuizType:quizType];
         }
+    }
 }
 
 - (void)prepareQuizViewController:(QuizViewController *)quizViewController withQuiz:(Quiz *)quiz
+                     withQuizType:(QuizType)quizType
 {
     quizViewController.quiz = quiz;
+    quizViewController.quizType = quizType;
     quizViewController.title = [NSString stringWithFormat:@"QUIZ  |  %@", quiz.title];
 }
 
+// Used only when quiz was completed successfully
 - (IBAction)unwindToQuizSelectionViewController:(UIStoryboardSegue *)unwindSegue
 {
     if ([unwindSegue.sourceViewController isKindOfClass:[QuizViewController class]]) {
-//        NSInteger score = ((QuizViewController *)unwindSegue.sourceViewController).finalScore;
-//        [self.game addScore:score]
-        
+        UIViewController *viewController = ((QuizViewController *)unwindSegue.sourceViewController);
+        if ([viewController isKindOfClass:[QuizViewController class]]) {
+            QuizViewController *quizViewController = (QuizViewController *)viewController;
+            [self.userAccount increaseQuizLevelForQuizType:quizViewController.quizType];
+        }
     }
 }
 

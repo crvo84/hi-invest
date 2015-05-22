@@ -17,6 +17,7 @@
 @property (nonatomic, readwrite) NSInteger maxScore;
 @property (nonatomic, readwrite) NSInteger minScore;
 @property (nonatomic) NSInteger nextQuizQuestionIndex;
+@property (nonatomic, readwrite) QuizType quizType;
 
 @end
 

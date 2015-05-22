@@ -11,16 +11,50 @@
 #import "RatiosKeys.h"
 #import "GlossaryKeys.h"
 
-
+#define QuizGeneratorMaximumQuizLevel 5
+#define QuizGeneratorNumberOfAnswers 4 // Number of answers for each QuizQuestion. 1 correct, the rest are wrong
+#define QuizGeneratorMaximumMistakesAllowed 3
 
 @implementation QuizGenerator
 
-#define numberOfAnswers 4 // Number of answers for each QuizQuestion. 1 correct, the rest are wrong
 
-- (Quiz *)getQuizWithType:(QuizType)quizType andLevel:(NSUInteger)quizLevel
+// Return a dictionary containting information for a quiz with the given characteristics.
+// QuizType is stored as a NSNumber
+- (NSDictionary *)quizInfoWithType:(QuizType)quizType andLevel:(NSInteger)quizLevel
 {
+    if (![self isQuizAvailableForQuizLevel:quizLevel forQuizType:quizType]) {
+        return nil;
+    }
+    
+    NSString *title = [self titleForQuizType:quizType];
+    
+    NSString *numberOfQuestionsStr = [NSString stringWithFormat:@"%ld", (unsigned long)[self numberOfQuestionsForQuizType:quizType
+                                                                                                             forQuizLevel:quizLevel]];
+    NSString *secondsPerQuestionStr = [NSString stringWithFormat:@"%ld", (unsigned long)[self secondsPerQuestionForQuizType:quizType
+                                                                                                               forQuizLevel:quizLevel]];
+    NSString *mistakesAllowedStr = [NSString stringWithFormat:@"%ld", (unsigned long)[self mistakesAllowedForQuizType:quizType
+                                                                                                         forQuizLevel:quizLevel]];
+    NSString *maxScoreStr = [NSString stringWithFormat:@"%ld", (long)[self maximumScoreForQuizType:quizType
+                                                                                      forQuizLevel:quizLevel]];
+    NSString *minScoreStr = [NSString stringWithFormat:@"%ld", (long)[self minimumScoreForQuizType:quizType
+                                                                                      forQuizLevel:quizLevel]];
+    return @{ QuizInfoTitleKey : title, QuizInfoType : @(quizType), QuizInfoNumberOfQuestionsKey : numberOfQuestionsStr, QuizInfoSecondsPerQuestionKey : secondsPerQuestionStr, QuizInfoMistakesAllowedKey : mistakesAllowedStr, QuizInfoMaxScoreKey : maxScoreStr, QuizInfoMinScoreKey : minScoreStr };
+}
+
+
+// Return a quiz with the given characteristics
+- (Quiz *)getQuizWithType:(QuizType)quizType andLevel:(NSInteger)quizLevel
+{
+    if (![self isQuizAvailableForQuizLevel:quizLevel forQuizType:quizType]) {
+        return nil;
+    }
+    
     NSUInteger numberOfQuizQuestions = [self numberOfQuestionsForQuizType:quizType forQuizLevel:quizLevel];
     NSArray *quizQuestions = [self quizQuestionsForQuizType:quizType withNumberOfQuizQuestions:numberOfQuizQuestions];
+    
+    // Maybe not enough definitions to initial number request
+    numberOfQuizQuestions = [quizQuestions count];
+    
     NSString *title = [self titleForQuizType:quizType];
     NSUInteger secondsPerQuestions = [self secondsPerQuestionForQuizType:quizType forQuizLevel:quizLevel];
     NSUInteger mistakesAllowed = [self mistakesAllowedForQuizType:quizType forQuizLevel:quizLevel];
@@ -36,29 +70,32 @@
 }
 
 
+// Return a mutable array with quiz questions with the given characteristics
 - (NSMutableArray *)quizQuestionsForQuizType:(QuizType)quizType withNumberOfQuizQuestions:(NSUInteger)numberOfQuizQuestions
 {
+    NSMutableArray *quizQuestions = nil;
+    
     if (quizType == QuizTypeFinancialRatioFormulas) {
 
-        return [self quizQuestionsFromDictionary:FinancialRatiosImageFilenamesDictionary
+        quizQuestions = [self definitionQuizQuestionsFromDictionary:FinancialRatiosImageFilenamesDictionary
                            withNumberOfQuizQuestions:numberOfQuizQuestions
                             withQuizQuestionType:QuizQuestionTypeImageQuestionTextAnswers];
         
     } else if (quizType == QuizTypeFinancialRatioDefinitions) {
         
-        return [self quizQuestionsFromDictionary:FinancialRatiosDefinitionsDictionary
+        quizQuestions = [self definitionQuizQuestionsFromDictionary:FinancialRatiosDefinitionsDictionary
                        withNumberOfQuizQuestions:numberOfQuizQuestions
                             withQuizQuestionType:QuizQuestionTypeTextQuestionTextAnswers];
         
     } else if (quizType == QuizTypeFinancialStatementDefinitions) {
 
-        return [self quizQuestionsFromDictionary:FinancialStatementTermDefinitionsDictionary
+        quizQuestions = [self definitionQuizQuestionsFromDictionary:FinancialStatementTermDefinitionsDictionary
                        withNumberOfQuizQuestions:numberOfQuizQuestions
                             withQuizQuestionType:QuizQuestionTypeTextQuestionTextAnswers];
         
     } else if (quizType == QuizTypeStockMarketDefinitions) {
         
-        return [self quizQuestionsFromDictionary:StockMarketTermDefinitionsDictionary
+        quizQuestions = [self definitionQuizQuestionsFromDictionary:StockMarketTermDefinitionsDictionary
                        withNumberOfQuizQuestions:numberOfQuizQuestions
                             withQuizQuestionType:QuizQuestionTypeTextQuestionTextAnswers];
         
@@ -70,7 +107,7 @@
         [questions addObjectsFromArray:[self quizQuestionsForQuizType:QuizTypeFinancialRatioFormulas
                                             withNumberOfQuizQuestions:numberOfQuizQuestions / 2]];
 
-        return [self randomSortArray:questions];
+        quizQuestions = [self randomSortArray:questions];
 
         
     } else if (quizType == QuizTypeAllDefinitions) {
@@ -87,13 +124,22 @@
         [questions addObjectsFromArray:[self quizQuestionsForQuizType:QuizTypeStockMarketDefinitions
                                             withNumberOfQuizQuestions:numberOfQuizQuestions / 4]];
         
-        return [self randomSortArray:questions];
+        quizQuestions = [self randomSortArray:questions];
+        
+    } else if (quizType == QuizTypeFinancialRatioInterpretations) {
+        
+        quizQuestions = [self interpretationQuizQuestionsWithNumber:numberOfQuizQuestions];
+        
     }
     
-    return nil;
+    return quizQuestions;
 }
 
-- (NSMutableArray *)quizQuestionsFromDictionary:(NSDictionary *)dictionary withNumberOfQuizQuestions:(NSInteger)numberOfQuizQuestions withQuizQuestionType:(QuizQuestionType)quizQuestionType
+
+#pragma mark - Question generation methods
+
+// return a mutable array containing quiz questions of the type term-definition
+- (NSMutableArray *)definitionQuizQuestionsFromDictionary:(NSDictionary *)dictionary withNumberOfQuizQuestions:(NSInteger)numberOfQuizQuestions withQuizQuestionType:(QuizQuestionType)quizQuestionType
 {
     NSMutableArray *questions = [[NSMutableArray alloc] init];
     
@@ -118,7 +164,7 @@
         NSMutableArray *answers = [[NSMutableArray alloc] init];
         
         // Wrong answers
-        for (int i = 0;  i < numberOfAnswers - 1; i++) {
+        for (int i = 0;  i < QuizGeneratorNumberOfAnswers - 1; i++) {
             NSUInteger randomIndex = arc4random() % [keysLeft count];
             NSString *wrongAnswer = keysLeft[randomIndex];
             [answers addObject:wrongAnswer];
@@ -138,23 +184,266 @@
     return questions;
 }
 
-- (NSDictionary *)quizInfoWithType:(QuizType)quizType andLevel:(NSUInteger)quizLevel
+// Return a mutable array containing quiz questions of the type interpretation-ratio
+- (NSMutableArray *)interpretationQuizQuestionsWithNumber:(NSInteger)numberOfQuizQuestions
 {
-    NSString *title = [self titleForQuizType:quizType];
+    NSMutableArray *questions = [[NSMutableArray alloc] init];
     
-    NSString *numberOfQuestionsStr = [NSString stringWithFormat:@"%ld", [self numberOfQuestionsForQuizType:quizType
-                                                                                           forQuizLevel:quizLevel]];
-    NSString *secondsPerQuestionStr = [NSString stringWithFormat:@"%ld", [self secondsPerQuestionForQuizType:quizType
-                                                                                             forQuizLevel:quizLevel]];
-    NSString *mistakesAllowedStr = [NSString stringWithFormat:@"%ld", [self mistakesAllowedForQuizType:quizType
-                                                                                       forQuizLevel:quizLevel]];
-    NSString *maxScoreStr = [NSString stringWithFormat:@"%ld", [self maximumScoreForQuizType:quizType
-                                                                                forQuizLevel:quizLevel]];
-    NSString *minScoreStr = [NSString stringWithFormat:@"%ld", [self minimumScoreForQuizType:quizType
-                                                                                forQuizLevel:quizLevel]];
-    return @{ QuizInfoTitleKey : title, QuizInfoNumberOfQuestionsKey : numberOfQuestionsStr, QuizInfoSecondsPerQuestionKey : secondsPerQuestionStr, QuizInfoMistakesAllowedKey : mistakesAllowedStr, QuizInfoMaxScoreKey : maxScoreStr, QuizInfoMinScoreKey : minScoreStr };
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    numberFormatter.locale = [NSLocale currentLocale];
+    numberFormatter.maximumFractionDigits = 2;
+    numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
+    
+    for (int i = 0; i < numberOfQuizQuestions; i++) {
+
+        NSArray *allKeys = [FinancialRatiosInterpretationsDictionary allKeys];
+        
+        NSString *ratioId = allKeys[arc4random() % [allKeys count]];
+        
+        NSNumber *maxValueNumber = FinancialRatioMaxAndMinValuesDictionary[ratioId][FinancialRatioMaxValueKey];
+        NSNumber *minValueNumber = FinancialRatioMaxAndMinValuesDictionary[ratioId][FinancialRatioMinValueKey];
+        
+        NSNumber *ratioValueNumber = [self randomNumberBetweenMinimumNumber:minValueNumber andMaximumNumber:maxValueNumber];
+        
+        // QUESTION
+        NSString *ratioValueStr = [numberFormatter stringFromNumber:ratioValueNumber];
+        NSString *questionStr = [NSString stringWithFormat:FinancialRatiosInterpretationsDictionary[ratioId], ratioValueStr];
+        // ------------
+        
+        // WRONG ANSWERS
+        NSMutableArray *answers = [[NSMutableArray alloc] init];
+        for (int i = 0; i < QuizGeneratorNumberOfAnswers - 1; i++) {
+            
+            NSString *randomRatioId = allKeys[arc4random() % [allKeys count]];
+            
+            while (randomRatioId == ratioId) {
+                randomRatioId = allKeys[arc4random() % [allKeys count]];
+            }
+            
+            [answers addObject:randomRatioId];
+        }
+        // ------------
+        
+        if (questionStr && answers) {
+            // Add the correct answer at a random index
+            NSInteger randomIndex = arc4random() % ([answers count] + 1);
+            [answers insertObject:ratioId atIndex:randomIndex];
+            
+            QuizQuestion *quizQuestion = [[QuizQuestion alloc] initWithType:QuizQuestionTypeTextQuestionTextAnswers
+                                                               withQuestion:questionStr
+                                                                withAnswers:answers
+                                                     withCorrectAnswerIndex:randomIndex];
+            
+            [questions addObject:quizQuestion];
+        }
+    }
+    
+    return questions;
 }
 
+
+#pragma mark - Quiz characteristics
+
+// Return the maximum level available for the given quizType
+// Return 0 for not implemented quizTypes
+- (NSInteger)maximumLevelForQuizType:(QuizType)quizType
+{
+    for (NSInteger i = 0; i <= QuizGeneratorMaximumQuizLevel; i++) {
+        if (![self isQuizAvailableForQuizLevel:(i + 1) forQuizType:quizType]) {
+            return i;
+        }
+    }
+    
+    return 0;
+}
+
+- (BOOL)isQuizAvailableForQuizLevel:(NSInteger)quizLevel forQuizType:(QuizType)quizType
+{
+    
+    
+    if (quizLevel > QuizGeneratorMaximumQuizLevel) {
+        return NO;
+    }
+    
+    NSUInteger num = [self numberOfQuestionsForQuizType:quizType forQuizLevel:quizLevel];
+    NSUInteger maxNum = 0;
+    
+    if (quizType == QuizTypeFinancialRatioFormulas) {
+        
+        maxNum = [FinancialRatiosImageFilenamesDictionary count];
+        
+    } else if (quizType == QuizTypeFinancialRatioDefinitions) {
+        
+        maxNum = [FinancialRatiosDefinitionsDictionary count];
+        
+    } else if (quizType == QuizTypeFinancialStatementDefinitions) {
+        
+        maxNum = [FinancialStatementTermDefinitionsDictionary count];
+        
+    } else if (quizType == QuizTypeStockMarketDefinitions) {
+        
+        maxNum = [StockMarketTermDefinitionsDictionary count];
+        
+    } else if (quizType == QuizTypeFinancialRatioDefinitionsAndFormulas) {
+        
+        maxNum = [FinancialRatiosImageFilenamesDictionary count] + [FinancialRatiosDefinitionsDictionary count];
+        
+    } else if (quizType == QuizTypeAllDefinitions) {
+        
+        NSUInteger ratioFormulasCount = [FinancialRatiosImageFilenamesDictionary count];
+        NSUInteger ratioDefinitionsCount = [FinancialRatiosDefinitionsDictionary count];
+        NSUInteger financialStatementDefinitionsCount = [FinancialStatementTermDefinitionsDictionary count];
+        NSUInteger stockMarketTermDefinitionsCount = [StockMarketTermDefinitionsDictionary count];
+        
+        maxNum = ratioFormulasCount + ratioDefinitionsCount + financialStatementDefinitionsCount + stockMarketTermDefinitionsCount;
+        
+    } else {
+        maxNum = num;
+    }
+    
+    if (quizType == QuizTypeFinancialRatioComparisons) { // NEED TO BE IMPLEMENTED
+        return NO;
+    }
+    
+    return num <= maxNum;
+}
+
+- (NSUInteger)numberOfQuestionsForQuizType:(QuizType)quizType forQuizLevel:(NSInteger)quizLevel
+{
+    NSUInteger num;
+    
+    switch (quizLevel) {
+        case 1:
+            num = 5;
+            break;
+        case 2:
+            num = 15;
+            break;
+        case 3:
+            num = 30;
+            break;
+        case 4:
+            num = 50;
+            break;
+        case 5:
+            num = 100;
+            break;
+        default:
+            num = 0;
+            break;
+    }
+    
+    return num;
+}
+
+
+- (NSString *)titleForQuizType:(QuizType)quizType
+{
+    if (quizType == QuizTypeAllDefinitions) {
+        return @"All Definitions";
+    }
+    
+    if (quizType == QuizTypeFinancialRatioDefinitionsAndFormulas) {
+        return @"Ratio Def. & Formulas";
+    }
+    
+    if (quizType == QuizTypeFinancialRatioDefinitions) {
+        return @"Ratio Definitions";
+    }
+    
+    if (quizType == QuizTypeFinancialStatementDefinitions) {
+        return @"Financial Statement";
+    }
+    
+    if (quizType == QuizTypeStockMarketDefinitions) {
+        return @"Stock Market";
+    }
+    
+    if (quizType == QuizTypeFinancialRatioFormulas) {
+        return @"Ratio Formulas";
+    }
+    
+    if (quizType == QuizTypeFinancialRatioInterpretations) {
+        return @"Ratio Interpretation";
+    }
+    
+    if (quizType == QuizTypeFinancialRatioComparisons) {
+        return @"Ratio Comparison";
+    }
+    
+    return nil;
+}
+
+
+- (NSUInteger)secondsPerQuestionForQuizType:(QuizType)quizType forQuizLevel:(NSInteger)quizLevel
+{
+    if (quizLevel <= 2) {
+        return 20;
+    } else if (quizLevel <= 4) {
+        return 15;
+    } else if (quizLevel <= 6) {
+        return 10;
+    } else {
+        return 5;
+    }
+}
+
+- (NSUInteger)mistakesAllowedForQuizType:(QuizType)quizType forQuizLevel:(NSInteger)quizLevel
+{
+    NSUInteger mistakes = [self numberOfQuestionsForQuizType:quizType forQuizLevel:quizLevel] / 30;
+    
+    return MIN(mistakes, QuizGeneratorMaximumMistakesAllowed);
+}
+
+- (NSInteger)maximumScoreForQuizType:(QuizType)quizType forQuizLevel:(NSInteger)quizLevel
+{
+    NSUInteger numberOfQuestions = [self numberOfQuestionsForQuizType:quizType forQuizLevel:quizLevel];
+    NSInteger pointsPerQuestion = 0;
+    
+    if (quizType == QuizTypeAllDefinitions) {
+        pointsPerQuestion = 1;
+    }
+    
+    if (quizType == QuizTypeFinancialRatioDefinitionsAndFormulas) {
+        pointsPerQuestion = 1;
+    }
+    
+    if (quizType == QuizTypeFinancialRatioDefinitions) {
+        pointsPerQuestion = 1;
+    }
+    
+    if (quizType == QuizTypeFinancialStatementDefinitions) {
+        pointsPerQuestion = 1;
+    }
+    
+    if (quizType == QuizTypeStockMarketDefinitions) {
+        pointsPerQuestion = 1;
+    }
+    
+    if (quizType == QuizTypeFinancialRatioFormulas) {
+        pointsPerQuestion = 1;
+    }
+    
+    if (quizType == QuizTypeFinancialRatioInterpretations) {
+        pointsPerQuestion = 1;
+    }
+    
+    if (quizType == QuizTypeFinancialRatioComparisons) {
+        pointsPerQuestion = 1;
+    }
+    
+    return numberOfQuestions * pointsPerQuestion;
+}
+
+
+- (NSInteger)minimumScoreForQuizType:(QuizType)quizType forQuizLevel:(NSInteger)quizLevel
+{
+    return 0;
+}
+
+#pragma mark - Helper methods
+
+// Return a mutable array from the elements from the given array randomly sorted.
 - (NSMutableArray *)randomSortArray:(NSArray *)array
 {
     NSMutableArray *mutableArray;
@@ -178,83 +467,13 @@
     return mutableArray;
 }
 
-
-- (NSUInteger)numberOfQuestionsForQuizType:(QuizType)quizType forQuizLevel:(NSUInteger)quizLevel
+// Return a random NSNumber over the interval [minNum, maxNum]
+- (NSNumber *)randomNumberBetweenMinimumNumber:(NSNumber *)minNumber andMaximumNumber:(NSNumber *)maxNumber
 {
-    return quizLevel * 5;
+    double randomValue = drand48(); // Random value [0.0, 1.0]
+    
+    return @(randomValue * ([maxNumber doubleValue] - [minNumber doubleValue]) + [minNumber doubleValue]);
 }
-
-
-- (NSString *)titleForQuizType:(QuizType)quizType
-{
-    if (quizType == QuizTypeAllDefinitions) {
-        return @"Financial Definitions";
-    }
-    
-    if (quizType == QuizTypeFinancialRatioDefinitionsAndFormulas) {
-        return @"Financial Ratios";
-    }
-    
-    if (quizType == QuizTypeFinancialRatioDefinitions) {
-        return @"Ratio Definitions";
-    }
-    
-    if (quizType == QuizTypeFinancialStatementDefinitions) {
-        return @"Financial Statement";
-    }
-    
-    if (quizType == QuizTypeStockMarketDefinitions) {
-        return @"Stock Market";
-    }
-    
-    if (quizType == QuizTypeFinancialRatioFormulas) {
-        return @"Calculation Formulas";
-    }
-    
-    if (quizType == QuizTypeFinancialRatioInterpretations) {
-        return @"Ratio Interpretation";
-    }
-    
-    if (quizType == QuizTypeFinancialRatioComparisons) {
-        return @"Ratio Comparison";
-    }
-    
-    return nil;
-}
-
-
-- (NSUInteger)secondsPerQuestionForQuizType:(QuizType)quizType forQuizLevel:(NSUInteger)quizLevel
-{
-    if (quizType == QuizTypeFinancialRatioComparisons) {
-        return 20;
-    }
-    
-    if (quizType == QuizTypeFinancialRatioInterpretations) {
-        return 20;
-    }
-    
-    return 15;
-}
-
-- (NSUInteger)mistakesAllowedForQuizType:(QuizType)quizType forQuizLevel:(NSUInteger)quizLevel
-{
-    return 3;
-}
-
-- (NSInteger)maximumScoreForQuizType:(QuizType)quizType forQuizLevel:(NSUInteger)quizLevel
-{
-    return quizLevel * 100;
-}
-
-
-- (NSInteger)minimumScoreForQuizType:(QuizType)quizType forQuizLevel:(NSUInteger)quizLevel
-{
-    return 0;
-}
-
-
-
-
 
 
 

@@ -13,7 +13,7 @@
 @interface Quiz : NSObject
 
 typedef enum : NSInteger {
-    QuizTypeFinancialRatioDefinitions,
+    QuizTypeFinancialRatioDefinitions = 0,
     QuizTypeFinancialRatioFormulas,
     QuizTypeFinancialRatioDefinitionsAndFormulas,
     QuizTypeFinancialStatementDefinitions,
@@ -21,6 +21,8 @@ typedef enum : NSInteger {
     QuizTypeAllDefinitions,
     QuizTypeFinancialRatioInterpretations,
     QuizTypeFinancialRatioComparisons,
+    
+    QuizTypeCount // This is the number of QuizTypes in the enum 
 } QuizType;
 
 @property (copy, nonatomic, readonly) NSString *title;

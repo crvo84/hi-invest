@@ -15,6 +15,7 @@
 
 @property (nonatomic, readwrite) NSInteger userLevel;
 @property (strong, nonatomic, readwrite) InvestingGame *currentInvestingGame;
+@property (strong, nonatomic) NSMutableDictionary *currentQuizLevels; // @{ @"QuizType" : @(Current Level) }
 
 @end
 
@@ -29,6 +30,31 @@
     }
     
     return self;
+}
+
+#pragma mark - Quizzes
+
+- (void)increaseQuizLevelForQuizType:(QuizType)quizType
+{
+    NSInteger previousQuizLevel = [self currentQuizLevelForQuizType:quizType];
+    
+    NSString *quizTypeAsStr = [NSString stringWithFormat:@"%ld", (long)quizType];
+    
+    self.currentQuizLevels[quizTypeAsStr] = @(++previousQuizLevel);
+}
+
+// Return the current (Unfinished quiz level) for the given quiz type
+// Return 1 f there is no record for the given quiz type
+- (NSInteger)currentQuizLevelForQuizType:(QuizType)quizType
+{
+    NSString *quizTypeAsStr = [NSString stringWithFormat:@"%ld", (long)quizType];
+    NSNumber *currentLevelNumber = self.currentQuizLevels[quizTypeAsStr];
+    
+    if (currentLevelNumber) {
+        return [currentLevelNumber integerValue];
+    }
+    
+    return 1;
 }
 
 #pragma mark - Getters
@@ -60,6 +86,28 @@
     
     return _currentInvestingGame;
 }
+
+- (NSMutableDictionary *)currentQuizLevels
+{
+    if (!_currentQuizLevels) {
+        // Previous user? Load existing info
+        
+        // New user?...
+        _currentQuizLevels = [[NSMutableDictionary alloc] init];
+    }
+    
+    return _currentQuizLevels;
+}
+
+
+
+
+
+
+
+
+
+
 
 
 @end

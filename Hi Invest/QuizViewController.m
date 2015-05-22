@@ -9,17 +9,24 @@
 #import "QuizViewController.h"
 #import "DefaultColors.h"
 #import "QuizQuestion.h"
-#import "Quiz.h"
 
 @interface QuizViewController ()
 
+@property (strong, nonatomic) QuizQuestion *currentQuizQuestion;
+// Initial Subview Outlets
+@property (weak, nonatomic) IBOutlet UIView *initialSubview;
+@property (weak, nonatomic) IBOutlet UILabel *initialInfoLabel;
+@property (weak, nonatomic) IBOutlet UILabel *initialCountdownLabel;
+// Final Subview Outlets
+@property (weak, nonatomic) IBOutlet UIView *finalSubview;
+@property (weak, nonatomic) IBOutlet UIButton *finalSubviewButton;
+// Quiz Outlets
+@property (weak, nonatomic) IBOutlet UIView *timerView;
 @property (strong, nonatomic) IBOutletCollection(UIImageView) NSArray *mistakeCountImages;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *questionLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *questionImageView;
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *answerButtons;
-@property (strong, nonatomic) IBOutletCollection(UIImageView) NSArray *answerImageViews;
-@property (strong, nonatomic) QuizQuestion *currentQuizQuestion;
 @property (strong, nonatomic) NSTimer *timer;
 @property (nonatomic) NSUInteger secondsLeft;
 @property (nonatomic) NSUInteger mistakeCount;
@@ -33,61 +40,119 @@
 {
     [super viewDidLoad];
     
-    // Navigation Bar
+    // NAV BAR SETUP
     [self.navigationController.navigationBar setBarTintColor:[[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]]];
     
-    // Answer Buttons
-    for (UIButton *answerButton in self.answerButtons) {
-        answerButton.layer.cornerRadius = 5;
-        answerButton.layer.masksToBounds = YES;
-        answerButton.backgroundColor = [[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:[DefaultColors UIElementsBackgroundAlpha]];
-    }
-    
-    // Mistake Count Images
+    // INITIAL SUBVIEW SETUP
+    self.initialSubview.hidden = NO;
+    self.initialSubview.alpha = 1.0;
+    self.initialSubview.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.90];
+    self.initialInfoLabel.text = [NSString stringWithFormat:@"%lu questions", (unsigned long)[self.quiz.quizQuestions count]];
+    self.initialCountdownLabel.text = @"";
+
+    // QUIZ SETUP
+    // Mistake count
     self.mistakeCount = 0;
     [self updateMistakeCountImages];
-    
-    [self resetAnswerImageViews];
-
-    [self setupUIForQuizQuestion:[self.quiz getNewQuizQuestion]];
+    // Answer Buttons
+    for (UIButton *answerButton in self.answerButtons) {
+        answerButton.layer.cornerRadius = 3;
+        answerButton.layer.masksToBounds = YES;
+        answerButton.backgroundColor = [[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:[DefaultColors UIElementsBackgroundAlpha]];
+        answerButton.titleLabel.minimumScaleFactor = 0.7;
+        answerButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+        answerButton.alpha = 0.0;
+    }
+    // Question views
+    self.questionImageView.alpha = 0.0;
+    self.questionLabel.alpha = 0.0;
 }
 
-- (void)resetAnswerImageViews
+- (void)viewDidAppear:(BOOL)animated
 {
-    for (UIImageView *answerImageView in self.answerImageViews) {
-        answerImageView.alpha = 0.0;
+    [super viewDidAppear:animated];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.6
+                                                  target:self
+                                                selector:@selector(countdownTimerAction)
+                                                userInfo:nil
+                                                 repeats:YES];
+    
+}
+
+- (void)countdownTimerAction
+{
+    if ([self.initialCountdownLabel.text isEqualToString:@""]) {
+        self.initialCountdownLabel.text = @"3";
+        
+    } else {
+        NSInteger currentTime = [self.initialCountdownLabel.text intValue];
+        
+        if (currentTime > 1) {
+            self.initialCountdownLabel.text = [NSString stringWithFormat:@"%ld", (long)--currentTime];
+            
+        } else {
+            [self.timer invalidate];
+            
+            self.initialCountdownLabel.text = @"Go!";
+            
+            [UIView animateWithDuration:0.2 delay:0.5 options:UIViewAnimationOptionTransitionNone animations:^{
+                self.initialSubview.alpha = 0.0;
+            } completion:^(BOOL finished) {
+                self.initialSubview.hidden = YES;
+                [self setupUIForQuizQuestion:[self.quiz getNewQuizQuestion]];
+            }];
+        }
     }
 }
+
 
 - (void)updateMistakeCountImages
 {
-    for (int i = 0; i < [self.mistakeCountImages count]; i++) {
+    // Right-most image has the lowest tag
+    for (NSInteger i = 0 ; i < [self.mistakeCountImages count] ; i++) {
         
         UIImageView *mistakeCountImageView = self.mistakeCountImages[i];
-        mistakeCountImageView.image = [[UIImage imageNamed:@"incorrectB"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         
-        if (i < self.quiz.mistakesAllowed) {
-            mistakeCountImageView.alpha = 1.0;
-            
-        } else {
+        mistakeCountImageView.image = [[UIImage imageNamed:@"ninjaEmoticon"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        mistakeCountImageView.tintColor = [[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:[DefaultColors UIElementsBackgroundAlpha]];
+        
+        if (mistakeCountImageView.tag < self.mistakeCount) {
             mistakeCountImageView.alpha = 0.0;
-        }
-        
-        if (i < self.mistakeCount) {
-            [mistakeCountImageView setTintColor:[UIColor redColor]];
             
         } else {
-            [mistakeCountImageView setTintColor:[UIColor lightGrayColor]];
-            
+            mistakeCountImageView.alpha = 1.0;
         }
     }
 }
+
+// Used only when Quiz was completed successfully.
+- (IBAction)endQuiz:(id)sender
+{
+    [self.timer invalidate];
+}
+
+
 
 - (void)setupUIForQuizQuestion:(QuizQuestion *)quizQuestion
 {
     if (quizQuestion) {
         
-        [self resetAnswerImageViews];
+        for (UIButton *button in self.answerButtons) {
+            button.backgroundColor = [[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:[DefaultColors UIElementsBackgroundAlpha]];
+        }
+        
+        [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionTransitionNone animations:^{
+            self.questionLabel.alpha = 1.0;
+            self.questionImageView.alpha = 1.0;
+            for (UIButton *button in self.answerButtons) {
+                button.alpha = 1.0;
+            }
+        } completion:^(BOOL finished) {
+            for (UIButton *button in self.answerButtons) {
+                button.enabled = YES;
+            }
+        }];
+        
         
         self.currentQuizQuestion = quizQuestion;
         
@@ -120,6 +185,13 @@
                                        selector:@selector(timerAction)
                                        userInfo:nil
                                         repeats:YES];
+        
+        [UIView animateWithDuration:0.1 animations:^{
+            for (UIButton *button in self.answerButtons) {
+                button.enabled = YES;
+                button.alpha = 1.0;
+            }
+        } completion:nil];
     }
 }
 
@@ -143,65 +215,71 @@
 
 - (IBAction)answerButtonPressed:(UIButton *)sender
 {
-    if (!self.currentQuizQuestion) return;
-    
     [self.timer invalidate];
     
-    UIImageView *selectedButtonImageView = self.answerImageViews[sender.tag];
-    UIImage *selectedButtonImage;
-    UIColor *selectedButtonImageColor;
+    if (!self.currentQuizQuestion) return;
     
-    if (sender.tag == self.currentQuizQuestion.correctAnswerIndex) {
+    if (sender.tag != self.currentQuizQuestion.correctAnswerIndex) {
         
-        // Correct Answer
-        selectedButtonImage = [UIImage imageNamed:@"correctB"];
-        selectedButtonImageColor = [UIColor greenColor];
-        
-    } else {
-        
-        // Wrong Answer
-        selectedButtonImage = [UIImage imageNamed:@"incorrectB"];
-        selectedButtonImageColor = [UIColor redColor];
-        
+        // Incorrect Answer
+        sender.backgroundColor = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha:1.0];
         self.mistakeCount++;
         [self updateMistakeCountImages];
-
+        
     }
     
-    selectedButtonImageView.image = [selectedButtonImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    [selectedButtonImageView setTintColor:selectedButtonImageColor];
-    
-    [UIView animateWithDuration:0.5 animations:^{
+    for (UIButton *button in self.answerButtons) {
+        button.enabled = NO;
+        if (button.tag == self.currentQuizQuestion.correctAnswerIndex) {
+            button.backgroundColor = [UIColor colorWithRed:0.0 green:0.60 blue:0.0 alpha:1.0];
+        }
+    }
+
+    [UIView animateWithDuration:0.4 delay:0.5 options:UIViewAnimationOptionTransitionNone animations:^{
         
-        selectedButtonImageView.alpha = 1.0;
+        for (UIButton *button in self.answerButtons) {
+            
+            button.alpha = button.tag == self.currentQuizQuestion.correctAnswerIndex ? 1.0 : 0.0;
+        }
         
     } completion:^(BOOL finished) {
         
-        [self setupUIForQuizQuestion:[self.quiz getNewQuizQuestion]];
+        [UIView animateWithDuration:0.4 delay:0.5 options:UIViewAnimationOptionTransitionNone animations:^{
+            
+            self.questionImageView.alpha = 0.0;
+            self.questionLabel.alpha = 0.0;
+            for (UIButton *button in self.answerButtons) {
+                button.alpha = 0.0;
+            }
+            
+        } completion:^(BOOL finished) {
+            
+            [self setupUIForQuizQuestion:[self.quiz getNewQuizQuestion]];
+        }];
         
     }];
     
 }
+
+#pragma mark - Navigation
 
 - (IBAction)cancelQuiz:(id)sender {
-    
+    // Canceling Quiz
     [self.timer invalidate];
-    
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Quiz canceled"
-                                                                   message:nil
-                                                            preferredStyle:UIAlertControllerStyleAlert];
-    
-    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-        
-        [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-        
-    }];
-    
-    [alert addAction:okAction];
-    
-    [self presentViewController:alert animated:YES completion:nil];
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+
 }
 
+- (IBAction)exitCompletedQuiz:(id)sender
+{
+    [self.timer invalidate];
+    [self performSegueWithIdentifier:@"unwindToQuizSelectionViewController" sender:self];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    [self.timer invalidate];
+}
 
 
 

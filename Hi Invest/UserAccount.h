@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Quiz.h"
 
 @class InvestingGame;
 
@@ -14,5 +15,10 @@
 
 @property (nonatomic, readonly) NSInteger userLevel;
 @property (strong, nonatomic, readonly) InvestingGame *currentInvestingGame;
+
+- (void)increaseQuizLevelForQuizType:(QuizType)quizType;
+
+// Return the current (Unfinished quiz level) for the given quiz type
+- (NSInteger)currentQuizLevelForQuizType:(QuizType)quizType;
 
 @end
