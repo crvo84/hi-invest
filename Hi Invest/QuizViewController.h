@@ -13,5 +13,7 @@
 
 @property (strong, nonatomic) Quiz *quiz;
 @property (nonatomic) QuizType quizType;
+@property (nonatomic) BOOL quizAlreadyDone;
+@property (nonatomic) BOOL succesfulQuiz;
 
 @end

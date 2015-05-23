@@ -11,6 +11,7 @@
 #import "QuizTableViewCell.h"
 #import "QuizGenerator.h"
 #import "UserAccount.h"
+#import "DefaultColors.h"
 #import "Quiz.h"
 
 @interface QuizSelectionViewController () <UITableViewDataSource, UITableViewDelegate>
@@ -21,16 +22,38 @@
 
 @implementation QuizSelectionViewController
 
-- (void)viewWillAppear:(BOOL)animated
+
+- (void)viewDidAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
+    [super viewDidAppear:animated];
     
-    [self updateUI];
+    [self updateUI]; // Done here for progress bar animation
 }
 
 - (void)updateUI
 {
-    [self.tableView reloadData];
+    for (int i = 0; i < QuizTypeCount; i++) {
+        
+        QuizGenerator *quizGenerator = [[QuizGenerator alloc] init];
+        NSInteger quizTypeLevel = [self.userAccount currentQuizLevelForQuizType:i];
+        NSInteger maxQuizTypeLevel = [quizGenerator maximumLevelForQuizType:i];
+        
+        QuizTableViewCell *quizCell = (QuizTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        
+        if (quizTypeLevel <= maxQuizTypeLevel) {
+            
+            quizCell.accessoryType = UITableViewCellAccessoryNone;
+            quizCell.progressView.hidden = NO;
+            [quizCell.progressView setProgress:((CGFloat)quizTypeLevel - 1) / maxQuizTypeLevel animated:YES];
+            
+        } else {
+            
+            quizCell.accessoryType = UITableViewCellAccessoryCheckmark;
+            quizCell.progressView.hidden = YES;
+        }
+        
+
+    }
 }
 
 #pragma mark - Quizzes Info
@@ -55,26 +78,11 @@
 {
     QuizTableViewCell *quizCell = [self.tableView dequeueReusableCellWithIdentifier:@"Quiz Cell"];
     
-    QuizType quizType = indexPath.row;
-    NSInteger quizTypeLevel = [self.userAccount currentQuizLevelForQuizType:quizType];
-    
     QuizGenerator *quizGenerator = [[QuizGenerator alloc] init];
-    NSDictionary *quizInfo = [quizGenerator quizInfoWithType:quizType andLevel:quizTypeLevel];
     
-    if (quizInfo) {
-        
-        quizCell.accessoryType = UITableViewCellAccessoryNone;
-        quizCell.titleLabel.text = quizInfo[QuizInfoTitleKey];
-        quizCell.levelLabel.text = [NSString stringWithFormat:@"Level %ld", (long)quizTypeLevel];
-        quizCell.numberOfQuestionsLabel.hidden = NO;
-  
-    } else { // No new level available
-        
-        quizCell.levelLabel.hidden = YES;
-        quizCell.accessoryType = UITableViewCellAccessoryCheckmark;
-        quizCell.titleLabel.text = [quizGenerator titleForQuizType:quizType];
-        
-    }
+    QuizType quizType = indexPath.row;
+    
+    quizCell.titleLabel.text = [quizGenerator titleForQuizType:quizType];
     
     return quizCell;
 }
@@ -115,24 +123,30 @@
             // CREATE QUIZ WITH OPTIONS GOT FROM ROW SELECTED
             QuizGenerator *quizGenerator = [[QuizGenerator alloc] init];
             QuizType quizType = indexPath.row;
+            
             NSInteger quizTypeLevel = [self.userAccount currentQuizLevelForQuizType:quizType];
             NSInteger maxQuizTypeLevelAvailable = [quizGenerator maximumLevelForQuizType:quizType];
+            
+            BOOL quizAlreadyDone = NO;
+            
             if (quizTypeLevel > maxQuizTypeLevelAvailable) {
                 quizTypeLevel = maxQuizTypeLevelAvailable;
+                quizAlreadyDone = YES;
             }
             
             Quiz *quiz = [quizGenerator getQuizWithType:quizType andLevel:quizTypeLevel];
             
-            [self prepareQuizViewController:(QuizViewController *)viewController withQuiz:quiz withQuizType:quizType];
+            [self prepareQuizViewController:(QuizViewController *)viewController withQuiz:quiz quizType:quizType quizAlreadyDone:quizAlreadyDone];
         }
     }
 }
 
 - (void)prepareQuizViewController:(QuizViewController *)quizViewController withQuiz:(Quiz *)quiz
-                     withQuizType:(QuizType)quizType
+                         quizType:(QuizType)quizType quizAlreadyDone:(BOOL)quizAlreadyDone
 {
     quizViewController.quiz = quiz;
     quizViewController.quizType = quizType;
+    quizViewController.quizAlreadyDone = quizAlreadyDone;
     quizViewController.title = [NSString stringWithFormat:@"QUIZ  |  %@", quiz.title];
 }
 
@@ -143,7 +157,9 @@
         UIViewController *viewController = ((QuizViewController *)unwindSegue.sourceViewController);
         if ([viewController isKindOfClass:[QuizViewController class]]) {
             QuizViewController *quizViewController = (QuizViewController *)viewController;
-            [self.userAccount increaseQuizLevelForQuizType:quizViewController.quizType];
+            if (quizViewController.succesfulQuiz) {
+                [self.userAccount increaseQuizLevelForQuizType:quizViewController.quizType];
+            }
         }
     }
 }

@@ -10,6 +10,7 @@
 #import "UserDefaultsKeys.h"
 #import "InvestingGame.h"
 #import "ManagedObjectContextCreator.h"
+#import "Quiz.h"
 
 @interface UserAccount ()
 
@@ -32,23 +33,35 @@
     return self;
 }
 
+- (NSInteger)userLevel
+{
+    NSInteger quizzesSum = 0;
+    for (NSString *key in self.currentQuizLevels) {
+        
+        NSNumber *quizLevel = self.currentQuizLevels[key];
+        if (quizLevel) {
+            quizzesSum += [quizLevel integerValue] - 1;
+        }
+    }
+    
+//    return quizzesSum / QuizTypeCount + 1;
+    return quizzesSum / 7 + 1; // PROVISIONAL. NEED TO IMPLEMENT QuizType Comparisons
+}
+
 #pragma mark - Quizzes
 
 - (void)increaseQuizLevelForQuizType:(QuizType)quizType
 {
     NSInteger previousQuizLevel = [self currentQuizLevelForQuizType:quizType];
     
-    NSString *quizTypeAsStr = [NSString stringWithFormat:@"%ld", (long)quizType];
-    
-    self.currentQuizLevels[quizTypeAsStr] = @(++previousQuizLevel);
+    self.currentQuizLevels[[self stringKeyForQuizType:quizType]] = @(++previousQuizLevel);
 }
 
 // Return the current (Unfinished quiz level) for the given quiz type
 // Return 1 f there is no record for the given quiz type
 - (NSInteger)currentQuizLevelForQuizType:(QuizType)quizType
 {
-    NSString *quizTypeAsStr = [NSString stringWithFormat:@"%ld", (long)quizType];
-    NSNumber *currentLevelNumber = self.currentQuizLevels[quizTypeAsStr];
+    NSNumber *currentLevelNumber = self.currentQuizLevels[[self stringKeyForQuizType:quizType]];
     
     if (currentLevelNumber) {
         return [currentLevelNumber integerValue];
@@ -56,6 +69,12 @@
     
     return 1;
 }
+
+- (NSString *)stringKeyForQuizType:(QuizType)quizType
+{
+    return [NSString stringWithFormat:@"%ld", (long)quizType];
+}
+
 
 #pragma mark - Getters
 

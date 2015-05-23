@@ -7,8 +7,10 @@
 //
 
 #import "InvestingGame.h"
+
 #import "ManagedObjectContextCreator.h"
 #import "FinancialDatabaseManager.h"
+#import "PortfolioTransaction.h"
 #import "UserDefaultsKeys.h"
 #import "Scenario.h"
 #import "PortfolioPicture.h"
@@ -35,6 +37,8 @@
 
 @implementation InvestingGame
 
+#define InvestingGameDefaultTransactionFeeRate 0.005
+
 // Designated Initializer
 // Return a initialized InvestingGame with initial cash and initial date
 // If portfolioPictures parameter is given as nil, then is a new game.
@@ -51,6 +55,7 @@
         self.tickersOfCompaniesAvailable = [scenario.companyTickersStr componentsSeparatedByString:@","];
         self.initialDate = scenario.initialScenarioDate;
         self.endDate = scenario.endingScenarioDate;
+        self.transactionFeeRate = InvestingGameDefaultTransactionFeeRate;
         self.managedObjectContext = scenario.managedObjectContext;
         
         if (portfolioPictures && [portfolioPictures count] > 0) {
@@ -300,49 +305,6 @@
         }
 }
 
-//// Return a NSArray of NSNumber containing double with the total value of the portfolio since day 1 until (including) the current game date. Adds one NSNumber for each valid day (not including weekends or bank holidays).
-//- (NSArray *)getPortfolioHistoricalValues
-//{
-//    NSMutableArray *historicalValues = [[NSMutableArray alloc] init];
-//    
-//    for (int i = 0; i < [self.portfolioPictures count]; i++) {
-//        
-//        PortfolioPicture *portfolioPicture = self.portfolioPictures[i];
-//        NSDate *date = portfolioPicture.date;
-//        
-//        PortfolioPicture *nextPortfolioPicture;
-//        NSDate *limitDate;
-//        
-//        if (i < [self.portfolioPictures count] - 1) {
-//            
-//            nextPortfolioPicture = self.portfolioPictures[i + 1];
-//            limitDate = nextPortfolioPicture.date;
-//            
-//        } else {
-//            
-//            nextPortfolioPicture = nil;
-//            limitDate = self.currentDate;
-//            
-//        }
-//        
-//        while ([limitDate timeIntervalSinceDate:date] > (60*60*12)) {
-//            
-//            NSNumber *porfolioValueNumber = [self valueFromPortfolioPicture:portfolioPicture atDate:date withManagedObjectContext:self.managedObjectContext];
-//            
-//            if (porfolioValueNumber) { // Check for weekends and bank holidays when there are no prices available
-//                [historicalValues addObject:porfolioValueNumber];
-//            }
-//            
-//            date = [FinancialDatabaseManager dateWithTimeDifferenceinYears:0 months:0 days:1 hours:0 fromDate:date];
-//        }
-//    }
-//    
-//    // For the current date, there will be no PortfolioPictures taken then, so it adds the current game netWorth to the array
-//    [historicalValues addObject:@([self currentNetWorth])];
-//    
-//    return historicalValues;
-//}
-
 
 // Return a NSNumber with a double of the portfolio value with the given PortfolioPicture at the given date.
 // If the date parameter is nil, it uses the PortfolioPicture date.
@@ -378,6 +340,28 @@
     
     return portfolioHistoricalValue;
 }
+
+// Return a NSArray of PortfolioTransaction objects
+// If initialDate is nil, the earliest game date will be used.
+// If finalDate is nil, the current game date will be used.
+// At least one transactionType must be given.
+- (NSArray *)portfolioTransactionHistoryFromDate:(NSDate *)initialDate toDate:(NSDate *)finalDate withTransactionTypes:(PortfolioTransactionType)transactionType
+{
+    NSMutableArray *transactions = [[NSMutableArray alloc] init];
+    
+    if (!initialDate) {
+        initialDate = self.initialDate;
+    }
+    
+    if (!finalDate) {
+        finalDate = self.currentDate;
+    }
+    
+    
+    return transactions;
+}
+
+
 
 #pragma mark - Getters
 

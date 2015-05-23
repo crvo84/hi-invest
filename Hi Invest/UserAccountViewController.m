@@ -11,14 +11,18 @@
 
 @interface UserAccountViewController ()
 
+@property (weak, nonatomic) IBOutlet UILabel *userLevelLabel;
+
 @end
 
 @implementation UserAccountViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    self.userLevelLabel.text = [NSString stringWithFormat:@"Ninja Level: %ld", [self.userAccount userLevel]];
 }
+
 
 
 @end

@@ -21,4 +21,7 @@
 // Return the current (Unfinished quiz level) for the given quiz type
 - (NSInteger)currentQuizLevelForQuizType:(QuizType)quizType;
 
+// Return the user ninja level (1 is the lowest) depending on answered quizzes
+- (NSInteger)userLevel;
+
 @end

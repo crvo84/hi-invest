@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "PortfolioTransaction.h"
 #import "Portfolio.h"
 
 @class Scenario;
@@ -22,6 +23,7 @@
 @property (strong, nonatomic, readonly) NSDate *endDate;
 @property (strong, nonatomic, readonly) NSDate *currentDate;
 @property (strong, nonatomic, readonly) NSDictionary *currentPrices; // @{ticker : Price}
+@property (nonatomic) double transactionFeeRate;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic, readonly) NSMutableArray *portfolioPictures; // of PortfolioPicture
 @property (strong, nonatomic, readonly) NSMutableArray *portfolioHistoricalValues; // of PortfolioHistoricalValue
@@ -60,12 +62,15 @@
 // Return an NSArray with the ticker of the companies ordered by weight in portfolio with current prices.
 - (NSArray *)tickersOfCompaniesInPortfolioOrderedByWeightInDescendingOrder:(BOOL)descendingOrder;
 
-// Returns a NSMutableArray of NSDictionary containing Company info: ticker (NSString), price (Price), sortingValue (NSNumber)
+// Return a NSMutableArray of NSDictionary containing Company info: ticker (NSString), price (Price), sortingValue (NSNumber)
 // If parameter tickers is nil, return information of all available companies. If parameter sortingValueId is nil, the result wont contain sorting value information. Includes the market average with mkt name as ticker (if apply)
 - (NSMutableArray *)informationOfCompanies:(NSArray *)tickers withSortingValueId:(NSString *)sortingValueId;
 
-// Return a NSArray of NSNumber containing double with the total value of the portfolio since day 1 until (including) the current game date. Adds one NSNumber for each valid day (not including weekends or bank holidays).
-//- (NSArray *)getPortfolioHistoricalValues;
+// Return a NSArray of PortfolioTransaction objects
+// If initialDate is nil, the earliest game date will be used.
+// If finalDate is nil, the current game date will be used.
+// At least one transactionType must be given.
+- (NSArray *)portfolioTransactionHistoryFromDate:(NSDate *)initialDate toDate:(NSDate *)finalDate withTransactionTypes:(PortfolioTransactionType)transactionType;
 
 
 

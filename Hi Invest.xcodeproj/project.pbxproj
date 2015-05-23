@@ -68,6 +68,8 @@
 		73D7C3731B0A7E0700653A4C /* SignupLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D7C3721B0A7E0700653A4C /* SignupLoginViewController.m */; };
 		73D7C3861B0AD86C00653A4C /* SimulatorTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D7C3851B0AD86C00653A4C /* SimulatorTabBarController.m */; };
 		73D7C38B1B0AFB2800653A4C /* QuizTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D7C3891B0AFB2800653A4C /* QuizTableViewCell.m */; };
+		73E966D21B10EA5600431AAC /* PortfolioActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73E966D11B10EA5600431AAC /* PortfolioActivityViewController.m */; };
+		73E966D51B10F02A00431AAC /* PortfolioTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 73E966D41B10F02A00431AAC /* PortfolioTransaction.m */; };
 		73EEC57C1B040E9300FAA1FE /* UserAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 73EEC57B1B040E9300FAA1FE /* UserAccount.m */; };
 		73EEC5801B042FEA00FAA1FE /* Quiz.m in Sources */ = {isa = PBXBuildFile; fileRef = 73EEC57F1B042FEA00FAA1FE /* Quiz.m */; };
 		73EEC5861B0449EE00FAA1FE /* QuizGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 73EEC5851B0449EE00FAA1FE /* QuizGenerator.m */; };
@@ -208,6 +210,10 @@
 		73D7C3851B0AD86C00653A4C /* SimulatorTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimulatorTabBarController.m; sourceTree = "<group>"; };
 		73D7C3881B0AFB2800653A4C /* QuizTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuizTableViewCell.h; sourceTree = "<group>"; };
 		73D7C3891B0AFB2800653A4C /* QuizTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuizTableViewCell.m; sourceTree = "<group>"; };
+		73E966D01B10EA5600431AAC /* PortfolioActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PortfolioActivityViewController.h; sourceTree = "<group>"; };
+		73E966D11B10EA5600431AAC /* PortfolioActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PortfolioActivityViewController.m; sourceTree = "<group>"; };
+		73E966D31B10F02A00431AAC /* PortfolioTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PortfolioTransaction.h; sourceTree = "<group>"; };
+		73E966D41B10F02A00431AAC /* PortfolioTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PortfolioTransaction.m; sourceTree = "<group>"; };
 		73EEC5761B04038900FAA1FE /* GlossaryKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GlossaryKeys.h; sourceTree = "<group>"; };
 		73EEC57A1B040E9300FAA1FE /* UserAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserAccount.h; sourceTree = "<group>"; };
 		73EEC57B1B040E9300FAA1FE /* UserAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserAccount.m; sourceTree = "<group>"; };
@@ -492,6 +498,8 @@
 				739ABD5F1B01662E009EFC0E /* PortfolioPicture.m */,
 				739ABD941B01674E009EFC0E /* StockInvestment.h */,
 				739ABD951B01674E009EFC0E /* StockInvestment.m */,
+				73E966D31B10F02A00431AAC /* PortfolioTransaction.h */,
+				73E966D41B10F02A00431AAC /* PortfolioTransaction.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -560,6 +568,8 @@
 				739ABD671B016656009EFC0E /* PortfolioStockInfoViewController.m */,
 				739ABD681B016656009EFC0E /* PortfolioTableViewController.h */,
 				739ABD691B016656009EFC0E /* PortfolioTableViewController.m */,
+				73E966D01B10EA5600431AAC /* PortfolioActivityViewController.h */,
+				73E966D11B10EA5600431AAC /* PortfolioActivityViewController.m */,
 			);
 			name = Portfolio;
 			sourceTree = "<group>";
@@ -755,6 +765,7 @@
 				739ABD6A1B016656009EFC0E /* PortfolioPieChartViewController.m in Sources */,
 				739ABD0F1B0163EF009EFC0E /* XYPieChart.m in Sources */,
 				73EEC5861B0449EE00FAA1FE /* QuizGenerator.m in Sources */,
+				73E966D21B10EA5600431AAC /* PortfolioActivityViewController.m in Sources */,
 				739ABD601B01662E009EFC0E /* PortfolioPicture.m in Sources */,
 				739ABD811B0166B9009EFC0E /* Report.m in Sources */,
 				739ABD321B0164F8009EFC0E /* DefinitionViewController.m in Sources */,
@@ -780,6 +791,7 @@
 				739ABCB61B0162F6009EFC0E /* main.m in Sources */,
 				739ABD061B0163EF009EFC0E /* KSMHand.m in Sources */,
 				739ABD081B0163EF009EFC0E /* BEMCircle.m in Sources */,
+				73E966D51B10F02A00431AAC /* PortfolioTransaction.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

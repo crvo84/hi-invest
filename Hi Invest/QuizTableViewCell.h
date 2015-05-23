@@ -16,5 +16,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *mistakesAllowedLabel;
 @property (weak, nonatomic) IBOutlet UILabel *secondsPerQuestionLabel;
 @property (weak, nonatomic) IBOutlet UILabel *levelLabel;
+@property (weak, nonatomic) IBOutlet UIProgressView *progressView;
 
 @end

@@ -14,22 +14,28 @@
 
 @property (strong, nonatomic) QuizQuestion *currentQuizQuestion;
 // Initial Subview Outlets
+@property (strong, nonatomic) NSTimer *timer;
 @property (weak, nonatomic) IBOutlet UIView *initialSubview;
 @property (weak, nonatomic) IBOutlet UILabel *initialInfoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *initialCountdownLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *quizAlreadyDoneImageView;
 // Final Subview Outlets
 @property (weak, nonatomic) IBOutlet UIView *finalSubview;
+@property (weak, nonatomic) IBOutlet UILabel *finalLabel;
 @property (weak, nonatomic) IBOutlet UIButton *finalSubviewButton;
+@property (weak, nonatomic) IBOutlet UIImageView *finalImageView;
 // Quiz Outlets
-@property (weak, nonatomic) IBOutlet UIView *timerView;
-@property (strong, nonatomic) IBOutletCollection(UIImageView) NSArray *mistakeCountImages;
-@property (weak, nonatomic) IBOutlet UILabel *timeLabel;
+@property (weak, nonatomic) IBOutlet UIView *timerBarSuperview;
+@property (strong, nonatomic) UIView *timerBarView;
+@property (weak, nonatomic) IBOutlet UIImageView *mistakesLeftImageView;
+@property (weak, nonatomic) IBOutlet UILabel *mistakesLeftLabel;
+@property (weak, nonatomic) IBOutlet UILabel *questionCounterLabel;
 @property (weak, nonatomic) IBOutlet UILabel *questionLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *questionImageView;
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *answerButtons;
-@property (strong, nonatomic) NSTimer *timer;
-@property (nonatomic) NSUInteger secondsLeft;
 @property (nonatomic) NSUInteger mistakeCount;
+// Quiz View Controller Dismissing
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelQuizBarButtonItem;
 
 @end
 
@@ -49,23 +55,45 @@
     self.initialSubview.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.90];
     self.initialInfoLabel.text = [NSString stringWithFormat:@"%lu questions", (unsigned long)[self.quiz.quizQuestions count]];
     self.initialCountdownLabel.text = @"";
+    if (self.quizAlreadyDone) {
+        self.quizAlreadyDoneImageView.image = [[UIImage imageNamed:@"correctB"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        self.quizAlreadyDoneImageView.tintColor = [UIColor colorWithRed:0.0 green:0.5 blue:0.0 alpha:1.0];
+        self.quizAlreadyDoneImageView.hidden = NO;
+    } else {
+        self.quizAlreadyDoneImageView.hidden = YES;
+    }
 
     // QUIZ SETUP
+    
+    self.succesfulQuiz = NO;
+    
     // Mistake count
     self.mistakeCount = 0;
-    [self updateMistakeCountImages];
+    self.mistakesLeftImageView.image = [[UIImage imageNamed:@"ninjaEmoticon"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    self.mistakesLeftImageView.tintColor = [[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:[DefaultColors UIElementsBackgroundAlpha]];
+    [self updateMistakesLeft];
+    
     // Answer Buttons
     for (UIButton *answerButton in self.answerButtons) {
+        
         answerButton.layer.cornerRadius = 3;
         answerButton.layer.masksToBounds = YES;
-        answerButton.backgroundColor = [[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:[DefaultColors UIElementsBackgroundAlpha]];
         answerButton.titleLabel.minimumScaleFactor = 0.7;
         answerButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+        
         answerButton.alpha = 0.0;
+        answerButton.enabled = NO;
     }
+    
     // Question views
+    [self updateQuestionCounter];
     self.questionImageView.alpha = 0.0;
     self.questionLabel.alpha = 0.0;
+    
+    // FINAL SUBVIEW SETUP
+    self.initialSubview.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.90];
+    self.finalSubview.hidden = YES;
+    self.finalSubview.alpha = 0.0;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -105,67 +133,41 @@
     }
 }
 
-
-- (void)updateMistakeCountImages
+- (void)updateMistakesLeft
 {
-    // Right-most image has the lowest tag
-    for (NSInteger i = 0 ; i < [self.mistakeCountImages count] ; i++) {
-        
-        UIImageView *mistakeCountImageView = self.mistakeCountImages[i];
-        
-        mistakeCountImageView.image = [[UIImage imageNamed:@"ninjaEmoticon"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-        mistakeCountImageView.tintColor = [[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:[DefaultColors UIElementsBackgroundAlpha]];
-        
-        if (mistakeCountImageView.tag < self.mistakeCount) {
-            mistakeCountImageView.alpha = 0.0;
-            
-        } else {
-            mistakeCountImageView.alpha = 1.0;
-        }
-    }
+    self.mistakesLeftLabel.text = [NSString stringWithFormat:@"x%ld", (long)(self.quiz.mistakesAllowed - self.mistakeCount)];
 }
 
-// Used only when Quiz was completed successfully.
-- (IBAction)endQuiz:(id)sender
+- (void)updateQuestionCounter
 {
-    [self.timer invalidate];
+    self.questionCounterLabel.text = [NSString stringWithFormat:@"%ld/%ld", (long)self.quiz.nextQuizQuestionIndex, [self.quiz.quizQuestions count]];
 }
 
-
-
+// Pre condition: All Answer UIButtons and questions UIViews must have alpha = 0.0. UIButtons must also be disabled
 - (void)setupUIForQuizQuestion:(QuizQuestion *)quizQuestion
 {
-    if (quizQuestion) {
+    if (quizQuestion && self.mistakeCount <= self.quiz.mistakesAllowed) {
+        
+        [self updateQuestionCounter];
+        
+        self.currentQuizQuestion = quizQuestion;
         
         for (UIButton *button in self.answerButtons) {
             button.backgroundColor = [[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:[DefaultColors UIElementsBackgroundAlpha]];
         }
         
-        [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionTransitionNone animations:^{
-            self.questionLabel.alpha = 1.0;
-            self.questionImageView.alpha = 1.0;
-            for (UIButton *button in self.answerButtons) {
-                button.alpha = 1.0;
-            }
-        } completion:^(BOOL finished) {
-            for (UIButton *button in self.answerButtons) {
-                button.enabled = YES;
-            }
-        }];
-        
-        
-        self.currentQuizQuestion = quizQuestion;
-        
+        BOOL showQuestionLabel;
+        BOOL showQuestionImageView;
         if (quizQuestion.questionType == QuizQuestionTypeImageQuestionImageAnswers || quizQuestion.questionType == QuizQuestionTypeImageQuestionTextAnswers) {
             
-            self.questionLabel.alpha = 0.0;
-            self.questionImageView.alpha = 1.0;
+            showQuestionLabel = NO;
+            showQuestionImageView = YES;
             self.questionImageView.image = [[UIImage imageNamed:quizQuestion.question] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             
         } else {
             
-            self.questionImageView.alpha = 0.0;
-            self.questionLabel.alpha = 1.0;
+            showQuestionLabel = YES;
+            showQuestionImageView = NO;
             self.questionLabel.text = quizQuestion.question;
             
         }
@@ -177,65 +179,75 @@
                 [answerButton setTitle:quizQuestion.answers[i] forState:UIControlStateNormal];
             }
         }
-
-        self.secondsLeft = self.quiz.secondsPerQuestion;
-        self.timeLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.secondsLeft];
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0
-                                         target:self
-                                       selector:@selector(timerAction)
-                                       userInfo:nil
-                                        repeats:YES];
         
-        [UIView animateWithDuration:0.1 animations:^{
+        //Create Timer Bar
+        self.timerBarView = [[UIView alloc] initWithFrame:self.timerBarSuperview.bounds];
+        self.timerBarView.backgroundColor = [[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:[DefaultColors UIElementsBackgroundAlpha]];
+        self.timerBarView.alpha = 0.0;
+        [self.timerBarSuperview addSubview:self.timerBarView];
+        
+        [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionTransitionNone animations:^{
+            self.questionLabel.alpha = showQuestionLabel ? 1.0 : 0.0;
+            self.questionImageView.alpha = showQuestionImageView ? 1.0 : 0.0;
             for (UIButton *button in self.answerButtons) {
-                button.enabled = YES;
                 button.alpha = 1.0;
             }
-        } completion:nil];
-    }
-}
-
-- (void)timerAction
-{
-    if (self.secondsLeft == 0) {
+            self.timerBarView.alpha = 1.0;
+        } completion:^(BOOL finished) {
+            for (UIButton *button in self.answerButtons) {
+                button.enabled = YES;
+            }
+        }];
         
-        [self.timer invalidate];
-        
-        self.mistakeCount++;
-        [self updateMistakeCountImages];
-        
-        [self setupUIForQuizQuestion:[self.quiz getNewQuizQuestion]];
-        
+        [UIView animateWithDuration:self.quiz.secondsPerQuestion delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+            
+                self.timerBarView.frame = CGRectMake(self.timerBarSuperview.bounds.origin.x, self.timerBarSuperview.bounds.origin.y, 0.0, self.timerBarSuperview.bounds.size.height);
+            
+        } completion:^(BOOL finished) {
+            
+            if (finished) { // Only if animation finished (if time is out only)
+                [self.timerBarView removeFromSuperview];
+                self.timerBarView = nil;
+                
+                self.mistakeCount++;
+                [self updateMistakesLeft];
+                
+                [self setupUIForQuizQuestion:[self.quiz getNewQuizQuestion]];
+            }
+        }];
     } else {
-
-        self.timeLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)--self.secondsLeft];
+        // Finished game
+        self.succesfulQuiz = self.mistakeCount <= self.quiz.mistakesAllowed;
+        [self finishQuiz];
     }
-    
 }
 
 - (IBAction)answerButtonPressed:(UIButton *)sender
 {
-    [self.timer invalidate];
-    
     if (!self.currentQuizQuestion) return;
+    
+    // Cancel timer Bar. (To remove view and cancel its animation completion block)
+    [self.timerBarView.layer removeAllAnimations];
+    [self.timerBarView removeFromSuperview];
+    self.timerBarView = nil;
     
     if (sender.tag != self.currentQuizQuestion.correctAnswerIndex) {
         
         // Incorrect Answer
-        sender.backgroundColor = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha:1.0];
+        sender.backgroundColor = [UIColor colorWithRed:0.5 green:0.0 blue:0.0 alpha:1.0];
         self.mistakeCount++;
-        [self updateMistakeCountImages];
+        [self updateMistakesLeft];
         
     }
     
     for (UIButton *button in self.answerButtons) {
         button.enabled = NO;
         if (button.tag == self.currentQuizQuestion.correctAnswerIndex) {
-            button.backgroundColor = [UIColor colorWithRed:0.0 green:0.60 blue:0.0 alpha:1.0];
+            button.backgroundColor = [UIColor colorWithRed:0.0 green:0.5 blue:0.0 alpha:1.0];
         }
     }
 
-    [UIView animateWithDuration:0.4 delay:0.5 options:UIViewAnimationOptionTransitionNone animations:^{
+    [UIView animateWithDuration:0.3 delay:0.3 options:UIViewAnimationOptionTransitionNone animations:^{
         
         for (UIButton *button in self.answerButtons) {
             
@@ -244,7 +256,7 @@
         
     } completion:^(BOOL finished) {
         
-        [UIView animateWithDuration:0.4 delay:0.5 options:UIViewAnimationOptionTransitionNone animations:^{
+        [UIView animateWithDuration:0.4 delay:0.7 options:UIViewAnimationOptionTransitionNone animations:^{
             
             self.questionImageView.alpha = 0.0;
             self.questionLabel.alpha = 0.0;
@@ -258,6 +270,35 @@
         }];
         
     }];
+}
+
+// Pre condition: finalSubview must be set to hidden and alpha = 0.0. Final subview button disabled
+- (void)finishQuiz
+{
+    self.cancelQuizBarButtonItem.enabled = NO;
+    
+    self.finalSubview.hidden = NO;
+    
+    // Final Label
+    self.finalLabel.text = self.succesfulQuiz ? @"Well done!" : @"Maybe next time!";
+    
+    // Final Image
+    UIImage *finalImage;
+    UIColor *finalImageColor;
+    if (self.succesfulQuiz) {
+        finalImage = [[UIImage imageNamed:@"correctB"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        finalImageColor = [UIColor colorWithRed:0.0 green:0.5 blue:0.0 alpha:1.0];
+    } else {
+        finalImage = [[UIImage imageNamed:@"incorrectB"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        finalImageColor = [UIColor colorWithRed:0.5 green:0.0 blue:0.0 alpha:1.0];
+    }
+    self.finalImageView.image = finalImage;
+    self.finalImageView.tintColor = finalImageColor;
+    
+    [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionTransitionNone animations:^{
+        self.finalSubview.alpha = 1.0;
+        
+    } completion:nil];
     
 }
 
@@ -265,20 +306,19 @@
 
 - (IBAction)cancelQuiz:(id)sender {
     // Canceling Quiz
-    [self.timer invalidate];
-    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-
+    [self.timer invalidate]; // In case user cancel the quiz while in initial countdown
+    
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil]; // No need to save anything
 }
 
 - (IBAction)exitCompletedQuiz:(id)sender
 {
-    [self.timer invalidate];
     [self performSegueWithIdentifier:@"unwindToQuizSelectionViewController" sender:self];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    [self.timer invalidate];
+    // Send user info to UserAccount here
 }
 
 

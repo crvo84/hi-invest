@@ -31,6 +31,7 @@ typedef enum : NSInteger {
 @property (nonatomic, readonly) NSUInteger mistakesAllowed;
 @property (nonatomic, readonly) NSInteger maxScore;
 @property (nonatomic, readonly) NSInteger minScore;
+@property (nonatomic, readonly) NSInteger nextQuizQuestionIndex; // Zero base index
 
 // Designated Initializer
 - (instancetype)initWithTitle:(NSString *)title

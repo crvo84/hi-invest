@@ -16,8 +16,8 @@
 @property (nonatomic, readwrite) NSUInteger mistakesAllowed;
 @property (nonatomic, readwrite) NSInteger maxScore;
 @property (nonatomic, readwrite) NSInteger minScore;
-@property (nonatomic) NSInteger nextQuizQuestionIndex;
 @property (nonatomic, readwrite) QuizType quizType;
+@property (nonatomic) NSInteger nextQuizQuestionIndex; // Zero base index
 
 @end
 
@@ -60,5 +60,7 @@
     
     return quizQuestion;
 }
+
+
 
 @end
