@@ -41,6 +41,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *priceLabel;
 @property (weak, nonatomic) IBOutlet UILabel *amountDescriptionLabel;
 @property (weak, nonatomic) IBOutlet UILabel *amountLabel;
+@property (weak, nonatomic) IBOutlet UILabel *commissionLabel;
 @property (weak, nonatomic) IBOutlet UILabel *previousCashLabel;
 @property (weak, nonatomic) IBOutlet UILabel *sharesOrWeightLabel;
 @property (weak, nonatomic) IBOutlet UILabel *previousWeightLabel;
@@ -163,6 +164,8 @@
     
     self.amountLabel.text = [self.numberFormatter stringFromNumber:@(self.amount)];
     
+    self.commissionLabel.text = [self.numberFormatter stringFromNumber:@(self.amount * self.game.transactionCommissionRate)];
+    
     //-----------------------/
     /* PERCENT FORMAT CELLS */
     //-----------------------/
@@ -213,7 +216,7 @@
     NSInteger maxValue;
     
     if (self.isBuyOrder) {
-        maxValue = (NSInteger) self.previousCash / [self.price.price doubleValue];
+        maxValue = (NSInteger) self.previousCash / ([self.price.price doubleValue] * (1 + self.game.transactionCommissionRate));
     } else {
         maxValue = self.previousShares;
     }
@@ -408,30 +411,53 @@
 // Executes the order in the game portfolio. Then calls the method to present an alert confirming the execution
 - (IBAction)executeOrder:(id)sender
 {
+    double price = [self.price.price doubleValue];
+    double commissionPaid = price * self.sharesSelected * self.game.transactionCommissionRate;
+    
+    BOOL success;
+    
     if (self.isBuyOrder) {
-        [self.game.portfolio investInStockWithTicker:self.ticker withPrice:[self.price.price doubleValue] forSharesNumber:self.sharesSelected];
+        success = [self.game.portfolio investInStockWithTicker:self.ticker
+                                                         price:price
+                                                numberOfShares:self.sharesSelected
+                                                commissionPaid:commissionPaid];
     } else {
-        [self.game.portfolio deinvestInStockWithTicker:self.ticker withPrice:[self.price.price doubleValue] forSharesNumber:self.sharesSelected];
+        success = [self.game.portfolio deinvestInStockWithTicker:self.ticker
+                                                           price:price
+                                                  numberOfShares:self.sharesSelected
+                                                  commissionPaid:commissionPaid];
     }
     
-    [self presentOperationExecutedAlert];
+    [self presentTransactionAlertWithSuccess:success];
 }
 
 
 // Presents an alert confirming the order execution, with some information about the order.
 // After user press Ok button in the alert, the handler calls the unwind method in the presentingViewController
 // (Had to ctrl drag from File's Owner to Exit in the interface builder, so the unwind segue would be available programmatically)s
-- (void)presentOperationExecutedAlert
+- (void)presentTransactionAlertWithSuccess:(BOOL)success
 {
-    self.numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
-    NSString *sharesString = [self.numberFormatter stringFromNumber:@(self.sharesSelected)];
+    NSString *alertTitle;
+    NSString *alertMessage;
     
-    self.numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
-    NSString *priceAsString = [self.numberFormatter stringFromNumber:self.price.price];
-
-    NSString *alertTitle = [NSString stringWithFormat:@"%@ - %@ Order Executed", self.ticker, self.isBuyOrder ? @"Buy" : @"Sell"];
-    NSString *alertMessage = [NSString stringWithFormat:@"%@ Shares at Price: %@", sharesString, priceAsString];
-
+    if (success) {
+        
+        self.numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+        NSString *sharesString = [self.numberFormatter stringFromNumber:@(self.sharesSelected)];
+        
+        self.numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
+        NSString *priceAsString = [self.numberFormatter stringFromNumber:self.price.price];
+        
+        alertTitle = [NSString stringWithFormat:@"%@ - %@ Order Executed", self.ticker, self.isBuyOrder ? @"Buy" : @"Sell"];
+        alertMessage = [NSString stringWithFormat:@"%@ Shares at Price: %@", sharesString, priceAsString];
+        
+    } else {
+        
+        alertTitle = @"Error";
+        alertMessage = @"Order NOT Executed.";
+        
+    }
+    
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:alertTitle
                                                                    message:alertMessage
                                                             preferredStyle:UIAlertControllerStyleAlert];

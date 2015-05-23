@@ -20,12 +20,14 @@
 - (instancetype)initPortfolioWithPortfolioPicture:(PortfolioPicture *)portfolioPicture;
 
 - (BOOL)investInStockWithTicker:(NSString *)ticker
-                      withPrice:(double)price
-                forSharesNumber:(NSUInteger)shares;
+                      price:(double)price
+                numberOfShares:(NSUInteger)shares
+                 commissionPaid:(double)commission;
 
 - (BOOL)deinvestInStockWithTicker:(NSString *)ticker
-                        withPrice:(double)price
-                  forSharesNumber:(NSUInteger)shares;
+                        price:(double)price
+                  numberOfShares:(NSUInteger)shares
+                   commissionPaid:(double)commission;
 
 //- (void)addCashToPortfolioInAmount:(double)newCash;
 

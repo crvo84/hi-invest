@@ -49,13 +49,14 @@
 
 
 - (BOOL)investInStockWithTicker:(NSString *)ticker
-                      withPrice:(double)price
-                forSharesNumber:(NSUInteger)shares
+                          price:(double)price
+                 numberOfShares:(NSUInteger)shares
+                 commissionPaid:(double)commission
 {
-    if (price * shares > self.cash) {
+    if (price * shares + commission > self.cash) {
         return NO;
     } else {
-        self.cash -= price * shares;
+        self.cash -= price * shares + commission;
     }
     
     StockInvestment *si = self.equity[ticker];
@@ -78,15 +79,20 @@
 }
 
 - (BOOL)deinvestInStockWithTicker:(NSString *)ticker
-                        withPrice:(double)price
-                  forSharesNumber:(NSUInteger)shares
+                            price:(double)price
+                   numberOfShares:(NSUInteger)shares
+                   commissionPaid:(double)commission
 {
     StockInvestment *si = self.equity[ticker];
     
     if (!si) return NO;
     if (si.shares < shares) return NO;
     
-    self.cash += price * shares;
+    if (price * shares + self.cash < commission) {
+        return NO;
+    }
+    
+    self.cash += price * shares - commission;
     
     if (si.shares == shares) {
         [self.equity removeObjectForKey:ticker];

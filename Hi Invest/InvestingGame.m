@@ -37,7 +37,7 @@
 
 @implementation InvestingGame
 
-#define InvestingGameDefaultTransactionFeeRate 0.005
+#define InvestingGameDefaultTransactionCommissionRate 0.0015
 
 // Designated Initializer
 // Return a initialized InvestingGame with initial cash and initial date
@@ -55,7 +55,7 @@
         self.tickersOfCompaniesAvailable = [scenario.companyTickersStr componentsSeparatedByString:@","];
         self.initialDate = scenario.initialScenarioDate;
         self.endDate = scenario.endingScenarioDate;
-        self.transactionFeeRate = InvestingGameDefaultTransactionFeeRate;
+        self.transactionCommissionRate = InvestingGameDefaultTransactionCommissionRate;
         self.managedObjectContext = scenario.managedObjectContext;
         
         if (portfolioPictures && [portfolioPictures count] > 0) {

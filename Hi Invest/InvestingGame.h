@@ -23,7 +23,7 @@
 @property (strong, nonatomic, readonly) NSDate *endDate;
 @property (strong, nonatomic, readonly) NSDate *currentDate;
 @property (strong, nonatomic, readonly) NSDictionary *currentPrices; // @{ticker : Price}
-@property (nonatomic) double transactionFeeRate;
+@property (nonatomic) double transactionCommissionRate;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic, readonly) NSMutableArray *portfolioPictures; // of PortfolioPicture
 @property (strong, nonatomic, readonly) NSMutableArray *portfolioHistoricalValues; // of PortfolioHistoricalValue
