@@ -69,8 +69,8 @@
     
     // Mistake count
     self.mistakeCount = 0;
-    self.mistakesLeftImageView.image = [[UIImage imageNamed:@"ninjaEmoticon"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    self.mistakesLeftImageView.tintColor = [[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:[DefaultColors UIElementsBackgroundAlpha]];
+    // Image will take UIImageView tint color. Set on interface builder
+    self.mistakesLeftImageView.image = [[UIImage imageNamed:@"ninjaEmoticon22x22"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     [self updateMistakesLeft];
     
     // Answer Buttons

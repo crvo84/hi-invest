@@ -21,6 +21,11 @@
 
 @implementation FinancialDatabaseManager
 
+/*
+ // In database:
+ Total Operating Expenses = Cost of Sales + Operating Expenses
+ */
+
 #pragma mark - Fetching methods
 
 // Return an array of Company managed objects for the tickers (NSString) in the given array from the given managed object context
@@ -1166,11 +1171,14 @@
     return financialLeverageNumber;
 }
 
+
+#pragma mark - Absolute values from report
+
 // Return an NSNumber with the double of the EARNINGS PER SHARE calculated from the given Reports. nil if not a valid value.
 + (NSNumber *)earningsPerShareFromReports:(NSArray *)reports
 {
     NSNumber *earningsPerShareNumber = nil;
-
+    
     if ([reports count] == 4) {
         double annualNetIncome = 0;
         double reportsSharesSum = 0;
@@ -1228,6 +1236,7 @@
     return salesPerShareNumber;
 }
 
+
 // Return an NSNumber with the double of the DIVIDENDS PER SHARE calculated from the given Reports. nil if not a valid value.
 + (NSNumber *)dividendsPerShareFromReports:(NSArray *)reports
 {
@@ -1265,26 +1274,26 @@
     NSNumber *bookValuePerShareNumber = nil;
     
     NSNumber *equityNumber = report.balanceSheet.totalStockholdersEquity;
+    NSNumber *preferredStockNumber = report.balanceSheet.preferredStock;
     NSNumber *sharesNumber = report.outstandingShares;
     
     if (equityNumber && sharesNumber) {
         double equity = [equityNumber doubleValue];
         double shares = [sharesNumber doubleValue];
+        double preferredStock = 0;
+        
+        if (preferredStockNumber) {
+            preferredStock = [preferredStockNumber doubleValue];
+        }
+        
         if (shares > 0) {
-            double bookValuePerShare = equity / shares;
-            bookValuePerShareNumber = [NSNumber numberWithDouble:bookValuePerShare];
+            double bookValuePerShare = (equity - preferredStock) / shares;
+            bookValuePerShareNumber = @(bookValuePerShare);
         }
     }
     
     return bookValuePerShareNumber;
 }
-
-#pragma mark - Absolute values from report
-
-/*
- Total Operating Expenses = Cost of Sales + Operating Expenses
- */
-
 
 
 + (NSNumber *)liquidAssetsFromReport:(Report *)report

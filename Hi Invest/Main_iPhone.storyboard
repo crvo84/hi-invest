@@ -757,22 +757,23 @@
                                 <rect key="frame" x="16" y="76" width="568" height="32"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5/5" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mr3-KY-Wuz" userLabel="Question Tracker">
-                                        <rect key="frame" x="539" y="4" width="29" height="24"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <rect key="frame" x="538" y="3" width="30" height="26"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="21"/>
                                         <color key="textColor" red="0.23529411764705882" green="0.23529411764705882" blue="0.23529411764705882" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="x0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H4i-m7-VkR">
-                                        <rect key="frame" x="30" y="9" width="19" height="21"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <rect key="frame" x="24" y="3" width="23" height="26"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="21"/>
                                         <color key="textColor" red="0.23529411764705882" green="0.23529411764705882" blue="0.23529411764705882" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ninjaEmoticon" translatesAutoresizingMaskIntoConstraints="NO" id="85F-FC-6dZ">
-                                        <rect key="frame" x="0.0" y="2" width="28" height="28"/>
+                                    <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ninjaEmoticon22x22" translatesAutoresizingMaskIntoConstraints="NO" id="85F-FC-6dZ">
+                                        <rect key="frame" x="0.0" y="5" width="22" height="22"/>
+                                        <color key="tintColor" red="0.23529411764705882" green="0.23529411764705882" blue="0.23529411764705882" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="28" id="Aam-58-twK"/>
-                                            <constraint firstAttribute="height" constant="28" id="vHE-DY-VEu"/>
+                                            <constraint firstAttribute="width" constant="22" id="Aam-58-twK"/>
+                                            <constraint firstAttribute="height" constant="22" id="vHE-DY-VEu"/>
                                         </constraints>
                                     </imageView>
                                 </subviews>
@@ -781,7 +782,7 @@
                                     <constraint firstAttribute="height" constant="32" id="DvS-Re-dj3"/>
                                     <constraint firstAttribute="centerY" secondItem="85F-FC-6dZ" secondAttribute="centerY" id="JJm-pZ-9KR"/>
                                     <constraint firstAttribute="centerY" secondItem="mr3-KY-Wuz" secondAttribute="centerY" id="LGF-wL-SRq"/>
-                                    <constraint firstItem="H4i-m7-VkR" firstAttribute="bottom" secondItem="85F-FC-6dZ" secondAttribute="bottom" id="QZK-fm-1ZF"/>
+                                    <constraint firstItem="H4i-m7-VkR" firstAttribute="bottom" secondItem="85F-FC-6dZ" secondAttribute="bottom" constant="2" id="QZK-fm-1ZF"/>
                                     <constraint firstItem="H4i-m7-VkR" firstAttribute="leading" secondItem="85F-FC-6dZ" secondAttribute="trailing" constant="2" id="VZk-sS-v8Y"/>
                                     <constraint firstAttribute="trailing" secondItem="mr3-KY-Wuz" secondAttribute="trailing" id="e0a-Lj-qqf"/>
                                     <constraint firstItem="85F-FC-6dZ" firstAttribute="leading" secondItem="Yps-SE-pSL" secondAttribute="leading" id="qqj-s2-Dv3"/>
@@ -2506,7 +2507,7 @@
         <image name="list25x25" width="25" height="25"/>
         <image name="menu22x22" width="22" height="22"/>
         <image name="ninjaD" width="133" height="240"/>
-        <image name="ninjaEmoticon" width="512" height="512"/>
+        <image name="ninjaEmoticon22x22" width="22" height="22"/>
         <image name="ninjaIconRed144x144" width="144" height="144"/>
         <image name="ninjaIconRed48x48" width="48" height="48"/>
         <image name="pieChart" width="25" height="25"/>
