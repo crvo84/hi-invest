@@ -10,16 +10,22 @@
 
 @interface PortfolioTransaction : NSObject
 
-typedef NS_OPTIONS(NSUInteger, PortfolioTransactionType) {
-    PortfolioTransactionTypePurchase    = (1 << 0), // => 00000001
-    PortfolioTransactionTypeSale        = (1 << 1), // => 00000010
-    PortfolioTransactionTypeDividends   = (1 << 2), // => 00000100
-    PortfolioTransactionTypeFeePaid     = (1 << 3)  // => 00001000
-};
+typedef enum : NSInteger {
+    
+    PortfolioTransactionTypePurchase = 0,
+    PortfolioTransactionTypeSale,
+    PortfolioTransactionTypeCommissionPurchase,
+    PortfolioTransactionTypeCommissionSale,
+    PortfolioTransactionTypeDividends,
+    
+} PortfolioTransactionType;
 
 @property (nonatomic) PortfolioTransactionType transactionType;
-@property (copy, nonatomic) NSString *descriptionInfo;
+@property (copy, nonatomic) NSString *ticker;
 @property (nonatomic) NSInteger day;
-@property (nonatomic) double amount;
+@property (nonatomic) NSInteger shares;
+@property (nonatomic) double amount; // Normal purchases, sales, dividends and fees are positive values.
+
+
 
 @end

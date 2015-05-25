@@ -3,17 +3,17 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "ratio_25x25.png"
+      "filename" : "business_25x25.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "ratio_50x50.png"
+      "filename" : "business_50x50.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "ratio_75x75.png"
+      "filename" : "business_75x75.png"
     }
   ],
   "info" : {

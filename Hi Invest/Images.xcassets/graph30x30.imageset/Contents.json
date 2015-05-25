@@ -3,17 +3,17 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "home_25x25.png"
+      "filename" : "graph_30x30.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "home_50x50.png"
+      "filename" : "graph_60x60.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "home_75x75.png"
+      "filename" : "graph_90x90.png"
     }
   ],
   "info" : {

@@ -420,12 +420,14 @@
         success = [self.game.portfolio investInStockWithTicker:self.ticker
                                                          price:price
                                                 numberOfShares:self.sharesSelected
-                                                commissionPaid:commissionPaid];
+                                                commissionPaid:commissionPaid
+                                                         atDay:[self.game currentDay]];
     } else {
         success = [self.game.portfolio deinvestInStockWithTicker:self.ticker
                                                            price:price
                                                   numberOfShares:self.sharesSelected
-                                                  commissionPaid:commissionPaid];
+                                                  commissionPaid:commissionPaid
+                                                           atDay:[self.game currentDay]];
     }
     
     [self presentTransactionAlertWithSuccess:success];

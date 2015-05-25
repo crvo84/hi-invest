@@ -10,11 +10,11 @@
 #define Hi_Invest_GlossaryKeys_h
 
 
+#define GlossaryTypeFinancialStatementTerms @"Financial Statements"
 #define GlossaryTypeFinancialRatios @"Financial Ratios"
-#define GlossaryTypeFinancialStatementTerms @"Financial Statement"
 #define GlossaryTypeStockMarketTerms @"Stock Market"
 
-#define GlossaryTypesArray @[ GlossaryTypeFinancialRatios, GlossaryTypeFinancialStatementTerms, GlossaryTypeStockMarketTerms ]
+#define GlossaryTypesArray @[ GlossaryTypeFinancialStatementTerms, GlossaryTypeFinancialRatios, GlossaryTypeStockMarketTerms ]
 
   // ------------------- //
  // FINANCIAL STATEMENT //

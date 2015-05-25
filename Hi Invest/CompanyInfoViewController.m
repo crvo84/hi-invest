@@ -22,6 +22,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UILabel *companyNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *companyDescriptionLabel;
+@property (weak, nonatomic) IBOutlet UIButton *buySellButton;
 @property (strong, nonatomic) NSNumberFormatter *numberFormatter;
 @property (strong, nonatomic) Price *price;
 /* Financial Ratios Data */
@@ -32,6 +33,13 @@
 
 @implementation CompanyInfoViewController
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    [self buySellButtonSetup];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -39,6 +47,23 @@
     if (self.ticker) {
         [self updateUI]; // UpdatingUI is done here to update when switching tabs
     }
+}
+
+- (void)buySellButtonSetup
+{
+    UIColor *buttonColor = [UIColor colorWithRed:0.0/255.0 green:122.0/255.0 blue:255.0/255.0 alpha:1.0];
+    
+    [self.buySellButton setTitleColor:buttonColor forState:UIControlStateNormal];
+    [self.buySellButton setTitleColor:[DefaultColors UIElementsBackgroundColor] forState:UIControlStateHighlighted];
+    [self.buySellButton setBackgroundColor:[[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:0.15]];
+    
+    self.buySellButton.layer.borderWidth = 0.5;
+    self.buySellButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    
+    UIImage *buySellImage = [[UIImage imageNamed:@"arrows22x22"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [self.buySellButton setImage:buySellImage forState:UIControlStateNormal];
+    [self.buySellButton setTintColor:buttonColor];
+    self.buySellButton.imageView.image = buySellImage;
 }
 
 #pragma mark - Updating UI

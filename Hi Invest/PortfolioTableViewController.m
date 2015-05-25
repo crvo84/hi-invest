@@ -9,6 +9,7 @@
 #import "PortfolioTableViewController.h"
 #import "PortfolioPieChartViewController.h"
 #import "PortfolioHistoricalValue.h"
+#import "PortfolioActivityViewController.h"
 #import "BEMSimpleLineGraphView.h"
 #import "InvestingGame.h"
 #import "UserDefaultsKeys.h"
@@ -17,11 +18,12 @@
 
 @interface PortfolioTableViewController () <UITableViewDataSource, UITableViewDelegate, BEMSimpleLineGraphDataSource, BEMSimpleLineGraphDelegate>
 
+@property (weak, nonatomic) IBOutlet UIView *infoSubview;
+@property (weak, nonatomic) IBOutlet UILabel *dayLabel;
+@property (weak, nonatomic) IBOutlet UILabel *networthLabel;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSDictionary *weightOfStocksInPortfolio;
 @property (strong, nonatomic) NSArray *tickersOrderedByWeight;
-@property (weak, nonatomic) IBOutlet UILabel *dayLabel;
-@property (weak, nonatomic) IBOutlet UILabel *networthLabel;
 @property (weak, nonatomic) IBOutlet BEMSimpleLineGraphView *graphView;
 @property (strong, nonatomic) NSNumberFormatter *numberFormatter;
 
@@ -34,6 +36,13 @@
     [super viewDidLoad];
     
     [self initialGraphSetup];
+    
+    // Info Subview setup
+    self.infoSubview.layer.cornerRadius = 8;
+    self.infoSubview.layer.masksToBounds = YES;
+    UIColor *infoLabelColor = [UIColor whiteColor];
+    self.dayLabel.textColor = infoLabelColor;
+    self.networthLabel.textColor = infoLabelColor;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -59,8 +68,10 @@
 
 - (void)updateCurrentDayInfoLabels
 {
+    self.infoSubview.backgroundColor = [[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:0.78];
+    
     self.numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
-    self.dayLabel.text = [NSString stringWithFormat:@"Current Day: %@", [self.numberFormatter stringFromNumber:@(self.game.currentDay)]];
+    self.dayLabel.text = [NSString stringWithFormat:@"Day %@", [self.numberFormatter stringFromNumber:@(self.game.currentDay)]];
     
     self.numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
     self.networthLabel.text = [self.numberFormatter stringFromNumber:@([self.game currentNetWorth])];
@@ -185,7 +196,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (section == 0) return @"Cash and Short-Term Investments";
+    if (section == 0) return @"Cash";
     if (section == 1) return @"Stocks";
     
     return nil;
@@ -198,6 +209,15 @@
     return 52;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if (section == 0) {
+        return 36;
+    }
+    
+    return 28;
+}
+
 
 //-------------------------/
 /* BEMSimpleLineGraphView */
@@ -207,12 +227,7 @@
 
 - (NSInteger)numberOfPointsInLineGraph:(BEMSimpleLineGraphView *)graph
 {
-    NSInteger count = [self.game.portfolioHistoricalValues count];
-    if (count == 0) {
-        return 2; // If no historical values, then display to points to how a horizontal line with current networth
-    } else {
-        return [self.game.portfolioHistoricalValues count] + 1; // historical values + current net worth
-    }
+    return [self.game.portfolioHistoricalValues count] + 1; // historical values + current net worth
 }
 
 - (CGFloat)lineGraph:(BEMSimpleLineGraphView *)graph valueForPointAtIndex:(NSInteger)index
@@ -220,11 +235,14 @@
     NSInteger count = [self.game.portfolioHistoricalValues count];
     
     if (index < count) {
+        
         PortfolioHistoricalValue *portfolioHistoricalValue = self.game.portfolioHistoricalValues[index];
         return portfolioHistoricalValue.value / 1000; // value in thousands
+        
+    } else {
+        
+        return [self.game currentNetWorth] / 1000; // value in thousands
     }
-    
-    return [self.game currentNetWorth] / 1000; // value in thousands
 }
 
 #pragma mark - BEMSimpleLineGraphView Delegate
@@ -233,61 +251,60 @@
 - (NSInteger)numberOfGapsBetweenLabelsOnLineGraph:(BEMSimpleLineGraphView *)graph
 {
     NSInteger count = [self.game.portfolioHistoricalValues count];
-    if (count == 0) {
-        return 1;
-    } else {
-        return (count + 1) / 10;
-    }
+
+    return (count + 1) / 10;
 }
 
 - (NSString *)lineGraph:(BEMSimpleLineGraphView *)graph labelOnXAxisForIndex:(NSInteger)index
 {
-//    return [NSString stringWithFormat:@"Day %ld", index + 1];
     return @"";
 }
 
 - (void)lineGraph:(BEMSimpleLineGraphView *)graph didTouchGraphWithClosestIndex:(NSInteger)index
 {
-    if ([self.game.portfolioHistoricalValues count] != 0) {
-        NSNumber *dayNumber;
-        NSNumber *historicalValueNumber;
-        if (index < [self.game.portfolioHistoricalValues count]) {
-            PortfolioHistoricalValue *portfolioHistoricalValue = self.game.portfolioHistoricalValues[index];
-            dayNumber = @([self.game dayNumberFromDate:portfolioHistoricalValue.date]);
-            historicalValueNumber = @(portfolioHistoricalValue.value);
-        } else {
-            dayNumber = @([self.game currentDay]);
-            historicalValueNumber = @([self.game currentNetWorth]);
-        }
-        
+    NSNumber *dayNumber;
+    NSNumber *historicalValueNumber;
+    if (index < [self.game.portfolioHistoricalValues count]) {
+        PortfolioHistoricalValue *portfolioHistoricalValue = self.game.portfolioHistoricalValues[index];
+        dayNumber = @([self.game dayNumberFromDate:portfolioHistoricalValue.date]);
+        historicalValueNumber = @(portfolioHistoricalValue.value);
+    } else {
+        dayNumber = @([self.game currentDay]);
+        historicalValueNumber = @([self.game currentNetWorth]);
+    }
+    
+    if (index > 0) {
         self.numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
         self.dayLabel.text = [NSString stringWithFormat:@"Day %@", [self.numberFormatter stringFromNumber:dayNumber]];
         
-        self.numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
-        self.networthLabel.text = [self.numberFormatter stringFromNumber:historicalValueNumber];
+    } else {
+        self.dayLabel.text = @"Initial net worth";
     }
+    
+    self.numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
+    self.networthLabel.text = [self.numberFormatter stringFromNumber:historicalValueNumber];
+    
+    [UIView animateWithDuration:0.2 animations:^{
+        self.infoSubview.backgroundColor = [DefaultColors UIElementsBackgroundColor];
+    } completion:nil];
+    
 }
 
-- (void)lineGraph:(BEMSimpleLineGraphView *)graph didReleaseTouchFromGraphWithClosestIndex:(CGFloat)index {
-    
-    NSInteger count = [self.game.portfolioHistoricalValues count];
-    
-    if (count != 0) {
+- (void)lineGraph:(BEMSimpleLineGraphView *)graph didReleaseTouchFromGraphWithClosestIndex:(CGFloat)index
+{
+    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        
+        self.dayLabel.alpha = 0.0;
+        self.networthLabel.alpha = 0.0;
+        
+    } completion:^(BOOL finished) {
+        
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-            
-            self.dayLabel.alpha = 0.0;
-            self.networthLabel.alpha = 0.0;
-            
-        } completion:^(BOOL finished) {
-            
             [self updateCurrentDayInfoLabels];
-            
-            [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                self.dayLabel.alpha = 1.0;
-                self.networthLabel.alpha = 1.0;
-            } completion:nil];
-        }];
-    }
+            self.dayLabel.alpha = 1.0;
+            self.networthLabel.alpha = 1.0;
+        } completion:nil];
+    }];
 }
 
 //- (void)lineGraphDidFinishLoading:(BEMSimpleLineGraphView *)graph {
@@ -302,9 +319,6 @@
 //- (NSString *)popUpPrefixForlineGraph:(BEMSimpleLineGraphView *)graph {
 //    return @"$";
 //}
-
-
-
 
 
 #pragma mark - Navigation
@@ -325,6 +339,10 @@
             [self preparePortfolioPieChartViewController:segue.destinationViewController withInvestingGame:self.game withSelectedTicker:ticker];
         }
     }
+    
+    if ([segue.destinationViewController isKindOfClass:[PortfolioActivityViewController class]]) {
+        [self preparePortfolioActivityViewController:segue.destinationViewController withInvestingGame:self.game];
+    }
 }
 
 - (void)preparePortfolioPieChartViewController:(PortfolioPieChartViewController *)portfolioPieChartViewController withInvestingGame:(InvestingGame *)game withSelectedTicker:(NSString *)ticker
@@ -333,6 +351,10 @@
     portfolioPieChartViewController.ticker = ticker;
 }
 
+- (void)preparePortfolioActivityViewController:(PortfolioActivityViewController *)portfolioActivityViewController withInvestingGame:(InvestingGame *)game
+{
+    portfolioActivityViewController.game = game;
+}
 
 
 

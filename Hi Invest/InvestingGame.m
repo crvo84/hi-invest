@@ -19,6 +19,7 @@
 #import "PortfolioKeys.h"
 #import "CompaniesInfoKeys.h"
 #import "Price.h"
+#import "Dividend.h"
 
 
 @interface InvestingGame ()
@@ -51,7 +52,6 @@
     if (self) {
         self.initialNetworth = initialCash;
         self.scenarioInfo = scenario;
-//        self.tickersOfCompaniesAvailable = CompaniesAllAvailableArrayOfTickers;
         self.tickersOfCompaniesAvailable = [scenario.companyTickersStr componentsSeparatedByString:@","];
         self.initialDate = scenario.initialScenarioDate;
         self.endDate = scenario.endingScenarioDate;
@@ -121,6 +121,10 @@
             [self.portfolioPictures addObject:currentPortfolioPicture];
         }
     }
+    
+    [self collectDividendsFromCompaniesWithTickers:[self.portfolio tickersOfStocksInPortfolio]
+                                          fromDate:[NSDate dateWithTimeInterval:(60*60*24) sinceDate:self.currentDate]
+                                            toDate:newDate];
 
     self.currentDate = newDate;
     self.currentPrices = nil; // reset prices to get the new date prices
@@ -128,6 +132,19 @@
 //    NSLog(@"Portfolio historical values count: %ld", [self.portfolioHistoricalValues count]);
     
     return YES;
+}
+
+- (void)collectDividendsFromCompaniesWithTickers:(NSArray *)tickers fromDate:(NSDate *)initialDate toDate:(NSDate *)finalDate
+{
+    NSArray *dividends = [FinancialDatabaseManager arrayOfDividendsPaidFromCompaniesWithTickers:tickers fromDate:initialDate toDate:finalDate fromManagedObjectContext:self.managedObjectContext];
+    
+    for (Dividend *dividend in dividends) {
+        NSInteger dividendDay = [self dayNumberFromDate:dividend.date];
+        NSInteger sharesOwned = [self.portfolio sharesInPortfolioOfStockWithTicker:dividend.ticker];
+        double dividendAmount = dividend.amountPerShare * sharesOwned;
+        [self.portfolio receiveDividendsFromStockWithTicker:dividend.ticker withNumberOfShares:sharesOwned withCashAmount:dividendAmount atDay:dividendDay];
+    }
+    
 }
 
 
@@ -394,7 +411,14 @@
 - (NSMutableArray *)portfolioHistoricalValues
 {
     if (!_portfolioHistoricalValues) {
+        
         _portfolioHistoricalValues = [[NSMutableArray alloc] init];
+        
+        PortfolioHistoricalValue *startingPortfolioValue = [[PortfolioHistoricalValue alloc] init];
+        startingPortfolioValue.date = [NSDate dateWithTimeInterval:-(60*60*24) sinceDate:self.initialDate];
+        startingPortfolioValue.value = self.initialNetworth;
+        
+        [_portfolioHistoricalValues addObject:startingPortfolioValue];
     }
     
     return _portfolioHistoricalValues;

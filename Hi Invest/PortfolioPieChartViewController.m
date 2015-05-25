@@ -37,6 +37,8 @@
     self.pieChart.delegate = self;
     self.pieChart.showLabel = YES;
     self.pieChart.labelFont = [UIFont fontWithName:@"Helvetica" size:17];
+//    self.pieChart.labelColor = [UIColor blackColor];
+    self.pieChart.labelColor = [DefaultColors navigationBarWithSegueTitleColor];
     self.pieChart.showPercentage = YES;
     
     // Percent label circle label
@@ -203,8 +205,16 @@
 
 - (UIColor *)pieChart:(XYPieChart *)pieChart colorForSliceAtIndex:(NSUInteger)index
 {
-    double alphaDifference = ([DefaultColors UIElementsBackgroundAlpha]) / ([self.tickersOrderedByWeight count] + 1);
+    NSInteger numberOfInvestmentsInPortfolio = [self.tickersOrderedByWeight count];
+    
+    double alphaDifference = ([DefaultColors UIElementsBackgroundAlpha]) / (numberOfInvestmentsInPortfolio + 1);
+
     double alpha = alphaDifference * (index + 1);
+    
+    if (numberOfInvestmentsInPortfolio == 0) {
+        // If 100% of cash
+        alpha *= 0.75;
+    }
     
     return [[DefaultColors pieChartMainColor] colorWithAlphaComponent:alpha];
 }

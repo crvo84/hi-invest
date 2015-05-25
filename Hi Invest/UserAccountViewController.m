@@ -20,7 +20,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.userLevelLabel.text = [NSString stringWithFormat:@"Ninja Level: %ld", [self.userAccount userLevel]];
+    self.userLevelLabel.text = [NSString stringWithFormat:@"Ninja Level: %ld", (long)[self.userAccount userLevel]];
 }
 
 

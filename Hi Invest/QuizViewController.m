@@ -135,12 +135,13 @@
 
 - (void)updateMistakesLeft
 {
-    self.mistakesLeftLabel.text = [NSString stringWithFormat:@"x%ld", (long)(self.quiz.mistakesAllowed - self.mistakeCount)];
+    NSInteger mistakesLeft = self.quiz.mistakesAllowed - self.mistakeCount;
+    self.mistakesLeftLabel.text = [NSString stringWithFormat:@"x%ld", (long)MAX(mistakesLeft, 0)];
 }
 
 - (void)updateQuestionCounter
 {
-    self.questionCounterLabel.text = [NSString stringWithFormat:@"%ld/%ld", (long)self.quiz.nextQuizQuestionIndex, [self.quiz.quizQuestions count]];
+    self.questionCounterLabel.text = [NSString stringWithFormat:@"%ld/%ld", (long)self.quiz.nextQuizQuestionIndex, (unsigned long)[self.quiz.quizQuestions count]];
 }
 
 // Pre condition: All Answer UIButtons and questions UIViews must have alpha = 0.0. UIButtons must also be disabled

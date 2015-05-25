@@ -22,7 +22,6 @@
 
 @implementation QuizSelectionViewController
 
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -83,6 +82,9 @@
     QuizType quizType = indexPath.row;
     
     quizCell.titleLabel.text = [quizGenerator titleForQuizType:quizType];
+    
+    UIColor *progressColor = [[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:[DefaultColors UIElementsBackgroundAlpha]];
+    [quizCell.progressView setProgressTintColor:progressColor];
     
     return quizCell;
 }

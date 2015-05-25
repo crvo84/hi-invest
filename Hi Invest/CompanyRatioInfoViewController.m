@@ -24,6 +24,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 @property (weak, nonatomic) IBOutlet UIView *infoLabelBackgroundView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIButton *buySellButton;
 @property (strong, nonatomic) NSArray *values; // of NSNumber. ratios[0] = current ratio, ratio[1] = last year's...
 @property (strong, nonatomic) NSNumberFormatter *numberFormatter;
 @property (strong, nonatomic) Price *price;
@@ -35,6 +36,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [self buySellButtonSetup];
     
 //    self.infoLabelBackgroundView.backgroundColor = [[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:[DefaultColors UIElementsBackgroundAlpha]];
 }
@@ -57,6 +60,23 @@
     [self setTextViewWithCorrespondingValueInfo];
     
     [self.tableView reloadData];
+}
+
+- (void)buySellButtonSetup
+{
+    UIColor *buttonColor = [UIColor colorWithRed:0.0/255.0 green:122.0/255.0 blue:255.0/255.0 alpha:1.0];
+    
+    [self.buySellButton setTitleColor:buttonColor forState:UIControlStateNormal];
+    [self.buySellButton setTitleColor:[DefaultColors UIElementsBackgroundColor] forState:UIControlStateHighlighted];
+    [self.buySellButton setBackgroundColor:[[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:0.15]];
+    
+    self.buySellButton.layer.borderWidth = 0.5;
+    self.buySellButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    
+    UIImage *buySellImage = [[UIImage imageNamed:@"arrows22x22"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [self.buySellButton setImage:buySellImage forState:UIControlStateNormal];
+    [self.buySellButton setTintColor:buttonColor];
+    self.buySellButton.imageView.image = buySellImage;
 }
 
 - (void)setTextViewWithCorrespondingValueInfo

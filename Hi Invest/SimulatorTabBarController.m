@@ -9,6 +9,7 @@
 #import "SimulatorTabBarController.h"
 #import "CompaniesViewController.h"
 #import "PortfolioTableViewController.h"
+#import "PortfolioActivityViewController.h"
 #import "UserAccount.h"
 #import "InvestingGame.h"
 
@@ -39,38 +40,65 @@
 {
     NSUInteger tabsCount = [self.viewControllers count];
     
-    InvestingGame *game = [userAccount currentInvestingGame];
-    
+    if (!self.game) {
+        self.game = [userAccount currentInvestingGame];
+    }
+
     if (tabsCount > 0) {
         /* COMPANIES VIEW CONTROLLER PREPARATION */
         // CompaniesViewController will be the first view controller (or embedded inside a Navigation Controller)
-        UIViewController *companiesTabViewController = self.viewControllers[0];
+        UIViewController *viewController = self.viewControllers[0];
         // Is it a navigation controller?
-        if ([companiesTabViewController isKindOfClass:[UINavigationController class]]) {
-            companiesTabViewController = [((UINavigationController *)companiesTabViewController).viewControllers firstObject];
+        if ([viewController isKindOfClass:[UINavigationController class]]) {
+            viewController = [((UINavigationController *)viewController).viewControllers firstObject];
         }
-        if ([companiesTabViewController isKindOfClass:[CompaniesViewController class]]) {
+        if ([viewController isKindOfClass:[CompaniesViewController class]]) {
             // Found the CompaniesViewController
-            CompaniesViewController *companiesViewController = (CompaniesViewController *)companiesTabViewController;
-            companiesViewController.game = game;
+            CompaniesViewController *companiesViewController = (CompaniesViewController *)viewController;
+            companiesViewController.game = self.game;
         }
     }
     
     if (tabsCount > 1) {
         /* PORFOLIO VIEW CONTROLLER PREPARATION */
         // PortfolioViewController will be the second view controller (or embedded inside a Navigation Controller)
-        UIViewController *portfolioTabViewController = self.viewControllers[1];
+        UIViewController *viewController = self.viewControllers[1];
         // Is it a navigation controller?
-        if ([portfolioTabViewController isKindOfClass:[UINavigationController class]]) {
-            portfolioTabViewController = [((UINavigationController *)portfolioTabViewController).viewControllers firstObject];
+        if ([viewController isKindOfClass:[UINavigationController class]]) {
+            viewController = [((UINavigationController *)viewController).viewControllers firstObject];
         }
-        if ([portfolioTabViewController isKindOfClass:[PortfolioTableViewController class]]) {
-            // Found the portfolioViewController
-            PortfolioTableViewController *porfolioViewController = (PortfolioTableViewController *)portfolioTabViewController;
-            porfolioViewController.game = game;
+        if ([viewController isKindOfClass:[PortfolioTableViewController class]]) {
+            // Found the PortfolioViewController
+            PortfolioTableViewController *portfolioViewController = (PortfolioTableViewController *)viewController;
+            portfolioViewController.game = self.game;
+        }
+    }
+    
+    if (tabsCount > 2) {
+        /* PORTFOLIO ACTIVITY VIEW CONTROLLER PREPARATION */
+        // PortfolioActivityViewController will be the third view controller (Or embedded inside a Navigation Controller)
+        UIViewController *viewController = self.viewControllers[2];
+        // Is it a navigation controller?
+        if ([viewController isKindOfClass:[UINavigationController class]]) {
+            viewController = [((UINavigationController *)viewController).viewControllers firstObject];
+        }
+        if ([viewController isKindOfClass:[PortfolioActivityViewController class]]) {
+            // Found the PortfolioActivityViewController
+            PortfolioActivityViewController *portfolioActivityViewController = (PortfolioActivityViewController *)viewController;
+            portfolioActivityViewController.game = self.game;
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
 
 
 @end

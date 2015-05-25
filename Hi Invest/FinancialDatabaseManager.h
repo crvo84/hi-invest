@@ -42,6 +42,10 @@
 // Return true if there are Price managed objects available for the given date (false otherwise). Weekends and bank holidays have no available Prices.
 + (BOOL)arePricesAvailableForDate:(NSDate *)date fromScenario:(Scenario *)scenario;
 
+// Return an array containing Dividend objects corresponding from the given initial (including) and final (including) dates. For the given company tickers.
+// Sorted by dividend date in ascending order
++ (NSArray *)arrayOfDividendsPaidFromCompaniesWithTickers:(NSArray *)tickers fromDate:(NSDate *)initialDate toDate:(NSDate *)finalDate fromManagedObjectContext:(NSManagedObjectContext *)context;
+
 
 //--------------------------/
 /* FINANCIAL CALCULATIONS */

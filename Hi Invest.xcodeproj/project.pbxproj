@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		73442DC01B12805B00F3A7ED /* Dividend.m in Sources */ = {isa = PBXBuildFile; fileRef = 73442DBF1B12805B00F3A7ED /* Dividend.m */; };
+		73442DC41B139B4600F3A7ED /* TransactionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 73442DC31B139B4600F3A7ED /* TransactionTableViewCell.m */; };
 		739ABCB61B0162F6009EFC0E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABCB51B0162F6009EFC0E /* main.m */; };
 		739ABCD01B0162F6009EFC0E /* Hi_InvestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABCCF1B0162F6009EFC0E /* Hi_InvestTests.m */; };
 		739ABCDE1B016390009EFC0E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABCDD1B016390009EFC0E /* AppDelegate.m */; };
@@ -86,6 +88,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		73442DBE1B12805B00F3A7ED /* Dividend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dividend.h; sourceTree = "<group>"; };
+		73442DBF1B12805B00F3A7ED /* Dividend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Dividend.m; sourceTree = "<group>"; };
+		73442DC21B139B4600F3A7ED /* TransactionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransactionTableViewCell.h; sourceTree = "<group>"; };
+		73442DC31B139B4600F3A7ED /* TransactionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransactionTableViewCell.m; sourceTree = "<group>"; };
 		739ABCB01B0162F6009EFC0E /* Hi Invest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hi Invest.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		739ABCB41B0162F6009EFC0E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		739ABCB51B0162F6009EFC0E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -241,6 +247,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		73442DC11B137FEA00F3A7ED /* Activity */ = {
+			isa = PBXGroup;
+			children = (
+				73E966D01B10EA5600431AAC /* PortfolioActivityViewController.h */,
+				73E966D11B10EA5600431AAC /* PortfolioActivityViewController.m */,
+			);
+			name = Activity;
+			sourceTree = "<group>";
+		};
 		739ABCA71B0162F6009EFC0E = {
 			isa = PBXGroup;
 			children = (
@@ -500,6 +515,8 @@
 				739ABD951B01674E009EFC0E /* StockInvestment.m */,
 				73E966D31B10F02A00431AAC /* PortfolioTransaction.h */,
 				73E966D41B10F02A00431AAC /* PortfolioTransaction.m */,
+				73442DBE1B12805B00F3A7ED /* Dividend.h */,
+				73442DBF1B12805B00F3A7ED /* Dividend.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -511,6 +528,7 @@
 				73D7C3851B0AD86C00653A4C /* SimulatorTabBarController.m */,
 				73D7C37E1B0AD4F600653A4C /* Companies */,
 				73D7C37F1B0AD50900653A4C /* Portfolio */,
+				73442DC11B137FEA00F3A7ED /* Activity */,
 				739ABD971B01675C009EFC0E /* TimeSimulationViewController.h */,
 				739ABD981B01675C009EFC0E /* TimeSimulationViewController.m */,
 				739ABD8D1B01671E009EFC0E /* SimulatorInfoViewController.h */,
@@ -560,16 +578,14 @@
 		73D7C37F1B0AD50900653A4C /* Portfolio */ = {
 			isa = PBXGroup;
 			children = (
+				739ABD681B016656009EFC0E /* PortfolioTableViewController.h */,
+				739ABD691B016656009EFC0E /* PortfolioTableViewController.m */,
 				739ABD621B016656009EFC0E /* PortfolioPieChartViewController.h */,
 				739ABD631B016656009EFC0E /* PortfolioPieChartViewController.m */,
 				739ABD641B016656009EFC0E /* PortfolioStockInfoContainerViewController.h */,
 				739ABD651B016656009EFC0E /* PortfolioStockInfoContainerViewController.m */,
 				739ABD661B016656009EFC0E /* PortfolioStockInfoViewController.h */,
 				739ABD671B016656009EFC0E /* PortfolioStockInfoViewController.m */,
-				739ABD681B016656009EFC0E /* PortfolioTableViewController.h */,
-				739ABD691B016656009EFC0E /* PortfolioTableViewController.m */,
-				73E966D01B10EA5600431AAC /* PortfolioActivityViewController.h */,
-				73E966D11B10EA5600431AAC /* PortfolioActivityViewController.m */,
 			);
 			name = Portfolio;
 			sourceTree = "<group>";
@@ -626,6 +642,8 @@
 				739ABD211B01647F009EFC0E /* CompanyTableViewCell.m */,
 				73D7C3881B0AFB2800653A4C /* QuizTableViewCell.h */,
 				73D7C3891B0AFB2800653A4C /* QuizTableViewCell.m */,
+				73442DC21B139B4600F3A7ED /* TransactionTableViewCell.h */,
+				73442DC31B139B4600F3A7ED /* TransactionTableViewCell.m */,
 			);
 			name = "Custom Cells";
 			sourceTree = "<group>";
@@ -735,6 +753,7 @@
 				739ABD2E1B0164DB009EFC0E /* DefaultColors.m in Sources */,
 				739ABD7C1B016686009EFC0E /* QuizSelectionViewController.m in Sources */,
 				73EEC57C1B040E9300FAA1FE /* UserAccount.m in Sources */,
+				73442DC41B139B4600F3A7ED /* TransactionTableViewCell.m in Sources */,
 				739ABCDE1B016390009EFC0E /* AppDelegate.m in Sources */,
 				73EEC5801B042FEA00FAA1FE /* Quiz.m in Sources */,
 				739ABD7A1B016686009EFC0E /* QuizQuestion.m in Sources */,
@@ -779,6 +798,7 @@
 				739ABD931B016740009EFC0E /* SpeechBubbleView.m in Sources */,
 				739ABD051B0163EF009EFC0E /* BEMAnalogClockView.m in Sources */,
 				739ABCE91B0163E1009EFC0E /* CashFlow.m in Sources */,
+				73442DC01B12805B00F3A7ED /* Dividend.m in Sources */,
 				739ABD411B016544009EFC0E /* IncomeStatement.m in Sources */,
 				739ABCE61B0163D8009EFC0E /* BuySellTableViewController.m in Sources */,
 				739ABD961B01674E009EFC0E /* StockInvestment.m in Sources */,

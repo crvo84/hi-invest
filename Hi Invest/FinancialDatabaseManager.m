@@ -17,6 +17,7 @@
 #import "IncomeStatement.h"
 #import "BalanceSheet.h"
 #import "CashFlow.h"
+#import "Dividend.h"
 
 @implementation FinancialDatabaseManager
 
@@ -258,6 +259,56 @@
         
         return reports;
     }
+}
+
+// Return an array containing all the reports available from (including) the initial date until (including) the final date.
+// Sorted by filingDate in ascending order
++ (NSArray *)dictionaryOfReportsForCompaniesWithTickers:(NSArray *)tickers fromDate:(NSDate *)initialDate toDate:(NSDate *)finalDate fromManagedObjectContext:(NSManagedObjectContext *)context
+{
+    NSArray *edgarEntityIds = [self arrayOfEdgarEntityIdsForCompaniesWithTickers:tickers fromManagedObjectContext:context];
+    
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Report"];
+    request.predicate = [NSPredicate predicateWithFormat:@"(filingDate >= %@) AND (filingDate <= %@) AND (edgarEntityId IN %@)", initialDate, finalDate, edgarEntityIds];
+    NSSortDescriptor *dateSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"filingDate" ascending:YES];
+    request.sortDescriptors = @[dateSortDescriptor];
+    
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    
+    if (!matches || error) {
+        NSLog(@"Error Fetching Available Reports from FinancialDatabaseManager. %@", [error localizedDescription]);
+        return nil;
+    }
+
+    return matches;
+}
+
+// Return an array containing Dividend objects corresponding from the given initial (including) and final (including) dates. For the given company tickers.
+// Sorted by dividend date in ascending order
++ (NSArray *)arrayOfDividendsPaidFromCompaniesWithTickers:(NSArray *)tickers fromDate:(NSDate *)initialDate toDate:(NSDate *)finalDate fromManagedObjectContext:(NSManagedObjectContext *)context
+{
+    NSMutableArray *dividends = [[NSMutableArray alloc] init];
+    
+    // This array is ordered by report filing date ascending order
+    NSArray *reports = [self dictionaryOfReportsForCompaniesWithTickers:tickers fromDate:initialDate toDate:finalDate fromManagedObjectContext:context];
+    
+    for (int i = 0; i < [reports count]; i++) {
+        
+        Report *report = reports[i];
+        NSNumber *totalDividendsPaid = report.cashFlow.dividendsPaid;
+        NSNumber *sharesOutstanding = report.outstandingShares;
+        
+        if (totalDividendsPaid && sharesOutstanding) {
+            Dividend *dividend = [[Dividend alloc] init];
+            dividend.ticker = report.company.ticker;
+            dividend.date = report.filingDate;
+            // totalDividendsPaid is negative because it comes from cash flow
+            dividend.amountPerShare = -[totalDividendsPaid doubleValue] / [sharesOutstanding doubleValue];
+            [dividends addObject:dividend];
+        }
+    }
+    
+    return dividends;
 }
 
 

@@ -49,11 +49,11 @@
     cell.textLabel.text = glossaryType;
     
     if ([glossaryType isEqualToString:GlossaryTypeFinancialRatios]) {
-        imageFilename = @"ratio25x25";
+        imageFilename = @"ratio30x30";
     } else if ([glossaryType isEqualToString:GlossaryTypeFinancialStatementTerms]) {
-        imageFilename = @"news25x25";
+        imageFilename = @"documents30x30";
     } else if ([glossaryType isEqualToString:GlossaryTypeStockMarketTerms]) {
-        imageFilename = @"graph25x25";
+        imageFilename = @"graph30x30";
     }
     
     if (imageFilename) {
@@ -71,7 +71,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 52;
+    return 60;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
