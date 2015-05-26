@@ -8,7 +8,6 @@
 
 #import "CompanyInfoViewController.h"
 #import "FinancialDatabaseManager.h"
-#import "UserDefaultsKeys.h"
 #import "DefaultColors.h"
 #import "RatiosKeys.h"
 #import "CompanyRatioInfoViewController.h"
@@ -99,7 +98,7 @@
 {
     if (!_numberFormatter) {
         _numberFormatter = [[NSNumberFormatter alloc] init];
-        _numberFormatter.locale = [NSLocale localeWithLocaleIdentifier:Locale];
+        _numberFormatter.locale = self.game.locale;
         _numberFormatter.maximumFractionDigits = 2;
         _numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
     }

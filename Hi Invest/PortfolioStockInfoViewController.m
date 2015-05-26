@@ -10,7 +10,6 @@
 #import "BuySellTableViewController.h"
 #import "InvestingGame.h"
 #import "Price.h"
-#import "UserDefaultsKeys.h"
 #import "PortfolioKeys.h"
 
 @interface PortfolioStockInfoViewController () <UITableViewDataSource, UITableViewDelegate>
@@ -203,7 +202,7 @@
 {
     if (!_numberFormatter) {
         _numberFormatter = [[NSNumberFormatter alloc] init];
-        _numberFormatter.locale = [NSLocale localeWithLocaleIdentifier:Locale];
+        _numberFormatter.locale = self.game.locale;
         _numberFormatter.maximumFractionDigits = 2;
     }
     

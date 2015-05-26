@@ -10,7 +10,6 @@
 #import "QuizQuestion.h"
 #import "RatiosKeys.h"
 #import "GlossaryKeys.h"
-#import "UserDefaultsKeys.h"
 
 #define QuizGeneratorMaximumQuizLevel 5
 #define QuizGeneratorNumberOfAnswers 4 // Number of answers for each QuizQuestion. 1 correct, the rest are wrong
@@ -191,7 +190,7 @@
     NSMutableArray *questions = [[NSMutableArray alloc] init];
     
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-    numberFormatter.locale = [NSLocale localeWithLocaleIdentifier:Locale];
+//    numberFormatter.locale = [NSLocale localeWithLocaleIdentifier:Locale];
     numberFormatter.maximumFractionDigits = 2;
     numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
     

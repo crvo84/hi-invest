@@ -15,6 +15,9 @@
 
 @property (nonatomic, readonly) NSInteger userLevel;
 @property (strong, nonatomic, readonly) InvestingGame *currentInvestingGame;
+// Settings
+@property (nonatomic) double scenarioInitialCash;
+@property (nonatomic) BOOL changeOriginalCompanyNamesAndTickers;
 
 - (void)increaseQuizLevelForQuizType:(QuizType)quizType;
 

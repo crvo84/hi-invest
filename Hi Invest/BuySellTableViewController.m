@@ -7,7 +7,6 @@
 //
 
 #import "BuySellTableViewController.h"
-#import "UserDefaultsKeys.h"
 #import "InvestingGame.h"
 #import "Price.h"
 #import "Company.h"
@@ -374,7 +373,7 @@
 {
     if (!_numberFormatter) {
         _numberFormatter = [[NSNumberFormatter alloc] init];
-        _numberFormatter.locale = [NSLocale localeWithLocaleIdentifier:Locale];
+        _numberFormatter.locale = self.game.locale;
         _numberFormatter.maximumFractionDigits = 2;
     }
     

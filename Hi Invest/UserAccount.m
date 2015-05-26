@@ -7,7 +7,6 @@
 //
 
 #import "UserAccount.h"
-#import "UserDefaultsKeys.h"
 #import "InvestingGame.h"
 #import "ManagedObjectContextCreator.h"
 #import "Quiz.h"
@@ -28,6 +27,8 @@
     
     if (self) {
         self.userLevel = 1;
+        self.scenarioInitialCash = 1000000.0;
+        self.changeOriginalCompanyNamesAndTickers = NO;
     }
     
     return self;
@@ -98,8 +99,8 @@
         } else {
             
             Scenario *scenario = [matches firstObject];
-            _currentInvestingGame = [[InvestingGame alloc] initInvestingGameWithInitialCash:SettingsDefaultInitialCash scenario:scenario andPortfolioPictures:nil];
-            
+            _currentInvestingGame = [[InvestingGame alloc] initInvestingGameWithInitialCash:self.scenarioInitialCash changingRealNamesAndTickers:self.changeOriginalCompanyNamesAndTickers scenario:scenario andPortfolioPictures:nil];
+    
         }
     }
     

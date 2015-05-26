@@ -12,6 +12,7 @@
 #import "Portfolio.h"
 
 @class Scenario;
+@class CompanyDisguiseManager;
 @class PortfolioPicture;
 @class Price;
 
@@ -23,17 +24,21 @@
 @property (strong, nonatomic, readonly) NSDate *endDate;
 @property (strong, nonatomic, readonly) NSDate *currentDate;
 @property (strong, nonatomic, readonly) NSDictionary *currentPrices; // @{ticker : Price}
+@property (nonatomic, readonly) BOOL changeRealNamesAndTickers;
+@property (strong, nonatomic, readonly) CompanyDisguiseManager *aliasGenerator;
 @property (nonatomic) double transactionCommissionRate;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic, readonly) NSMutableArray *portfolioPictures; // of PortfolioPicture
 @property (strong, nonatomic, readonly) NSMutableArray *portfolioHistoricalValues; // of PortfolioHistoricalValue
 @property (nonatomic, readonly) double initialNetworth;
 @property (strong, nonatomic) Scenario *scenarioInfo;
+@property (strong, nonatomic) NSLocale *locale;
 
 // Designated Initializer
 // Return a initialized InvestingGame with initial cash and initial date
 // If portfolioPictures parameter is given as nil, then is a new game.
 - (instancetype)initInvestingGameWithInitialCash:(double)initialCash
+                     changingRealNamesAndTickers:(BOOL)changeRealNamesAndTickers
                                         scenario:(Scenario *)scenario
                             andPortfolioPictures:(NSArray *)portfolioPictures;
 
@@ -55,6 +60,10 @@
 
 // Return the current value of portfolio
 - (double)currentNetWorth;
+
+// Return the market price at the given date;
+// Return nil if given date is earlier than the initial game date, or later than maximum game date
+- (NSNumber *)scenarioMarketPriceAtDate:(NSDate *)date;
 
 // Return an NSDictionary with the ticker as key, and a NSNumber with the double of the weight of that stock in the portfolio (Using current prices) (If array is nil, return info for all companies available from prices)
 - (NSDictionary *)weigthInPortfolioOfStocksWithTickers:(NSArray *)tickers;

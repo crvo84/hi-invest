@@ -7,9 +7,10 @@
 //
 
 #import "InfoPageContentViewController.h"
+#import "FinancialDatabaseManager.h"
 #import "DefaultColors.h"
-#import "UserDefaultsKeys.h"
 #import "InvestingGame.h"
+#import "Price.h"
 
 @interface InfoPageContentViewController ()
 
@@ -44,7 +45,7 @@
     NSString *infoStr = nil;
     
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-    numberFormatter.locale = [NSLocale localeWithLocaleIdentifier:Locale];
+    numberFormatter.locale = self.game.locale;
     numberFormatter.maximumFractionDigits = 2;
     
     if (index == 0) {
@@ -71,8 +72,19 @@
         double yearsToDate = [self.game currentDay] / 365.0;
         double annualizedReturn = pow([self.game currentNetWorth] / [self.game initialNetworth], 1 / yearsToDate) - 1;
         NSString *annualizedReturnStr = [numberFormatter stringFromNumber:@(annualizedReturn)];
-        infoStr = [NSString stringWithFormat:@"Annualized return: %@", annualizedReturnStr];
+        infoStr = [NSString stringWithFormat:@"Annual. portfolio return: %@", annualizedReturnStr];
         
+    } else if (index == 4) {
+        numberFormatter.numberStyle = NSNumberFormatterPercentStyle;
+        double yearsToDate = [self.game currentDay] / 365.0;
+        NSNumber *currentMarketPriceNumber = [self.game scenarioMarketPriceAtDate:self.game.currentDate];
+        NSNumber *initialMarketPriceNumber = [self.game scenarioMarketPriceAtDate:self.game.initialDate];
+        NSString *annualizedMarketReturnStr = @"N/A";
+        if (currentMarketPriceNumber && initialMarketPriceNumber) {
+            double annualizedMarketReturn = pow([currentMarketPriceNumber doubleValue] / [initialMarketPriceNumber doubleValue], 1 / yearsToDate) - 1;
+            annualizedMarketReturnStr = [numberFormatter stringFromNumber:@(annualizedMarketReturn)];
+        }
+        infoStr = [NSString stringWithFormat:@"Annual. market return: %@", annualizedMarketReturnStr];
     }
     
     return infoStr;

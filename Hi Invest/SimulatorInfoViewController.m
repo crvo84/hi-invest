@@ -11,7 +11,6 @@
 #import "Scenario.h"
 #import "InvestingGame.h"
 #import "SpeechBubbleView.h"
-#import "UserDefaultsKeys.h"
 #import "DefaultColors.h"
 
 @interface SimulatorInfoViewController () <UIPageViewControllerDataSource>
@@ -62,7 +61,7 @@
 - (void)infoPageViewControllerInitialSetup
 {
     
-    self.infoPagesCount = 4; // MUST BE UPDATED IF MORE PAGES ARE ADDED
+    self.infoPagesCount = 5; // MUST BE UPDATED IF MORE PAGES ARE ADDED
     
     // Create page view controller
     self.infoPageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"InfoPageViewController"];

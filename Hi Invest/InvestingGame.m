@@ -9,9 +9,10 @@
 #import "InvestingGame.h"
 
 #import "ManagedObjectContextCreator.h"
+#import "CompanyDisguiseManager.h"
+#import "FictionalNamesKeys.h"
 #import "FinancialDatabaseManager.h"
 #import "PortfolioTransaction.h"
-#import "UserDefaultsKeys.h"
 #import "Scenario.h"
 #import "PortfolioPicture.h"
 #import "PortfolioHistoricalValue.h"
@@ -30,6 +31,8 @@
 @property (strong, nonatomic, readwrite) NSDate *endDate;
 @property (strong, nonatomic, readwrite) NSDate *currentDate;
 @property (strong, nonatomic, readwrite) NSDictionary *currentPrices; // @{NSString ticker : Price}
+@property (nonatomic, readwrite) BOOL changeRealNamesAndTickers;
+@property (strong, nonatomic, readwrite) CompanyDisguiseManager *disguiseManager;
 @property (strong, nonatomic, readwrite) NSMutableArray *portfolioPictures; // of PortfolioPicture
 @property (strong, nonatomic, readwrite) NSMutableArray *portfolioHistoricalValues; // of PortfolioHistoricalValue
 @property (nonatomic, readwrite) double initialNetworth;
@@ -44,6 +47,7 @@
 // Return a initialized InvestingGame with initial cash and initial date
 // If portfolioPictures parameter is given as nil, then is a new game.
 - (instancetype)initInvestingGameWithInitialCash:(double)initialCash
+                     changingRealNamesAndTickers:(BOOL)changeRealNamesAndTickers
                                         scenario:(Scenario *)scenario
                             andPortfolioPictures:(NSArray *)portfolioPictures
 {
@@ -55,6 +59,7 @@
         self.tickersOfCompaniesAvailable = [scenario.companyTickersStr componentsSeparatedByString:@","];
         self.initialDate = scenario.initialScenarioDate;
         self.endDate = scenario.endingScenarioDate;
+        self.changeRealNamesAndTickers = changeRealNamesAndTickers;
         self.transactionCommissionRate = InvestingGameDefaultTransactionCommissionRate;
         self.managedObjectContext = scenario.managedObjectContext;
         
@@ -182,6 +187,24 @@
     }
 
     return stockValue + self.portfolio.cash;
+}
+
+// Return the market price at the given date;
+// Return nil if given date is earlier than the initial game date, or later than maximum game date
+// Scenario Info has a string containing the available market prices in the database. Separated by a comma ",". The first market is the scenario comparing market
+- (NSNumber *)scenarioMarketPriceAtDate:(NSDate *)date
+{
+    if ([self.initialDate timeIntervalSinceDate:date] > (60*60*6) || [date timeIntervalSinceDate:self.endDate] > (60*60*12)) {
+        return nil;
+    }
+    NSArray *allMarketTickers = [self.scenarioInfo.marketTickersStr componentsSeparatedByString:@","];
+    NSString *scenarioMarketTicker = [allMarketTickers firstObject];
+    Price *scenarioMarketPrice = [[FinancialDatabaseManager arrayOfPricesWithTickers:@[scenarioMarketTicker] atDate:date fromManagedObjectContext:self.managedObjectContext] firstObject];
+    if (scenarioMarketPrice) {
+        return scenarioMarketPrice.price;
+    }
+    
+    return nil;
 }
 
 
@@ -423,6 +446,26 @@
     
     return _portfolioHistoricalValues;
 }
+
+- (NSLocale *)locale
+{
+    if (!_locale) {
+        _locale = [NSLocale localeWithLocaleIdentifier:self.scenarioInfo.localeStr];
+    }
+    
+    return _locale;
+}
+
+- (CompanyDisguiseManager *)disguiseManager
+{
+    if (!_disguiseManager) {
+        _disguiseManager = [[CompanyDisguiseManager alloc] initWithCompaniesRealTickers:self.tickersOfCompaniesAvailable andFictionalNames:FictionalNamesGOTHousesArray];
+    }
+    
+    return _disguiseManager;
+}
+
+
 
 
 

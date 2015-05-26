@@ -11,7 +11,6 @@
 #import "Price.h"
 #import "Company.h"
 #import "RatiosKeys.h"
-#import "UserDefaultsKeys.h"
 #import "DefaultColors.h"
 #import "BuySellTableViewController.h"
 #import "DefinitionViewController.h"
@@ -82,7 +81,7 @@
 - (void)setTextViewWithCorrespondingValueInfo
 {
     NSNumberFormatter *numberFormatterForInterpretation = [[NSNumberFormatter alloc] init];
-    numberFormatterForInterpretation.locale = [NSLocale localeWithLocaleIdentifier:Locale];
+    numberFormatterForInterpretation.locale = self.game.locale;
     numberFormatterForInterpretation.maximumFractionDigits = 2;
     
     NSString *valueAsText;
@@ -197,7 +196,7 @@
 {
     if (!_numberFormatter) {
         _numberFormatter = [[NSNumberFormatter alloc] init];
-        _numberFormatter.locale = [NSLocale localeWithLocaleIdentifier:Locale];
+        _numberFormatter.locale = self.game.locale;
         _numberFormatter.maximumFractionDigits = 2;
         
         if ([FinancialRatioIdentifiersArray containsObject:self.valueId]) {

@@ -12,7 +12,6 @@
 #import "PortfolioActivityViewController.h"
 #import "BEMSimpleLineGraphView.h"
 #import "InvestingGame.h"
-#import "UserDefaultsKeys.h"
 #import "DefaultColors.h"
 #import "PortfolioKeys.h"
 
@@ -142,7 +141,7 @@
 {
     if (!_numberFormatter) {
         _numberFormatter = [[NSNumberFormatter alloc] init];
-        _numberFormatter.locale = [NSLocale localeWithLocaleIdentifier:Locale];
+        _numberFormatter.locale = self.game.locale;
         _numberFormatter.maximumFractionDigits = 2;
     }
     

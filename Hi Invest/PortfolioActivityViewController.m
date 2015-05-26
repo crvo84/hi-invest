@@ -7,7 +7,6 @@
 //
 
 #import "PortfolioActivityViewController.h"
-#import "UserDefaultsKeys.h"
 #import "InvestingGame.h"
 #import "PortfolioTransaction.h"
 #import "TransactionTableViewCell.h"
@@ -169,7 +168,7 @@
     if (!_numberFormatter) {
         _numberFormatter = [[NSNumberFormatter alloc] init];
         _numberFormatter.maximumFractionDigits = 2;
-        _numberFormatter.locale = [NSLocale localeWithLocaleIdentifier:Locale];
+        _numberFormatter.locale = self.game.locale;
     }
     
     return _numberFormatter;

@@ -7,7 +7,6 @@
 //
 
 #import "InitialViewController.h"
-#import "UserDefaultsKeys.h"
 #import "ManagedObjectContextCreator.h"
 #import "InvestingGame.h"
 #import "CompaniesViewController.h"
@@ -140,10 +139,8 @@
         
     } else {
         
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        double initialCash = [defaults doubleForKey:SettingsInitialCashKey];
-        Scenario *scenario = [matches firstObject];
-        return [[InvestingGame alloc] initInvestingGameWithInitialCash:initialCash scenario:scenario andPortfolioPictures:nil];
+//        Scenario *scenario = [matches firstObject];
+//        return [[InvestingGame alloc] initInvestingGameWithInitialCash:1000000.0 scenario:scenario andPortfolioPictures:nil];
         
     }
     
