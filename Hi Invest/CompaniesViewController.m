@@ -23,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *selectRatioButton;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *companies; // of NSDictionary
+@property (strong, nonatomic) NSNumberFormatter *numberFormatter;
 @property (nonatomic) BOOL descendingOrder; // For future option to sort in ascending order
 @property (nonatomic) BOOL showValueAsPercent;
 
@@ -114,6 +115,17 @@
     return _companies;
 }
 
+- (NSNumberFormatter *)numberFormatter
+{
+    if (!_numberFormatter) {
+        _numberFormatter = [[NSNumberFormatter alloc] init];
+        _numberFormatter.locale = self.game.locale;
+        _numberFormatter.maximumFractionDigits = 2;
+    }
+    
+    return _numberFormatter;
+}
+
 #pragma mark - Setters
 
 - (void)setSortingValueId:(NSString *)sortingValueId
@@ -143,7 +155,7 @@
     NSString *ticker = companyInfo[companyTicker];
     
     // Ticker Label Text
-    cell.tickerLabel.text = ticker;
+    cell.tickerLabel.text = [self.game UITickerForTicker:ticker];
     
     // pieChartButton
     if ([self.game.portfolio hasInvestmentWithTicker:ticker]) {
@@ -156,10 +168,12 @@
     
     
     // Price label text
-    NSNumber *priceNumber = companyInfo[companyPriceNumber];
+    Price *price = self.game.currentPrices[ticker];
+    NSNumber *UIPriceNumber = @([price.price doubleValue] * [self.game UIPriceMultiplierForTicker:ticker]);
     NSString *priceText;
-    if (priceNumber) {
-        priceText = [NSString stringWithFormat:@"$%.2f",[priceNumber doubleValue]];
+    if (UIPriceNumber) {
+        self.numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
+        priceText = [self.numberFormatter stringFromNumber:UIPriceNumber];
     } else {
         priceText = @"";
     }
@@ -169,10 +183,15 @@
     NSNumber *valueNumber = companyInfo[companyOrderingValueNumber];
     NSString *valueText;
     if (valueNumber) {
-        double value = [valueNumber doubleValue];
-        if (self.showValueAsPercent) value *= 100;
-        valueText = [NSString stringWithFormat:@"%.2f", value];
-        if (self.showValueAsPercent) valueText = [NSString stringWithFormat:@"%@%%", valueText];
+        
+        if (self.showValueAsPercent) {
+            self.numberFormatter.numberStyle = NSNumberFormatterPercentStyle;
+            valueText = [self.numberFormatter stringFromNumber:valueNumber];
+        } else {
+            self.numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+            valueText = [self.numberFormatter stringFromNumber:valueNumber];
+        }
+        
     } else {
         valueText = @"";
     }
@@ -241,7 +260,7 @@
 {
     companyInfoViewController.game = game;
     companyInfoViewController.ticker = ticker;
-    companyInfoViewController.title = ticker;
+    companyInfoViewController.title = [self.game UITickerForTicker:ticker];
 }
 
 - (void)preparePortfolioStockInfoContainerViewController:(PortfolioStockInfoContainerViewController *)portfolioStockInfoContainerViewController withTicker:(NSString *)ticker andInvestingGame:(InvestingGame *)game

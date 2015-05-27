@@ -27,8 +27,10 @@
     
     if (self) {
         self.userLevel = 1;
+        // Temporary
+        // MUST BE GOT FROM SETTINGS
         self.scenarioInitialCash = 1000000.0;
-        self.changeOriginalCompanyNamesAndTickers = NO;
+        self.disguiseOriginalCompanyNamesAndTickers = NO;
     }
     
     return self;
@@ -99,7 +101,7 @@
         } else {
             
             Scenario *scenario = [matches firstObject];
-            _currentInvestingGame = [[InvestingGame alloc] initInvestingGameWithInitialCash:self.scenarioInitialCash changingRealNamesAndTickers:self.changeOriginalCompanyNamesAndTickers scenario:scenario andPortfolioPictures:nil];
+            _currentInvestingGame = [[InvestingGame alloc] initInvestingGameWithInitialCash:self.scenarioInitialCash disguisingRealNamesAndTickers:self.disguiseOriginalCompanyNamesAndTickers scenario:scenario andPortfolioPictures:nil];
     
         }
     }

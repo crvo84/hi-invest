@@ -587,10 +587,10 @@
 				739ABD691B016656009EFC0E /* PortfolioTableViewController.m */,
 				739ABD621B016656009EFC0E /* PortfolioPieChartViewController.h */,
 				739ABD631B016656009EFC0E /* PortfolioPieChartViewController.m */,
-				739ABD641B016656009EFC0E /* PortfolioStockInfoContainerViewController.h */,
-				739ABD651B016656009EFC0E /* PortfolioStockInfoContainerViewController.m */,
 				739ABD661B016656009EFC0E /* PortfolioStockInfoViewController.h */,
 				739ABD671B016656009EFC0E /* PortfolioStockInfoViewController.m */,
+				739ABD641B016656009EFC0E /* PortfolioStockInfoContainerViewController.h */,
+				739ABD651B016656009EFC0E /* PortfolioStockInfoContainerViewController.m */,
 			);
 			name = Portfolio;
 			sourceTree = "<group>";

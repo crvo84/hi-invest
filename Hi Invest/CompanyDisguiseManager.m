@@ -14,43 +14,59 @@
 @property (strong, nonatomic) NSMutableDictionary *namesChanged; // @{ real ticker : fictional name NSString }
 @property (strong, nonatomic) NSMutableDictionary *priceMultipliers; // @{ real ticker : @(price multiplier) double }
 
-@property (nonatomic) BOOL changeRealNamesAndTickers;
-
 @end
 
 @implementation CompanyDisguiseManager
 
+#define FictionalNameCompanyTypes @[@"INC", @"CO", @"CORP"]
+
 // Designated initializer
-- (instancetype)initWithCompaniesRealTickers:(NSArray *)realTickers andFictionalNames:(NSArray *)fictionalNames
+// Receive an NSArray of real Tickers to disguise and a NSDictionary mapping fictional names with fictional tickers @{name : ticker}
+- (instancetype)initWithCompaniesRealTickers:(NSArray *)realTickers withFictionalNamesAndTickers:(NSDictionary *)fictionalNamesAndTickers
 {
     self = [super init];
     
     if (self) {
-        // Get a mutable dictionary with fictional company info @{ TICKER : NAME }
-        NSDictionary *fictionalCompanyInfo = [self randomFictionalCompanyInfoFromNames:fictionalNames
-                                                                         forNumberOfCompanies:[realTickers count]];
         
-        NSMutableArray *fictionalTickersLeft = [[fictionalCompanyInfo allKeys] mutableCopy];
+        self.tickersChanged = [[NSMutableDictionary alloc] init];
+        self.namesChanged = [[NSMutableDictionary alloc] init];
+        self.priceMultipliers = [[NSMutableDictionary alloc] init];
+        
+        NSMutableArray *namesLeft = [[fictionalNamesAndTickers allKeys] mutableCopy];
+        NSMutableSet *existingFictionalTickers = [[NSMutableSet alloc] init];
         
         for (NSString *realTicker in realTickers) {
             
-            if ([fictionalTickersLeft count] > 0) {
+            while ([namesLeft count] > 0) {
+
                 
-                NSString *fictionalTicker = [fictionalTickersLeft firstObject];
-                NSString *fictionalName = fictionalCompanyInfo[fictionalTicker];
-                [fictionalTickersLeft removeObject:fictionalTicker];
-                // Random double between 0.5 and 1.5 to multiply prices
-                double priceMultiplier = (arc4random() % 101) / 100 + 0.5;
+                NSInteger randomNameIndex = arc4random() % [namesLeft count];
                 
-                self.tickersChanged[realTicker] = fictionalTicker;
-                self.namesChanged[realTicker] = fictionalName;
-                self.priceMultipliers[realTicker] = @(priceMultiplier);
+                NSString *fictionalName = namesLeft[randomNameIndex];
+                NSString *fictionalTicker = [fictionalNamesAndTickers[fictionalName] uppercaseString];
                 
-            } else {
-                NSLog(@"CompanyDisguise error. Not enough valid fictional names");
-                return nil;
+                [namesLeft removeObject:fictionalName];
+                
+                if ([existingFictionalTickers containsObject:fictionalTicker]) {
+                    fictionalTicker = [self fictionalTickerForName:fictionalName notPresentInSet:existingFictionalTickers];
+                }
+                
+                if (fictionalTicker) {
+                    [existingFictionalTickers addObject:fictionalTicker];
+                    
+                    NSInteger randomCompanyTypeIndex = arc4random() % [FictionalNameCompanyTypes count];
+                    fictionalName = [[NSString stringWithFormat:@"%@ %@", fictionalName, FictionalNameCompanyTypes[randomCompanyTypeIndex]] uppercaseString];
+                    
+                    // Random NSUInteger greater than 1 to multiply prices
+                    NSUInteger priceMultiplier = (arc4random() % 3) + 2;
+                    
+                    self.tickersChanged[realTicker] = fictionalTicker;
+                    self.namesChanged[realTicker] = fictionalName;
+                    self.priceMultipliers[realTicker] = @(priceMultiplier);
+                    
+                    break;
+                }
             }
-            
         }
     }
     
@@ -63,11 +79,13 @@
 {
     return self.namesChanged[ticker];
 }
+
 - (NSString *)tickerFromTicker:(NSString *)ticker
 {
     return self.tickersChanged[ticker];
 }
-- (double)priceMultiplierFromTicker:(NSString *)ticker
+
+- (NSUInteger)priceMultiplierFromTicker:(NSString *)ticker
 {
     NSNumber *priceMultiplierNumber = self.priceMultipliers[ticker];
     
@@ -75,49 +93,11 @@
         return NSNotFound;
     }
     
-    return [priceMultiplierNumber doubleValue];
+    return [priceMultiplierNumber unsignedIntegerValue];
 }
 
 
 #pragma mark - Random Info Generator
-
-#define FictionalNameCompanyTypes @[@"INC", @"CO", @"CORP"]
-// Return a dictionary mapping fictional ticker with the corresponding given fictional name.
-// The result count is equal to the given number and generated randomly selecting from the given names.
-// Return nil if no enough names to create asked tickers.
-- (NSMutableDictionary *)randomFictionalCompanyInfoFromNames:(NSArray *)names forNumberOfCompanies:(NSUInteger)number
-{
-    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
-    
-    NSMutableArray *namesLeft = [names mutableCopy];
-    NSMutableSet *otherTickers = [[NSMutableSet alloc] init];
-    
-    while ([result count] < number) {
-        NSInteger namesLeftCount = [namesLeft count];
-        
-        if (namesLeftCount <= 0) {
-            return nil;
-        }
-        
-        NSInteger randomIndex = arc4random() % namesLeftCount;
-        NSString *fictionalName = namesLeft[randomIndex];
-        [namesLeft removeObject:fictionalName];
-        
-        NSString *fictionalTicker = [self fictionalTickerForName:fictionalName notPresentInSet:otherTickers];
-        
-        if (fictionalTicker) {
-            
-            NSInteger companyTypeIndex = arc4random() % [FictionalNameCompanyTypes count];
-            NSString *companyType = FictionalNameCompanyTypes[companyTypeIndex];
-            fictionalName = [NSString stringWithFormat:@"%@ %@", fictionalName, companyType];
-            
-            result[fictionalTicker] = fictionalName;
-            [otherTickers addObject:fictionalTicker];
-        }
-    }
-
-    return result;
-}
 
 // Return a upper case 3 or 4 letter ticker generated from the given name, not included in the given set
 // Return nil if ticker could not be generated.
@@ -128,42 +108,49 @@
     
     if (lettersStr.length >= 3) {
         
-        // A) First three characters
-        NSString *tickerA = [lettersStr substringToIndex:3];
-        if (![otherTickers containsObject:tickerA]) {
-            return tickerA;
+        // A) All four characters
+        if (lettersStr.length == 4) {
+            NSString *tickerA = lettersStr;
+            if (![otherTickers containsObject:tickerA]) {
+                return tickerA;
+            }
         }
         
-        // B) First two character + last character
-        NSString *tickerB = [NSString stringWithFormat:@"%@%@", [lettersStr substringToIndex:2], [lettersStr substringFromIndex:lettersStr.length - 1]];
+        // B) First three characters
+        NSString *tickerB = [lettersStr substringToIndex:3];
         if (![otherTickers containsObject:tickerB]) {
             return tickerB;
         }
         
-        // C) First character + last two characters
-        NSString *tickerC = [NSString stringWithFormat:@"%@%@", [lettersStr substringToIndex:1], [lettersStr substringFromIndex:lettersStr.length - 2]];
+        // C) First two character + last character
+        NSString *tickerC = [NSString stringWithFormat:@"%@%@", [lettersStr substringToIndex:2], [lettersStr substringFromIndex:lettersStr.length - 1]];
         if (![otherTickers containsObject:tickerC]) {
             return tickerC;
         }
         
-        // D) A, B or C with double initial letter
-        NSString *tickerD = [NSString stringWithFormat:@"%@%@", [tickerA substringToIndex:1], tickerA];
+        // D) First character + last two characters
+        NSString *tickerD = [NSString stringWithFormat:@"%@%@", [lettersStr substringToIndex:1], [lettersStr substringFromIndex:lettersStr.length - 2]];
         if (![otherTickers containsObject:tickerD]) {
             return tickerD;
         }
-        tickerD = [NSString stringWithFormat:@"%@%@", [tickerB substringToIndex:1], tickerB];
-        if (![otherTickers containsObject:tickerD]) {
-            return tickerD;
+        
+        // E) B, C or D with double initial letter
+        NSString *tickerE = [NSString stringWithFormat:@"%@%@", [tickerB substringToIndex:1], tickerB];
+        if (![otherTickers containsObject:tickerE]) {
+            return tickerE;
         }
-        tickerD = [NSString stringWithFormat:@"%@%@", [tickerC substringToIndex:1], tickerC];
-        if (![otherTickers containsObject:tickerD]) {
-            return tickerD;
+        tickerE = [NSString stringWithFormat:@"%@%@", [tickerC substringToIndex:1], tickerC];
+        if (![otherTickers containsObject:tickerE]) {
+            return tickerE;
+        }
+        tickerE = [NSString stringWithFormat:@"%@%@", [tickerD substringToIndex:1], tickerD];
+        if (![otherTickers containsObject:tickerE]) {
+            return tickerE;
         }
     }
     
     return nil;
 }
-
 
 
 

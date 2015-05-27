@@ -1260,7 +1260,7 @@
         double averageShares = reportsSharesSum / 4;
         
         if (averageShares > 0) {
-            dividendsPerShareNumber = @(-annualDividends / averageShares); // Negative because is cash flow
+            dividendsPerShareNumber = @(-annualDividends / averageShares);
         }
     }
     

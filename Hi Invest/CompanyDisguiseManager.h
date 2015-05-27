@@ -11,10 +11,11 @@
 @interface CompanyDisguiseManager : NSObject
 
 // Designated initializer
-- (instancetype)initWithCompaniesRealTickers:(NSArray *)realTickers andFictionalNames:(NSArray *)fictionalNames;
+// Receive an NSArray of real Tickers to disguise and a NSDictionary mapping fictional names with fictional tickers @{name : ticker}
+- (instancetype)initWithCompaniesRealTickers:(NSArray *)realTickers withFictionalNamesAndTickers:(NSDictionary *)fictionalNamesAndTickers;
 
 - (NSString *)nameFromTicker:(NSString *)ticker;
 - (NSString *)tickerFromTicker:(NSString *)ticker;
-- (double)priceMultiplierFromTicker:(NSString *)ticker;
+- (NSUInteger)priceMultiplierFromTicker:(NSString *)ticker;
 
 @end

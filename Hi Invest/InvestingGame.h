@@ -24,8 +24,8 @@
 @property (strong, nonatomic, readonly) NSDate *endDate;
 @property (strong, nonatomic, readonly) NSDate *currentDate;
 @property (strong, nonatomic, readonly) NSDictionary *currentPrices; // @{ticker : Price}
-@property (nonatomic, readonly) BOOL changeRealNamesAndTickers;
-@property (strong, nonatomic, readonly) CompanyDisguiseManager *aliasGenerator;
+@property (nonatomic, readonly) BOOL disguiseRealNamesAndTickers;
+@property (strong, nonatomic, readonly) CompanyDisguiseManager *disguiseManager;
 @property (nonatomic) double transactionCommissionRate;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic, readonly) NSMutableArray *portfolioPictures; // of PortfolioPicture
@@ -38,7 +38,7 @@
 // Return a initialized InvestingGame with initial cash and initial date
 // If portfolioPictures parameter is given as nil, then is a new game.
 - (instancetype)initInvestingGameWithInitialCash:(double)initialCash
-                     changingRealNamesAndTickers:(BOOL)changeRealNamesAndTickers
+                     disguisingRealNamesAndTickers:(BOOL)disguiseRealNamesAndTickers
                                         scenario:(Scenario *)scenario
                             andPortfolioPictures:(NSArray *)portfolioPictures;
 
@@ -60,6 +60,11 @@
 
 // Return the current value of portfolio
 - (double)currentNetWorth;
+
+// Return the User Interface value for the company of the given ticker. Disguised if neccesary.
+- (NSString *)UITickerForTicker:(NSString *)ticker;
+- (NSString *)UINameForTicker:(NSString *)ticker;
+- (NSUInteger)UIPriceMultiplierForTicker:(NSString *)ticker;
 
 // Return the market price at the given date;
 // Return nil if given date is earlier than the initial game date, or later than maximum game date

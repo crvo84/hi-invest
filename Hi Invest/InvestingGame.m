@@ -19,6 +19,7 @@
 #import "RatiosKeys.h"
 #import "PortfolioKeys.h"
 #import "CompaniesInfoKeys.h"
+#import "Company.h"
 #import "Price.h"
 #import "Dividend.h"
 
@@ -31,7 +32,7 @@
 @property (strong, nonatomic, readwrite) NSDate *endDate;
 @property (strong, nonatomic, readwrite) NSDate *currentDate;
 @property (strong, nonatomic, readwrite) NSDictionary *currentPrices; // @{NSString ticker : Price}
-@property (nonatomic, readwrite) BOOL changeRealNamesAndTickers;
+@property (nonatomic, readwrite) BOOL disguiseRealNamesAndTickers;
 @property (strong, nonatomic, readwrite) CompanyDisguiseManager *disguiseManager;
 @property (strong, nonatomic, readwrite) NSMutableArray *portfolioPictures; // of PortfolioPicture
 @property (strong, nonatomic, readwrite) NSMutableArray *portfolioHistoricalValues; // of PortfolioHistoricalValue
@@ -47,7 +48,7 @@
 // Return a initialized InvestingGame with initial cash and initial date
 // If portfolioPictures parameter is given as nil, then is a new game.
 - (instancetype)initInvestingGameWithInitialCash:(double)initialCash
-                     changingRealNamesAndTickers:(BOOL)changeRealNamesAndTickers
+                     disguisingRealNamesAndTickers:(BOOL)disguiseRealNamesAndTickers
                                         scenario:(Scenario *)scenario
                             andPortfolioPictures:(NSArray *)portfolioPictures
 {
@@ -59,7 +60,7 @@
         self.tickersOfCompaniesAvailable = [scenario.companyTickersStr componentsSeparatedByString:@","];
         self.initialDate = scenario.initialScenarioDate;
         self.endDate = scenario.endingScenarioDate;
-        self.changeRealNamesAndTickers = changeRealNamesAndTickers;
+        self.disguiseRealNamesAndTickers = disguiseRealNamesAndTickers;
         self.transactionCommissionRate = InvestingGameDefaultTransactionCommissionRate;
         self.managedObjectContext = scenario.managedObjectContext;
         
@@ -312,6 +313,44 @@
     return info;
 }
 
+#pragma mark - Disguising
+
+// Return the disguise value for the company of the given ticker
+
+- (NSString *)UITickerForTicker:(NSString *)ticker
+{
+    if (self.disguiseRealNamesAndTickers) {
+        return [self.disguiseManager tickerFromTicker:ticker];
+    }
+    
+    return ticker;
+}
+
+- (NSString *)UINameForTicker:(NSString *)ticker
+{
+    if (self.disguiseRealNamesAndTickers) {
+        return [self.disguiseManager nameFromTicker:ticker];
+    }
+    
+    Price *price = self.currentPrices[ticker];
+    
+    if (price) {
+        return price.company.name;
+    }
+    
+    return nil;
+}
+
+- (NSUInteger)UIPriceMultiplierForTicker:(NSString *)ticker
+{
+    if (self.disguiseRealNamesAndTickers) {
+        return [self.disguiseManager priceMultiplierFromTicker:ticker];
+    }
+    
+    return 1;
+}
+
+
 #pragma mark - Historic Data
 
 // Return a PortfolioPicture of the current portfolio state
@@ -459,7 +498,7 @@
 - (CompanyDisguiseManager *)disguiseManager
 {
     if (!_disguiseManager) {
-        _disguiseManager = [[CompanyDisguiseManager alloc] initWithCompaniesRealTickers:self.tickersOfCompaniesAvailable andFictionalNames:FictionalNamesGOTHousesArray];
+        _disguiseManager = [[CompanyDisguiseManager alloc] initWithCompaniesRealTickers:self.tickersOfCompaniesAvailable withFictionalNamesAndTickers:FictionalNamesGOTHousesDictionary];
     }
     
     return _disguiseManager;

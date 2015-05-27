@@ -15,9 +15,10 @@
 #import "CompanyInfoViewController.h"
 #import "PortfolioPieChartViewController.h"
 
+
 @interface BuySellTableViewController () <UITextFieldDelegate>
 
-@property (strong, nonatomic) Price *price;
+@property (strong, nonatomic) NSNumber *priceNumber;
 @property (strong, nonatomic) NSNumberFormatter *numberFormatter;
 
 // Portfolio properties
@@ -57,6 +58,9 @@
 @property (nonatomic) BOOL showPortfolioInfo;
 @property (nonatomic, readonly) NSInteger sharesSelected;
 
+// Company Disguising Properties
+@property (nonatomic) NSUInteger priceMultiplier;
+
 @end
 
 @implementation BuySellTableViewController
@@ -66,10 +70,19 @@
         
     // Initialization of portfolio values properties
     self.netWorth = self.game.currentNetWorth;
-    self.previousShares = [self.game.portfolio sharesInPortfolioOfStockWithTicker:self.ticker];
-    self.previousCash = self.game.portfolio.cash;
-    self.previousAverageCost = [self.game.portfolio averageCostForCompanyWithTicker:self.ticker];
     
+    self.previousShares = [self.game.portfolio sharesInPortfolioOfStockWithTicker:self.ticker];
+    if (self.previousShares != NSNotFound) {
+        self.previousShares /= self.priceMultiplier; // DISGUISE
+    }
+    
+    self.previousAverageCost = [self.game.portfolio averageCostForCompanyWithTicker:self.ticker];
+    if (self.previousAverageCost != NSNotFound) {
+        self.previousAverageCost *= self.priceMultiplier; // DISGUISE
+    }
+    
+    self.previousCash = self.game.portfolio.cash;
+
     // For keyboard dismissing over tableview
     UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
     [self.tableView addGestureRecognizer:gestureRecognizer];
@@ -92,7 +105,7 @@
 - (void)initialUIConfiguration
 {
     // Navigation Bar Title
-    self.title = self.ticker;
+    self.title = [self.game UITickerForTicker:self.ticker];
     
     // textField configuration
     self.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -117,7 +130,7 @@
     //------------------------/
     self.numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
     
-    self.priceLabel.text = [NSString stringWithFormat:@"Price: %@", [self.numberFormatter stringFromNumber:self.price.price]];
+    self.priceLabel.text = [NSString stringWithFormat:@"Price: %@", [self.numberFormatter stringFromNumber:self.priceNumber]];
     self.previousCashLabel.text = [self.numberFormatter stringFromNumber:@(self.previousCash)];
     self.previousAverageCostLabel.text = self.previousAverageCost == NSNotFound ? @"--" : [self.numberFormatter stringFromNumber:@(self.previousAverageCost)];
 
@@ -126,8 +139,8 @@
     //-----------------------/
     self.numberFormatter.numberStyle = NSNumberFormatterPercentStyle;
     
-    self.previousWeightLabel.text = [self.numberFormatter stringFromNumber:@(self.previousShares * [self.price.price doubleValue] / self.netWorth)];
-    self.previousReturnLabel.text = self.previousAverageCost == NSNotFound ? @"--" : [self.numberFormatter stringFromNumber:@([self.price.price doubleValue] / self.previousAverageCost - 1)];
+    self.previousWeightLabel.text = [self.numberFormatter stringFromNumber:@(self.previousShares * [self.priceNumber doubleValue] / self.netWorth)];
+    self.previousReturnLabel.text = self.previousAverageCost == NSNotFound ? @"--" : [self.numberFormatter stringFromNumber:@([self.priceNumber doubleValue] / self.previousAverageCost - 1)];
     
     [self updateUI];
 }
@@ -154,7 +167,7 @@
     
     double newAverageCost;
     if (self.isBuyOrder) {
-        newAverageCost = (self.previousShares / newSharesTotal) * self.previousAverageCost + (self.sharesSelected / newSharesTotal) * [self.price.price doubleValue];
+        newAverageCost = (self.previousShares / newSharesTotal) * self.previousAverageCost + (self.sharesSelected / newSharesTotal) * [self.priceNumber doubleValue];
     } else {
         newAverageCost = self.previousAverageCost;
     }
@@ -170,8 +183,8 @@
     //-----------------------/
     self.numberFormatter.numberStyle = NSNumberFormatterPercentStyle;
     
-    self.updatedWeightLabel.text = [self.numberFormatter stringFromNumber:@((newSharesTotal) * [self.price.price doubleValue] / self.netWorth)];
-    self.updatedReturnLabel.text = newSharesTotal == 0 ? @"--" : [self.numberFormatter stringFromNumber:@([self.price.price doubleValue] / newAverageCost - 1)];
+    self.updatedWeightLabel.text = [self.numberFormatter stringFromNumber:@((newSharesTotal) * [self.priceNumber doubleValue] / self.netWorth)];
+    self.updatedReturnLabel.text = newSharesTotal == 0 ? @"--" : [self.numberFormatter stringFromNumber:@([self.priceNumber doubleValue] / newAverageCost - 1)];
     
     [self.tableView reloadData];
 }
@@ -212,10 +225,17 @@
 
 - (void)reloadSlider
 {
+    /*
+     Cash Available = $5,000
+     Original Price = $100,  Maximum Shares = $5,000 / $100 = 50
+     Price multiplier = 3 (MUST ALWAYS BE A POSITIVE INTEGER)
+     Disguised Price = $300, Maximum Shares = $5,000 / $300 = 16
+     */
+    
     NSInteger maxValue;
     
     if (self.isBuyOrder) {
-        maxValue = (NSInteger) self.previousCash / ([self.price.price doubleValue] * (1 + self.game.transactionCommissionRate));
+        maxValue = self.previousCash / ([self.priceNumber doubleValue] * (1 + self.game.transactionCommissionRate));
     } else {
         maxValue = self.previousShares;
     }
@@ -251,10 +271,10 @@
                 self.slider.value = enteredShares;
             }
         } else {
-            double maxPercentValue = self.slider.maximumValue * [self.price.price doubleValue] / self.netWorth;
+            double maxPercentValue = self.slider.maximumValue * [self.priceNumber doubleValue] / self.netWorth;
             double enteredPercent = [enteredNumber doubleValue] / 100;
             if (enteredPercent >= 0 && enteredPercent <= maxPercentValue) {
-                self.slider.value = (NSInteger)(enteredPercent * self.netWorth / [self.price.price doubleValue]);
+                self.slider.value = (NSInteger)(enteredPercent * self.netWorth / [self.priceNumber doubleValue]);
             }
         }
     }
@@ -284,7 +304,7 @@
         self.numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
         placeholder = [NSString stringWithFormat:@"0  -  %@", [self.numberFormatter stringFromNumber:@(maxShares)]];
     } else {
-        double maxWeightPercent = maxShares * [self.price.price doubleValue] / self.netWorth * 100;
+        double maxWeightPercent = maxShares * [self.priceNumber doubleValue] / self.netWorth * 100;
         placeholder = [NSString stringWithFormat:@"0.00  -  %.2f", maxWeightPercent];
     }
     
@@ -339,7 +359,7 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     if (section == 0) {
-        return self.price.company.name;
+        return [self.game UINameForTicker:self.ticker];
     } else if (section == 1) {
         return @"Select Order Quantity";
     } else if (section == 2 && self.showPortfolioInfo) {
@@ -360,13 +380,20 @@
 
 #pragma mark - Getters
 
-- (Price *)price
+- (NSNumber *)priceNumber
 {
-    if (!_price) {
-        _price = self.game.currentPrices[self.ticker];
+    if (!_priceNumber) {
+        
+        Price *price = self.game.currentPrices[self.ticker];
+        
+        if (self.game.disguiseRealNamesAndTickers) { // DISGUISED
+            _priceNumber = @([price.price doubleValue] * self.priceMultiplier);
+        }  else {
+            _priceNumber = price.price;
+        }
     }
     
-    return _price;
+    return _priceNumber;
 }
 
 - (NSNumberFormatter *)numberFormatter
@@ -392,12 +419,17 @@
 
 - (double)amount
 {
-    return [self.price.price doubleValue] * self.sharesSelected;
+    return [self.priceNumber doubleValue] * self.sharesSelected;
 }
 
 - (NSInteger)sharesSelected
 {
     return self.slider.value;
+}
+
+- (NSUInteger)priceMultiplier
+{
+    return [self.game UIPriceMultiplierForTicker:self.ticker];
 }
 
 #pragma mark - Order Execution
@@ -410,21 +442,23 @@
 // Executes the order in the game portfolio. Then calls the method to present an alert confirming the execution
 - (IBAction)executeOrder:(id)sender
 {
-    double price = [self.price.price doubleValue];
-    double commissionPaid = price * self.sharesSelected * self.game.transactionCommissionRate;
+    Price *realPrice = self.game.currentPrices[self.ticker];
+    double realPriceValue = [realPrice.price doubleValue];
+    NSInteger realSharesSelected = self.sharesSelected * self.priceMultiplier;
+    double commissionPaid = realPriceValue * realSharesSelected * self.game.transactionCommissionRate;
     
     BOOL success;
     
     if (self.isBuyOrder) {
         success = [self.game.portfolio investInStockWithTicker:self.ticker
-                                                         price:price
-                                                numberOfShares:self.sharesSelected
+                                                         price:realPriceValue
+                                                numberOfShares:realSharesSelected
                                                 commissionPaid:commissionPaid
                                                          atDay:[self.game currentDay]];
     } else {
         success = [self.game.portfolio deinvestInStockWithTicker:self.ticker
-                                                           price:price
-                                                  numberOfShares:self.sharesSelected
+                                                           price:realPriceValue
+                                                  numberOfShares:realSharesSelected
                                                   commissionPaid:commissionPaid
                                                            atDay:[self.game currentDay]];
     }
@@ -447,9 +481,9 @@
         NSString *sharesString = [self.numberFormatter stringFromNumber:@(self.sharesSelected)];
         
         self.numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
-        NSString *priceAsString = [self.numberFormatter stringFromNumber:self.price.price];
+        NSString *priceAsString = [self.numberFormatter stringFromNumber:self.priceNumber];
         
-        alertTitle = [NSString stringWithFormat:@"%@ - %@ Order Executed", self.ticker, self.isBuyOrder ? @"Buy" : @"Sell"];
+        alertTitle = [NSString stringWithFormat:@"%@ - %@ Order Executed", [self.game UITickerForTicker:self.ticker] , self.isBuyOrder ? @"Buy" : @"Sell"];
         alertMessage = [NSString stringWithFormat:@"%@ Shares at Price: %@", sharesString, priceAsString];
         
     } else {

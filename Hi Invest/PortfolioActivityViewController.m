@@ -60,6 +60,11 @@
     NSArray *dayTransactions = self.transactions[indexPath.section];
     PortfolioTransaction *transaction = dayTransactions[indexPath.row];
     
+    NSUInteger priceMultiplier = [self.game UIPriceMultiplierForTicker:transaction.ticker];
+    
+    NSString *UITransactionTicker = [self.game UITickerForTicker:transaction.ticker];
+    NSInteger UItransactionShares = transaction.shares / priceMultiplier;
+    
     NSString *title;
     NSString *description;
     NSString *amount;
@@ -67,20 +72,20 @@
     
     switch (transaction.transactionType) {
         case 0:
-            title = [NSString stringWithFormat:@"Buy - %@", transaction.ticker];
+            title = [NSString stringWithFormat:@"Buy - %@", UITransactionTicker];
             
             self.numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
-            description = [NSString stringWithFormat:@"%@ shares", [self.numberFormatter stringFromNumber:@(transaction.shares)]];
+            description = [NSString stringWithFormat:@"%@ shares", [self.numberFormatter stringFromNumber:@(UItransactionShares)]];
             
             amountColor = [UIColor darkGrayColor];
             
             break;
             
         case 1:
-            title = [NSString stringWithFormat:@"Sell - %@", transaction.ticker];
+            title = [NSString stringWithFormat:@"Sell - %@", UITransactionTicker];
             
             self.numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
-            description = [NSString stringWithFormat:@"%@ shares", [self.numberFormatter stringFromNumber:@(transaction.shares)]];
+            description = [NSString stringWithFormat:@"%@ shares", [self.numberFormatter stringFromNumber:@(UItransactionShares)]];
             
             amountColor = [UIColor darkGrayColor];
             
@@ -90,7 +95,7 @@
             
             title = @"Commission & fees";
             
-            description = [NSString stringWithFormat:@"Buy - %@", transaction.ticker];
+            description = [NSString stringWithFormat:@"Buy - %@", UITransactionTicker];
             
             amountColor = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha:1.0];
             
@@ -100,7 +105,7 @@
             
             title = @"Commission & fees";
             
-            description = [NSString stringWithFormat:@"Sell - %@", transaction.ticker];
+            description = [NSString stringWithFormat:@"Sell - %@", UITransactionTicker];
             
             amountColor = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha:1.0];
             
@@ -111,7 +116,7 @@
             title = @"Dividends received";
             
             self.numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
-            description = [NSString stringWithFormat:@"%@  |  %@ shares", transaction.ticker, [self.numberFormatter stringFromNumber:@(transaction.shares)]];
+            description = [NSString stringWithFormat:@"%@  |  %@ shares", UITransactionTicker, [self.numberFormatter stringFromNumber:@(UItransactionShares)]];
             
             amountColor = [UIColor colorWithRed:0.0 green:0.6 blue:0.0 alpha:1.0];
             
@@ -173,7 +178,6 @@
     
     return _numberFormatter;
 }
-
 
 
 

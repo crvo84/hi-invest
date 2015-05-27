@@ -17,7 +17,7 @@
 @property (strong, nonatomic, readonly) InvestingGame *currentInvestingGame;
 // Settings
 @property (nonatomic) double scenarioInitialCash;
-@property (nonatomic) BOOL changeOriginalCompanyNamesAndTickers;
+@property (nonatomic) BOOL disguiseOriginalCompanyNamesAndTickers;
 
 - (void)increaseQuizLevelForQuizType:(QuizType)quizType;
 

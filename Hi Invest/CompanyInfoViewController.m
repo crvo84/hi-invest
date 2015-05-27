@@ -74,7 +74,7 @@
     self.ratioIdentifiers = nil;
     
     if (self.price) {
-        self.companyNameLabel.text = self.price.company.name;
+        self.companyNameLabel.text = [self.game UINameForTicker:self.ticker];
         self.companyDescriptionLabel.text = self.price.company.sicDescription;
     }
     

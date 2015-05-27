@@ -20,7 +20,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *currentPriceLabel;
 @property (weak, nonatomic) IBOutlet UILabel *currentPriceLabelText;
 @property (strong, nonatomic) NSNumberFormatter *numberFormatter;
-@property (strong, nonatomic) Price *price;
+@property (strong, nonatomic) NSNumber *priceNumber;
+@property (nonatomic) NSUInteger priceMultiplier;
 @property (nonatomic) double netWorth;
 
 @end
@@ -46,7 +47,7 @@
 {
     [super viewWillAppear:animated];
     
-    if (self.ticker && self.game ) {
+    if (self.ticker && self.game) {
         self.netWorth = [self.game currentNetWorth];
         [self updateUI]; // UpdatingUI is done here to update when switching tabs
     }
@@ -55,10 +56,10 @@
 
 - (void)updateUI
 {
-    self.price = nil;
+    self.priceNumber = nil;
     
     // Ticker Button Text
-    [self.tickerButton setTitle:self.ticker forState:UIControlStateNormal];
+    [self.tickerButton setTitle:[self.game UITickerForTicker:self.ticker] forState:UIControlStateNormal];
     if ([self.ticker isEqualToString:CashTicker]) {
         // Disabled button so Buy Sell segue cannot ve performed when Cash is selected
         self.tickerButton.enabled = NO;
@@ -79,9 +80,9 @@
         self.currentPriceLabel.text = @"";
     } else {
         self.currentPriceLabelText.alpha = 1.0;
-        double currentPrice = [self.price.price doubleValue];
+        double currentPriceValue = [self.priceNumber doubleValue];
         self.numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
-        self.currentPriceLabel.text = [self.numberFormatter stringFromNumber:[NSNumber numberWithDouble:currentPrice]];
+        self.currentPriceLabel.text = [self.numberFormatter stringFromNumber:[NSNumber numberWithDouble:currentPriceValue]];
     }
     
     [self.tableView reloadData];
@@ -106,9 +107,9 @@
     NSString *valueStr;
     
     NSString *ticker = self.ticker;
-    double currentPrice = [self.price.price doubleValue];
-    double shares = [self.game.portfolio sharesInPortfolioOfStockWithTicker:ticker];
-    double averageCost = [self.game.portfolio averageCostForCompanyWithTicker:ticker];
+    double currentPrice = [self.priceNumber doubleValue];
+    double shares = [self.game.portfolio sharesInPortfolioOfStockWithTicker:ticker] / self.priceMultiplier; // DISGUISED
+    double averageCost = [self.game.portfolio averageCostForCompanyWithTicker:ticker] * self.priceMultiplier; // DISGUISED
     
     if (indexPath.row == 0) { // Average cost cell (Weight in portfolio if cash)
         
@@ -182,20 +183,32 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     // Since there is only one section.
-    // Return a very small height to avoid initial table view offset
+    // Return a very small height to avoid initial table view offset for grouped table views
     return 0.1;
 }
 
 
 #pragma mark - Getters
 
-- (Price *)price
+- (NSNumber *)priceNumber
 {
-    if (!_price) {
-        _price = self.game.currentPrices[self.ticker];
+    if (!_priceNumber) {
+        
+        Price *price = self.game.currentPrices[self.ticker];
+        
+        if (self.game.disguiseRealNamesAndTickers) { // DISGUISED
+            _priceNumber = @([price.price doubleValue] * self.priceMultiplier);
+        }  else {
+            _priceNumber = price.price;
+        }
     }
     
-    return _price;
+    return _priceNumber;
+}
+
+- (NSUInteger)priceMultiplier
+{
+    return [self.game UIPriceMultiplierForTicker:self.ticker];
 }
 
 - (NSNumberFormatter *)numberFormatter

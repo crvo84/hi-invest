@@ -186,7 +186,7 @@
         cell.detailTextLabel.text = [self.numberFormatter stringFromNumber:[NSNumber numberWithDouble:cashWeight]];
     } else {
         NSString *ticker = self.tickersOrderedByWeight[indexPath.row];
-        cell.textLabel.text = ticker;
+        cell.textLabel.text = [self.game UITickerForTicker:ticker];
         cell.detailTextLabel.text = [self.numberFormatter stringFromNumber:self.weightOfStocksInPortfolio[ticker]];
     }
     

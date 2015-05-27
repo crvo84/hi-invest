@@ -26,7 +26,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *buySellButton;
 @property (strong, nonatomic) NSArray *values; // of NSNumber. ratios[0] = current ratio, ratio[1] = last year's...
 @property (strong, nonatomic) NSNumberFormatter *numberFormatter;
-@property (strong, nonatomic) Price *price;
 
 @end
 
@@ -54,7 +53,7 @@
     
     [self.valueNameButton setTitle:self.valueId forState:UIControlStateNormal];
     
-    self.companyNameLabel.text = self.price.company.name;
+    self.companyNameLabel.text = [self.game UINameForTicker:self.ticker];
     
     [self setTextViewWithCorrespondingValueInfo];
     
@@ -209,11 +208,6 @@
     }
     
     return _numberFormatter;
-}
-
-- (Price *)price
-{
-    return self.game.currentPrices[self.ticker];
 }
 
 #pragma mark - Navigation
