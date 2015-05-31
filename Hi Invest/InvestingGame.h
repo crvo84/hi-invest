@@ -33,6 +33,7 @@
 @property (nonatomic, readonly) double initialNetworth;
 @property (strong, nonatomic) Scenario *scenarioInfo;
 @property (strong, nonatomic) NSLocale *locale;
+@property (nonatomic, readonly) BOOL finishedSuccessfully;
 
 // Designated Initializer
 // Return a initialized InvestingGame with initial cash and initial date
@@ -60,6 +61,11 @@
 
 // Return the current value of portfolio
 - (double)currentNetWorth;
+
+- (double)currentPortfolioReturn;
+- (double)currentMarketReturn;
+- (double)currentPortfolioAnnualizedReturn;
+- (double)currentMarketAnnualizedReturn;
 
 // Return the User Interface value for the company of the given ticker. Disguised if neccesary.
 - (NSString *)UITickerForTicker:(NSString *)ticker;

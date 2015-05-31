@@ -13,5 +13,6 @@
 @property (copy, nonatomic) NSString *definitionId;
 @property (copy, nonatomic) NSString *definition;
 @property (copy, nonatomic) NSString *formulaImageFilename;
+@property (copy, nonatomic) NSString *source;
 
 @end

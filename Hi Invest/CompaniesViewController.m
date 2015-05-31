@@ -78,6 +78,10 @@
             NSString *ticker1 = (NSString *)dictionary1[companyTicker];
             NSString *ticker2 = (NSString *)dictionary2[companyTicker];
             
+            ticker1 = [self.game UITickerForTicker:ticker1];
+            ticker2 = [self.game UITickerForTicker:ticker2];
+            
+            
             if (!ticker1 || !ticker2) return NSOrderedSame;
             return [ticker1 caseInsensitiveCompare:ticker2];
             

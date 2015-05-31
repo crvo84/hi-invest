@@ -14,6 +14,7 @@
 @interface UserAccount ()
 
 @property (nonatomic, readwrite) NSInteger userLevel;
+@property (copy, nonatomic) NSString *selectedScenearioId;
 @property (strong, nonatomic, readwrite) InvestingGame *currentInvestingGame;
 @property (strong, nonatomic) NSMutableDictionary *currentQuizLevels; // @{ @"QuizType" : @(Current Level) }
 
@@ -27,10 +28,9 @@
     
     if (self) {
         self.userLevel = 1;
-        // Temporary
-        // MUST BE GOT FROM SETTINGS
-        self.scenarioInitialCash = 1000000.0;
-        self.disguiseOriginalCompanyNamesAndTickers = NO;
+        // TODO: Should be loaded from user account
+        self.simulatorInitialCash = 1000000.0;
+        self.disguiseCompanies = NO;
     }
     
     return self;
@@ -78,36 +78,39 @@
     return [NSString stringWithFormat:@"%ld", (long)quizType];
 }
 
+- (void)newInvestingGame
+{
+    // TODO: Edit ManagedObjectContextCreator to get a context with a given scenario id
+    // using self.selectedScenarioId
+    NSManagedObjectContext *context = [ManagedObjectContextCreator createMainQueueManagedObjectContext];
+    
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Scenario"];
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    
+    if (!matches || error || [matches count] > 1) {
+        
+        NSLog(@"Error fetching Scenario from database");
+        
+    } else if ([matches count] == 0) {
+        
+        NSLog(@"No Scenario in database");
+        
+    } else {
+        
+        Scenario *scenario = [matches firstObject];
+        self.currentInvestingGame = [[InvestingGame alloc] initInvestingGameWithInitialCash:self.simulatorInitialCash disguisingRealNamesAndTickers:self.disguiseCompanies scenario:scenario andPortfolioPictures:nil];
+        
+    }
+}
+
+- (void)exitInvestingGame
+{
+    self.currentInvestingGame = nil;
+}
+
 
 #pragma mark - Getters
-
-- (InvestingGame *)currentInvestingGame
-{
-    if (!_currentInvestingGame) {
-        NSManagedObjectContext *context = [ManagedObjectContextCreator createMainQueueManagedObjectContext];
-        
-        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Scenario"];
-        NSError *error;
-        NSArray *matches = [context executeFetchRequest:request error:&error];
-        
-        if (!matches || error || [matches count] > 1) {
-            
-            NSLog(@"Error fetching Scenario from database");
-            
-        } else if ([matches count] == 0) {
-            
-            NSLog(@"No Scenario in database");
-            
-        } else {
-            
-            Scenario *scenario = [matches firstObject];
-            _currentInvestingGame = [[InvestingGame alloc] initInvestingGameWithInitialCash:self.scenarioInitialCash disguisingRealNamesAndTickers:self.disguiseOriginalCompanyNamesAndTickers scenario:scenario andPortfolioPictures:nil];
-    
-        }
-    }
-    
-    return _currentInvestingGame;
-}
 
 - (NSMutableDictionary *)currentQuizLevels
 {
@@ -121,9 +124,19 @@
     return _currentQuizLevels;
 }
 
+- (NSLocale *)localeDefault
+{
+    if (!_localeDefault) {
+        _localeDefault = [NSLocale localeWithLocaleIdentifier:@"en_US"];
+    }
+    
+    return _localeDefault;
+}
 
-
-
+- (NSString *)selectedScenearioId
+{
+    return @"scenario_DJI001A";
+}
 
 
 

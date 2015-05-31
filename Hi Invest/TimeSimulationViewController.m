@@ -40,15 +40,14 @@
     self.clockView.hours = 12;
     self.clockView.minutes = 60;
     
-    NSString *timePeriodStr;
-    if (self.daysNum <= 1) timePeriodStr = @"one day";
-    else if (self.daysNum <= 7) timePeriodStr = @"one week";
-    else if (self.daysNum <= 31) timePeriodStr = @"one month";
-    else if (self.daysNum <= 180) timePeriodStr = @"six months";
-    else if (self.daysNum <= 365) timePeriodStr = @"one year";
-    else timePeriodStr = @"";
+    
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    numberFormatter.maximumFractionDigits = 0;
+    numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+    
+    NSString *daysStr = [numberFormatter stringFromNumber:@(self.daysNum)];
 
-    self.daysLabel.text = [NSString stringWithFormat:@"Let's wait %@...", timePeriodStr];
+    self.daysLabel.text = [NSString stringWithFormat:@"Let's wait %@ days...", daysStr];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -166,7 +165,6 @@
 
 #pragma mark - Dismissing View Controller
 
-// FOR DEBUGGING
 // Call cancel method when the user touches the screen outside the subview
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {

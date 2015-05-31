@@ -37,6 +37,7 @@
 @property (strong, nonatomic, readwrite) NSMutableArray *portfolioPictures; // of PortfolioPicture
 @property (strong, nonatomic, readwrite) NSMutableArray *portfolioHistoricalValues; // of PortfolioHistoricalValue
 @property (nonatomic, readwrite) double initialNetworth;
+@property (nonatomic, readwrite) BOOL finishedSuccessfully;
 
 @end
 
@@ -63,6 +64,7 @@
         self.disguiseRealNamesAndTickers = disguiseRealNamesAndTickers;
         self.transactionCommissionRate = InvestingGameDefaultTransactionCommissionRate;
         self.managedObjectContext = scenario.managedObjectContext;
+        self.finishedSuccessfully = NO;
         
         if (portfolioPictures && [portfolioPictures count] > 0) {
             PortfolioPicture *lastPicture = [portfolioPictures lastObject];
@@ -101,7 +103,7 @@
     
     if ([newDate timeIntervalSinceDate:self.endDate] > (60*60*12)) {
         // new date is out of database available info range
-        return NO;
+        newDate = self.endDate;// End date must have valid prices available
     }
     
     while (![FinancialDatabaseManager arePricesAvailableForDate:newDate fromScenario:self.scenarioInfo]) {
@@ -134,6 +136,10 @@
 
     self.currentDate = newDate;
     self.currentPrices = nil; // reset prices to get the new date prices
+    
+    if ([self currentDay] >= [self dayNumberFromDate:self.endDate]) {
+        self.finishedSuccessfully = YES;
+    }
     
 //    NSLog(@"Portfolio historical values count: %ld", [self.portfolioHistoricalValues count]);
     
@@ -188,6 +194,40 @@
     }
 
     return stockValue + self.portfolio.cash;
+}
+
+- (double)currentPortfolioReturn
+{
+    double currentNetWorth = [self currentNetWorth];
+    double initialNetWorth = self.initialNetworth;
+    
+    return currentNetWorth / initialNetWorth - 1;
+}
+
+- (double)currentPortfolioAnnualizedReturn
+{
+    double yearsToDate = [self currentDay] / 365.0;
+    double currentNetWorth = [self currentNetWorth];
+    double initialNetWorth = self.initialNetworth;
+    
+    return pow(currentNetWorth / initialNetWorth, 1 / yearsToDate) - 1;
+}
+
+- (double)currentMarketReturn
+{
+    NSNumber *currentMarketPriceNumber = [self scenarioMarketPriceAtDate:self.currentDate];
+    NSNumber *initialMarketPriceNumber = [self scenarioMarketPriceAtDate:self.initialDate];
+
+    return [currentMarketPriceNumber doubleValue] / [initialMarketPriceNumber doubleValue] - 1;
+}
+
+- (double)currentMarketAnnualizedReturn
+{
+    double yearsToDate = [self currentDay] / 365.0;
+    NSNumber *currentMarketPriceNumber = [self scenarioMarketPriceAtDate:self.currentDate];
+    NSNumber *initialMarketPriceNumber = [self scenarioMarketPriceAtDate:self.initialDate];
+    
+    return pow([currentMarketPriceNumber doubleValue] / [initialMarketPriceNumber doubleValue], 1 / yearsToDate) - 1;
 }
 
 // Return the market price at the given date;

@@ -167,6 +167,8 @@
 {
     _ticker = ticker;
     
+    self.title = ticker;
+    
     [self updateUI];
 }
 

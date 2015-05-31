@@ -16,6 +16,7 @@
 #import "LeftMenuViewController.h"
 #import "TimeSimulationViewController.h"
 #import "SimulatorInfoViewController.h"
+#import "SimulatorGameOverViewController.h"
 
 @interface SideMenuRootViewController ()
 
@@ -46,14 +47,6 @@
 
 #pragma mark - Content View Controllers Initialization
 
-- (UITabBarController *)getSimulatorTabBarControllerWithUserAccount:(UserAccount *)userAccount
-{
-    SimulatorTabBarController *simulatorTabBarController = [self.storyboard instantiateViewControllerWithIdentifier:@"SimulatorTabBarController"];
-    
-    simulatorTabBarController.userAccount = userAccount;
-    
-    return simulatorTabBarController;
-}
 
 // For Initial Content View Controller
 - (UINavigationController *)getUserAccountNavigationControllerWithUserAccount:(UserAccount *)userAccount
@@ -72,7 +65,6 @@
 - (void)setUserAccount:(UserAccount *)userAccount
 {
     _userAccount = userAccount;
-    
     
     // Initialize LeftMenuViewController
     LeftMenuViewController *leftMenuViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"LeftMenuViewController"];
@@ -116,50 +108,71 @@
 {
     InvestingGame *game = self.userAccount.currentInvestingGame;
     
+    NSInteger initialDay = [game currentDay];
     NSInteger daysLeft = [game daysLeft];
     
-    NSString *message = [NSString stringWithFormat:@"Days left: %ld  |  Select a period of time.", (long)daysLeft];
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Time Simulation"
+    if (daysLeft == 0) {
+        [self presentGameOverAfterNumberOfSeconds:0.1];
+        return;
+    }
+    
+    NSString *titleStr = @"Time Simulation";
+    NSString *message = [NSString stringWithFormat:@"%ld days left", (long)daysLeft];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:titleStr
                                                                    message:message
                                                             preferredStyle:UIAlertControllerStyleActionSheet];
     
     UIAlertAction *dayAction = [UIAlertAction actionWithTitle:@"Day" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         if ([game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:0 andDays:1]) {
-            [self performSegueWithIdentifier:@"Time Simulation" sender:@(1)];
+            NSInteger newDay = [game currentDay];
+            [self performSegueWithIdentifier:@"Time Simulation" sender:@(newDay - initialDay)];
         }
     }];
     
     UIAlertAction *weekAction = [UIAlertAction actionWithTitle:@"Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         if ([game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:0 andDays:7]) {
-            [self performSegueWithIdentifier:@"Time Simulation" sender:@(7)];
+            NSInteger newDay = [game currentDay];
+            [self performSegueWithIdentifier:@"Time Simulation" sender:@(newDay - initialDay)];
         }
     }];
     
     UIAlertAction *monthAction = [UIAlertAction actionWithTitle:@"Month" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         if ([game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:1 andDays:0]) {
-            [self performSegueWithIdentifier:@"Time Simulation" sender:@(30)];
+            NSInteger newDay = [game currentDay];
+            [self performSegueWithIdentifier:@"Time Simulation" sender:@(newDay - initialDay)];
         }
     }];
     
     UIAlertAction *sixMonthsAction = [UIAlertAction actionWithTitle:@"Six Months" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         if ([game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:6 andDays:0]) {
-            [self performSegueWithIdentifier:@"Time Simulation" sender:@(180)];
+            NSInteger newDay = [game currentDay];
+            [self performSegueWithIdentifier:@"Time Simulation" sender:@(newDay - initialDay)];
         }
     }];
     
     UIAlertAction *yearAction = [UIAlertAction actionWithTitle:@"Year" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         if ([game changeCurrentDateToDateWithTimeDifferenceInYears:1 months:0 andDays:0]) {
-            [self performSegueWithIdentifier:@"Time Simulation" sender:@(365)];
+            NSInteger newDay = [game currentDay];
+            [self performSegueWithIdentifier:@"Time Simulation" sender:@(newDay - initialDay)];
+        }
+    }];
+    
+    // FOR DEBUGGING
+    UIAlertAction *tenYearsAction = [UIAlertAction actionWithTitle:@"10 Years" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        if ([game changeCurrentDateToDateWithTimeDifferenceInYears:10 months:0 andDays:0]) {
+            NSInteger newDay = [game currentDay];
+            [self performSegueWithIdentifier:@"Time Simulation" sender:@(newDay - initialDay)];
         }
     }];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
     
-    if (daysLeft >= 1) [alert addAction:dayAction];
-    if (daysLeft >= 7) [alert addAction:weekAction];
-    if (daysLeft >= 30) [alert addAction:monthAction];
-    if (daysLeft >= 180) [alert addAction:sixMonthsAction];
-    if (daysLeft >= 365) [alert addAction:yearAction];
+    [alert addAction:dayAction];
+    [alert addAction:weekAction];
+    [alert addAction:monthAction];
+    [alert addAction:sixMonthsAction];
+    [alert addAction:yearAction];
+    [alert addAction:tenYearsAction];
     [alert addAction:cancelAction];
     
     [self presentViewController:alert animated:YES completion:nil];
@@ -186,7 +199,30 @@
     
     // UNWIND FROM TimeSimulationViewController
     if ([unwindSegue.sourceViewController isKindOfClass:[TimeSimulationViewController class]]) {
-        [self presentDayUpdateAfterNumberOfSeconds:0.1];
+        InvestingGame *game = self.userAccount.currentInvestingGame;
+        NSInteger simulatorCurrentDay = game.currentDay;
+        NSInteger lastScenarioDay = [game dayNumberFromDate:game.endDate];
+        
+        if (simulatorCurrentDay < lastScenarioDay) {
+            [self presentDayUpdateAfterNumberOfSeconds:0.1];
+            
+        } else {
+            [self presentGameOverAfterNumberOfSeconds:0.1];
+        }
+        
+    }
+    
+    // UNWIND FROM SimulatorGameOverViewController
+    if ([unwindSegue.sourceViewController isKindOfClass:[SimulatorGameOverViewController class]]) {
+        if ([unwindSegue.identifier isEqualToString:@"unwindToSideMenuRootViewController Reset Game"]) {
+            [self.userAccount exitInvestingGame];
+            [self.userAccount newInvestingGame];
+            if ([self.contentViewController isKindOfClass:[SimulatorTabBarController class]]) {
+                ((SimulatorTabBarController *)self.contentViewController).userAccount = self.userAccount;
+                
+            }
+            [self presentDayUpdateAfterNumberOfSeconds:0.1];
+        }
     }
     
     // UNWIND FROM SelectOrderingValueViewController
@@ -214,6 +250,15 @@
     });
 }
 
+- (void)presentGameOverAfterNumberOfSeconds:(double)seconds
+{
+    // Wait some time to let TimeSimulationViewController dismiss completely
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, seconds * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void){
+        //code to be executed on the main queue after delay
+        [self performSegueWithIdentifier:@"Simulator Game Over" sender:self];
+    });
+}
+
 #pragma mark - Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -226,10 +271,12 @@
         if ([sender isKindOfClass:[NSNumber class]]) {
             NSNumber *senderNumber = (NSNumber *)sender;
             NSInteger numberOfDays = [senderNumber integerValue];
-            if (numberOfDays <= 365 || numberOfDays > 0) {
-                [self prepareTimeSimulationViewController:segue.destinationViewController withNumberOfDays:numberOfDays];
-            }
+            [self prepareTimeSimulationViewController:segue.destinationViewController withNumberOfDays:numberOfDays];
         }
+    }
+    
+    if ([segue.destinationViewController isKindOfClass:[SimulatorGameOverViewController class]]) {
+        [self prepareSimulatorGameOverViewController:segue.destinationViewController withInvestingGame:self.userAccount.currentInvestingGame];
     }
 }
 
@@ -241,6 +288,11 @@
 - (void)prepareTimeSimulationViewController:(TimeSimulationViewController *)timeSimulationViewController withNumberOfDays:(NSInteger)numberOfDays
 {
     timeSimulationViewController.daysNum = numberOfDays;
+}
+
+- (void)prepareSimulatorGameOverViewController:(SimulatorGameOverViewController *)simulatorGameOverViewController withInvestingGame:(InvestingGame *)game
+{
+    simulatorGameOverViewController.game = game;
 }
 
 

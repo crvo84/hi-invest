@@ -18,7 +18,7 @@
 @interface PortfolioTableViewController () <UITableViewDataSource, UITableViewDelegate, BEMSimpleLineGraphDataSource, BEMSimpleLineGraphDelegate>
 
 @property (weak, nonatomic) IBOutlet UIView *infoSubview;
-@property (weak, nonatomic) IBOutlet UILabel *dayLabel;
+@property (weak, nonatomic) IBOutlet UILabel *dayReturnLabel;
 @property (weak, nonatomic) IBOutlet UILabel *networthLabel;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSDictionary *weightOfStocksInPortfolio;
@@ -39,9 +39,6 @@
     // Info Subview setup
     self.infoSubview.layer.cornerRadius = 8;
     self.infoSubview.layer.masksToBounds = YES;
-    UIColor *infoLabelColor = [UIColor whiteColor];
-    self.dayLabel.textColor = infoLabelColor;
-    self.networthLabel.textColor = infoLabelColor;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -67,14 +64,37 @@
 
 - (void)updateCurrentDayInfoLabels
 {
-    self.infoSubview.backgroundColor = [[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:0.78];
+    self.infoSubview.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:0.82];
     
-    self.numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
-    self.dayLabel.text = [NSString stringWithFormat:@"Day %@", [self.numberFormatter stringFromNumber:@(self.game.currentDay)]];
-    
+    // NETWORTH LABEL
     self.numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
-    self.networthLabel.text = [self.numberFormatter stringFromNumber:@([self.game currentNetWorth])];
+    NSString *netWorthStr = [self.numberFormatter stringFromNumber:@([self.game currentNetWorth])];
+    self.networthLabel.text = netWorthStr;
+    
+    // DAY & RETURN LABEL
+    
+    // Day string
+    self.numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+    NSString *dayStr = [self.numberFormatter stringFromNumber:@([self.game currentDay])];
+    
+    // Return string
+    NSString *annualStr;
+    double returnValue;
+    
+    if ([self.game currentDay] > 365) { // Show Annualized Return
+        returnValue = [self.game currentPortfolioAnnualizedReturn];
+        annualStr = @"Ann. ";
+        
+    } else { // Show Normal Return
+        returnValue = [self.game currentPortfolioReturn];
+        annualStr = @"";
+    }
+    NSString *initialStr = [NSString stringWithFormat:@"Day %@  |  %@Return: ", dayStr, annualStr];
+    NSMutableAttributedString *attributedStr = [[NSMutableAttributedString alloc] initWithString:initialStr];
+    [attributedStr appendAttributedString:[DefaultColors attributedStringForReturn:returnValue forDarkBackground:YES]];
+    self.dayReturnLabel.attributedText = attributedStr;
 }
+
 
 - (void)initialGraphSetup
 {
@@ -195,7 +215,6 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (section == 0) return @"Cash";
     if (section == 1) return @"Stocks";
     
     return nil;
@@ -205,13 +224,13 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 52;
+    return 44;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     if (section == 0) {
-        return 36;
+        return 20; // Practically no header space
     }
     
     return 28;
@@ -263,21 +282,28 @@
 {
     NSNumber *dayNumber;
     NSNumber *historicalValueNumber;
-    if (index < [self.game.portfolioHistoricalValues count]) {
+    
+    if (index < [self.game.portfolioHistoricalValues count]) { // Historical values
+        
         PortfolioHistoricalValue *portfolioHistoricalValue = self.game.portfolioHistoricalValues[index];
         dayNumber = @([self.game dayNumberFromDate:portfolioHistoricalValue.date]);
         historicalValueNumber = @(portfolioHistoricalValue.value);
-    } else {
+        
+    } else { // Current values
+        
         dayNumber = @([self.game currentDay]);
         historicalValueNumber = @([self.game currentNetWorth]);
     }
     
     if (index > 0) {
-        self.numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
-        self.dayLabel.text = [NSString stringWithFormat:@"Day %@", [self.numberFormatter stringFromNumber:dayNumber]];
         
-    } else {
-        self.dayLabel.text = @"Initial net worth";
+        self.numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+        NSString *dayStr = [self.numberFormatter stringFromNumber:dayNumber];
+        self.dayReturnLabel.text = [NSString stringWithFormat:@"Day %@", dayStr];
+        
+    } else { // Day 0
+        
+        self.dayReturnLabel.text = @"Initial net worth";
     }
     
     self.numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
@@ -293,14 +319,14 @@
 {
     [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         
-        self.dayLabel.alpha = 0.0;
+        self.dayReturnLabel.alpha = 0.0;
         self.networthLabel.alpha = 0.0;
         
     } completion:^(BOOL finished) {
         
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             [self updateCurrentDayInfoLabels];
-            self.dayLabel.alpha = 1.0;
+            self.dayReturnLabel.alpha = 1.0;
             self.networthLabel.alpha = 1.0;
         } completion:nil];
     }];

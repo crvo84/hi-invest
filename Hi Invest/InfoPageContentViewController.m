@@ -14,7 +14,13 @@
 
 @interface InfoPageContentViewController ()
 
-@property (weak, nonatomic) IBOutlet UILabel *infoLabel;
+@property (weak, nonatomic) IBOutlet UIView *daySubview;
+@property (weak, nonatomic) IBOutlet UIView *returnSubview;
+
+@property (weak, nonatomic) IBOutlet UILabel *dayLabel;
+@property (weak, nonatomic) IBOutlet UILabel *returnLabel;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+
 
 @end
 
@@ -36,58 +42,69 @@
 
 - (void)updateUI
 {
-    self.infoLabel.text = [self currentInfoForIndex:self.pageIndex];
+    if (self.pageIndex == 0) {
+
+        self.returnSubview.hidden = YES;
+        self.daySubview.hidden = NO;
+        self.dayLabel.attributedText = [self dayLabelAttributedString];
+        
+    } else {
+        
+        self.daySubview.hidden = YES;
+        self.returnSubview.hidden = NO;
+        
+        BOOL annualized = [self.game currentDay] > 365;
+
+        NSString *titleStr;
+        double returnValue;
+        
+        if (self.pageIndex == 1) { // Portfolio info
+            
+            titleStr = @"Your portfolio";
+            returnValue = annualized ? [self.game currentPortfolioAnnualizedReturn] : [self.game currentPortfolioReturn];
+            
+        } else { // Market info
+            
+            titleStr = @"Market Index";
+            returnValue = annualized ? [self.game currentMarketAnnualizedReturn] : [self.game currentMarketReturn];
+        }
+        
+        NSString *initialStr = annualized ? @"Annualized Return: " : @"Return: ";
+        NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:initialStr];
+
+        [attrStr appendAttributedString:[DefaultColors attributedStringForReturn:returnValue forDarkBackground:YES]];
+        
+        self.titleLabel.text = titleStr;
+        self.returnLabel.attributedText = attrStr;
+    }
+    
 }
 
-// Return a NSString with game information depending on the given index. 0 based index.
-- (NSString *)currentInfoForIndex:(NSUInteger)index
+- (NSAttributedString *)dayLabelAttributedString
 {
-    NSString *infoStr = nil;
+    NSMutableAttributedString *attributedStr = nil;
     
-    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-    numberFormatter.locale = self.game.locale;
-    numberFormatter.maximumFractionDigits = 2;
-    
-    if (index == 0) {
+    if (self.game.finishedSuccessfully) {
+        
+        attributedStr = [[NSMutableAttributedString alloc] initWithString:@"FINISHED"];
+        
+    } else {
+        
+        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+        numberFormatter.locale = self.game.locale;
+        numberFormatter.maximumFractionDigits = 2;
         
         numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
         NSString *currentDayStr = [numberFormatter stringFromNumber:@([self.game currentDay])];
-        infoStr = [NSString stringWithFormat:@"Current day: %@", currentDayStr];
-        
-    } else if (index == 1) {
-        
-        numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
-        NSString *daysLeftStr = [numberFormatter stringFromNumber:@([self.game daysLeft])];
-        infoStr = [NSString stringWithFormat:@"Days left: %@", daysLeftStr];
-        
-    } else if (index == 2) {
-        
-        numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
-        NSString *currentNetworthStr = [numberFormatter stringFromNumber:@([self.game currentNetWorth])];
-        infoStr = [NSString stringWithFormat:@"Net Worth: %@", currentNetworthStr];
-        
-    } else if (index == 3) {
-        
-        numberFormatter.numberStyle = NSNumberFormatterPercentStyle;
-        double yearsToDate = [self.game currentDay] / 365.0;
-        double annualizedReturn = pow([self.game currentNetWorth] / [self.game initialNetworth], 1 / yearsToDate) - 1;
-        NSString *annualizedReturnStr = [numberFormatter stringFromNumber:@(annualizedReturn)];
-        infoStr = [NSString stringWithFormat:@"Annual. portfolio return: %@", annualizedReturnStr];
-        
-    } else if (index == 4) {
-        numberFormatter.numberStyle = NSNumberFormatterPercentStyle;
-        double yearsToDate = [self.game currentDay] / 365.0;
-        NSNumber *currentMarketPriceNumber = [self.game scenarioMarketPriceAtDate:self.game.currentDate];
-        NSNumber *initialMarketPriceNumber = [self.game scenarioMarketPriceAtDate:self.game.initialDate];
-        NSString *annualizedMarketReturnStr = @"N/A";
-        if (currentMarketPriceNumber && initialMarketPriceNumber) {
-            double annualizedMarketReturn = pow([currentMarketPriceNumber doubleValue] / [initialMarketPriceNumber doubleValue], 1 / yearsToDate) - 1;
-            annualizedMarketReturnStr = [numberFormatter stringFromNumber:@(annualizedMarketReturn)];
-        }
-        infoStr = [NSString stringWithFormat:@"Annual. market return: %@", annualizedMarketReturnStr];
+        attributedStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"Day %@", currentDayStr]];
     }
     
-    return infoStr;
+    return attributedStr;
 }
+
+
+
+
+
 
 @end

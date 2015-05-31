@@ -190,7 +190,7 @@
     NSMutableArray *questions = [[NSMutableArray alloc] init];
     
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-//    numberFormatter.locale = [NSLocale localeWithLocaleIdentifier:Locale];
+    numberFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
     numberFormatter.maximumFractionDigits = 2;
     numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
     

@@ -12,6 +12,7 @@
 #import "UserAccountViewController.h"
 #import "GlossarySelectionViewController.h"
 #import "QuizSelectionViewController.h"
+#import "SettingsTableViewController.h"
 #import "UserAccount.h"
 #import "InvestingGame.h"
 #import "DefaultColors.h"
@@ -138,7 +139,11 @@
                 SimulatorTabBarController *simulatorTabBarController = [self.storyboard instantiateViewControllerWithIdentifier:@"SimulatorTabBarController"];
                 simulatorTabBarController.userAccount = self.userAccount;
                 [self.sideMenuViewController setContentViewController:simulatorTabBarController animated:YES];
-                [self.sideMenuViewController performSegueWithIdentifier:@"Simulator Info" sender:self];
+                if (self.userAccount.currentInvestingGame.finishedSuccessfully) {
+                    [self.sideMenuViewController performSegueWithIdentifier:@"Simulator Game Over" sender:self];
+                } else {
+                    [self.sideMenuViewController performSegueWithIdentifier:@"Simulator Info" sender:self];
+                }
             }
             break;
             
@@ -163,6 +168,12 @@
             break;
             
         case 3:
+            if (![currentContentViewController isKindOfClass:[SettingsTableViewController class]]) {
+                UINavigationController *settingsNavigationController = [self.storyboard instantiateViewControllerWithIdentifier:@"Settings UINavigationController"];
+                SettingsTableViewController *settingsSelectionViewController = [settingsNavigationController.viewControllers firstObject];
+                settingsSelectionViewController.userAccount = self.userAccount;
+                [self.sideMenuViewController setContentViewController:settingsNavigationController animated:YES];
+            }
             break;
 
         default:
@@ -176,8 +187,14 @@
 }
 
 #pragma mark - Navigation
-- (IBAction)userButtonPressed {
-    
+- (IBAction)userButtonPressed
+{
+    [self presentUserAccountViewController];
+    [self.sideMenuViewController hideMenuViewController];
+}
+
+- (void)presentUserAccountViewController
+{
     self.selectedRowIndex = -1;
     
     if (![self.sideMenuViewController.contentViewController isKindOfClass:[UserAccountViewController class]]) {
@@ -188,12 +205,7 @@
     }
     
     [self updateUI];
-    [self.sideMenuViewController hideMenuViewController];
 }
-
-
-
-
 
 
 @end

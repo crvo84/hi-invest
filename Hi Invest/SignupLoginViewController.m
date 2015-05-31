@@ -32,6 +32,8 @@
 {
     if ([segue.destinationViewController isKindOfClass:[SideMenuRootViewController class]]) {
         SideMenuRootViewController *sideMenuRootViewController = (SideMenuRootViewController *)segue.destinationViewController;
+        
+        // TODO: do user account loading here!
         sideMenuRootViewController.userAccount = [[UserAccount alloc] init];
     }
 }

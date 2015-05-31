@@ -16,4 +16,7 @@
 
 - (void)updateUI;
 
+// Used when simulator game ends, to return to user account vc
+- (void)presentUserAccountViewController;
+
 @end

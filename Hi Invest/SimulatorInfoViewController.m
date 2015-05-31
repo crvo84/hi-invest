@@ -61,7 +61,7 @@
 - (void)infoPageViewControllerInitialSetup
 {
     
-    self.infoPagesCount = 5; // MUST BE UPDATED IF MORE PAGES ARE ADDED
+    self.infoPagesCount = 3; // MUST BE UPDATED IF MORE PAGES ARE ADDED
     
     // Create page view controller
     self.infoPageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"InfoPageViewController"];
@@ -191,13 +191,13 @@
     CGPoint locationInView = [[touches anyObject] locationInView:self.view];
     UIView *viewTouched = [self.view hitTest:locationInView withEvent:event];
     if (viewTouched == self.view) {
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [self dismissViewController];
     }
 }
 
 - (IBAction)dismissViewController
 {
-    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    [self performSegueWithIdentifier:@"unwindToSideMenuRootViewController" sender:self];
 }
 
 

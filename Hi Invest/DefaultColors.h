@@ -67,4 +67,6 @@
 
 + (UIColor *)scenarioButtonBackgroundColor;
 
++ (NSAttributedString *)attributedStringForReturn:(double)returnValue forDarkBackground:(BOOL)darkBackground;
+
 @end

@@ -15,9 +15,10 @@
 
 @property (nonatomic, readonly) NSInteger userLevel;
 @property (strong, nonatomic, readonly) InvestingGame *currentInvestingGame;
+@property (copy, nonatomic) NSLocale *localeDefault; // Default NSLocale (Others: QuizGenerator, each scenario)
 // Settings
-@property (nonatomic) double scenarioInitialCash;
-@property (nonatomic) BOOL disguiseOriginalCompanyNamesAndTickers;
+@property (nonatomic) double simulatorInitialCash;
+@property (nonatomic) BOOL disguiseCompanies;
 
 - (void)increaseQuizLevelForQuizType:(QuizType)quizType;
 
@@ -26,5 +27,8 @@
 
 // Return the user ninja level (1 is the lowest) depending on answered quizzes
 - (NSInteger)userLevel;
+
+- (void)newInvestingGame;
+- (void)exitInvestingGame;
 
 @end

@@ -41,22 +41,22 @@
 // Sorting Values Definitions
 #define FinancialRatioROADefinition @"The amount of profit a company is able to generate for each dollar invested on assets."
 #define FinancialRatioROEDefinition @"The amount of profit a company is able to generate for each dollar invested by its shareholders."
-#define FinancialRatioPriceEarningsDefinition @"The market price per share divided by annual net income per share."
-#define FinancialRatioPriceSalesDefinition @"The market price per share divided by annual revenue per share."
+#define FinancialRatioPriceEarningsDefinition @"Price per share divided by annual net income per share."
+#define FinancialRatioPriceSalesDefinition @"Price per share divided by annual revenue per share."
 #define FinancialRatioDividendYieldDefinition @"The amount that a company pays out in annual dividends per share relative to its share price."
 #define FinancialRatioDividendPayoutDefinition @"The amount that a company pays out in annual dividends relative to its net income."
-#define FinancialRatioDebtEquityDefinition @"The relative proportion of shareholders' equity and debt used to finance a company's assets."
+#define FinancialRatioDebtEquityDefinition @"The relative proportion of debt used to finance company's assets and shareholders' equity."
 #define FinancialRatioPriceBookDefinition @"Compares a company's current market price to its book value."
 #define FinancialRatioCurrentRatioDefinition @"An indication of a firm's ability to meet short term creditor's demands with its short-term assets."
 #define FinancialRatioQuickRatioDefinition @"An indication of a firm's ability to meet short term creditor's demands with its short-term assets, but excluding Inventories."
 #define FinancialRatioCashRatioDefinition @"An indication of a firm's ability to meet short term creditor's demands with its Cash and Marketable Securities."
 #define FinancialRatioGrossMarginDefinition @"The proportion of a company's revenue left over after accounting the cost of goods sold."
 #define FinancialRatioEBITDAMarginDefinition @"The proportion of a company's revenue left over after variable production costs, but excluding Depreciation and Amortization."
-#define FinancialRatioOperatingMarginDefinition @"The proportion of a company's revenue left over after variable production costs." // ??
+#define FinancialRatioOperatingMarginDefinition @"The proportion of a company's revenue left over after cost of goods sold and operating expenses."
 #define FinancialRatioEffectiveTaxRateDefinition @"The average rate at which a company's pre-tax profits are taxed."
 #define FinancialRatioProfitMarginDefinition @"The net profit as a percentage of the revenue."
 #define FinancialRatioFinancialLeverageDefinition @"The amount of assets of a company for each dollar invested by its shareholders."
-#define FinancialRatioWeightInPortfolioDefinition @"The percentage composition of a particular stock holding in the total portfolio value." // Stock Market Definitions
+
 
 // Dictionary mapping each Sorting Value Identifier with its corresponding definition
 #define FinancialRatiosDefinitionsDictionary @{ FinancialRatioROA : FinancialRatioROADefinition, FinancialRatioROE : FinancialRatioROEDefinition, FinancialRatioPriceEarnings : FinancialRatioPriceEarningsDefinition, FinancialRatioPriceSales : FinancialRatioPriceSalesDefinition, FinancialRatioDividendYield : FinancialRatioDividendYieldDefinition, FinancialRatioDividendPayout : FinancialRatioDividendPayoutDefinition, FinancialRatioDebtEquity : FinancialRatioDebtEquityDefinition, FinancialRatioPriceBook : FinancialRatioPriceBookDefinition, FinancialRatioCurrentRatio : FinancialRatioCurrentRatioDefinition, FinancialRatioQuickRatio : FinancialRatioQuickRatioDefinition, FinancialRatioCashRatio : FinancialRatioCashRatioDefinition, FinancialRatioGrossMargin : FinancialRatioGrossMarginDefinition, FinancialRatioEBITDAMargin : FinancialRatioEBITDAMarginDefinition, FinancialRatioOperatingMargin : FinancialRatioOperatingMarginDefinition, FinancialRatioEffectiveTaxRate : FinancialRatioEffectiveTaxRateDefinition, FinancialRatioProfitMargin : FinancialRatioProfitMarginDefinition, FinancialRatioFinancialLeverage : FinancialRatioFinancialLeverageDefinition}
@@ -69,7 +69,7 @@
 #define FinancialRatioPriceEarningsInterpretation @"Investors are willing to pay %@ for every $1 of annual earnings."
 #define FinancialRatioPriceSalesInterpretation @"Investors are willing to pay %@ for every $1 of annual revenue."
 #define FinancialRatioDebtEquityInterpretation @"For every $1 of stockholder's equity the company has %@ of total debt."
-#define FinancialRatioPriceBookInterpretation @"Investors are willing to pay %@ for every $1 of common stockholder's equity."
+#define FinancialRatioPriceBookInterpretation @"Investors are willing to pay %@ for every $1 of book value."
 #define FinancialRatioCurrentRatioInterpretation @"For every $1 of current liabilities the company has %@ of current assets."
 #define FinancialRatioQuickRatioInterpretation @"The company has %@ of liquid assets available to cover each $1 of current liabilities."
 #define FinancialRatioCashRatioInterpretation @"The company is able to pay off %@ of every $1 of current liabilities using only its cash and cash equivalents."
@@ -79,10 +79,9 @@
 #define FinancialRatioEffectiveTaxRateInterpretation @"The company pays %@ in taxes for every $1 of pre-tax profit."
 #define FinancialRatioProfitMarginInterpretation @"The company has %@ of net income for every $1 of sales."
 #define FinancialRatioFinancialLeverageInterpretation @"The company has %@ of total assets for every $1 of stockholder's equity."
-#define FinancialRatioWeightInPortfolioInterpretation @"Investments in this company represent %@ for every $1 of the total portfolio."
 
 // Dictionary mapping each Sorting Value Identifier with its corresponding interpretation
-#define FinancialRatiosInterpretationsDictionary @{ FinancialRatioROA : FinancialRatioROAInterpretation, FinancialRatioROE : FinancialRatioROEInterpretation, FinancialRatioPriceEarnings : FinancialRatioPriceEarningsInterpretation, FinancialRatioPriceSales : FinancialRatioPriceSalesInterpretation, FinancialRatioDividendYield : FinancialRatioDividendYieldInterpretation, FinancialRatioDividendPayout : FinancialRatioDividendPayoutInterpretation, FinancialRatioDebtEquity : FinancialRatioDebtEquityInterpretation, FinancialRatioPriceBook : FinancialRatioPriceBookInterpretation, FinancialRatioCurrentRatio : FinancialRatioCurrentRatioInterpretation, FinancialRatioQuickRatio : FinancialRatioQuickRatioInterpretation, FinancialRatioCashRatio : FinancialRatioCashRatioInterpretation, FinancialRatioGrossMargin : FinancialRatioGrossMarginInterpretation, FinancialRatioEBITDAMargin : FinancialRatioEBITDAMarginInterpretation, FinancialRatioOperatingMargin : FinancialRatioOperatingMarginInterpretation, FinancialRatioEffectiveTaxRate : FinancialRatioEffectiveTaxRateInterpretation, FinancialRatioProfitMargin : FinancialRatioProfitMarginInterpretation, FinancialRatioFinancialLeverage : FinancialRatioFinancialLeverageInterpretation, FinancialRatioWeightInPortfolio : FinancialRatioWeightInPortfolioInterpretation }
+#define FinancialRatiosInterpretationsDictionary @{ FinancialRatioROA : FinancialRatioROAInterpretation, FinancialRatioROE : FinancialRatioROEInterpretation, FinancialRatioPriceEarnings : FinancialRatioPriceEarningsInterpretation, FinancialRatioPriceSales : FinancialRatioPriceSalesInterpretation, FinancialRatioDividendYield : FinancialRatioDividendYieldInterpretation, FinancialRatioDividendPayout : FinancialRatioDividendPayoutInterpretation, FinancialRatioDebtEquity : FinancialRatioDebtEquityInterpretation, FinancialRatioPriceBook : FinancialRatioPriceBookInterpretation, FinancialRatioCurrentRatio : FinancialRatioCurrentRatioInterpretation, FinancialRatioQuickRatio : FinancialRatioQuickRatioInterpretation, FinancialRatioCashRatio : FinancialRatioCashRatioInterpretation, FinancialRatioGrossMargin : FinancialRatioGrossMarginInterpretation, FinancialRatioEBITDAMargin : FinancialRatioEBITDAMarginInterpretation, FinancialRatioOperatingMargin : FinancialRatioOperatingMarginInterpretation, FinancialRatioEffectiveTaxRate : FinancialRatioEffectiveTaxRateInterpretation, FinancialRatioProfitMargin : FinancialRatioProfitMarginInterpretation, FinancialRatioFinancialLeverage : FinancialRatioFinancialLeverageInterpretation }
 
 // Financial Ratio Maximum and Minimum values for quiz questions
 #define FinancialRatioMaxValueKey @"Max ratio value"

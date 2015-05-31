@@ -72,6 +72,9 @@
     // Image will take UIImageView tint color. Set on interface builder
     self.mistakesLeftImageView.image = [[UIImage imageNamed:@"ninjaEmoticon22x22"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     [self updateMistakesLeft];
+    // If 0 mistakes allowed, hide image and count label
+    self.mistakesLeftImageView.hidden = self.quiz.mistakesAllowed == 0;
+    self.mistakesLeftLabel.hidden = self.quiz.mistakesAllowed == 0;
     
     // Answer Buttons
     for (UIButton *answerButton in self.answerButtons) {

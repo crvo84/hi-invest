@@ -184,6 +184,7 @@
             NSString *definitionId = nil;
             NSString *definition = nil;
             NSString *formulaImageFilename = nil;
+            NSString *source = nil;
             
             if ([self.glossaryId isEqualToString:GlossaryTypeFinancialRatios]) {
                 if (indexPath.section == 0) {
@@ -229,16 +230,24 @@
                 definition = StockMarketTermDefinitionsDictionary[definitionId];
             }
             
-            [self prepareDefinitionViewController:segue.destinationViewController withDefinitionId:definitionId withDefinition:definition withFormulaImageFilename:formulaImageFilename];
+            // Source availability
+            if ([FinancialDefinitionSourceNASDAQTermsArray containsObject:definition]) {
+                source = @"Nasdaq.com";
+            } else if ([FinancialDefinitionSourceNYSSCPATermsArray containsObject:definition]) {
+                source = @"NY Society of Certified Public Accountants";
+            }
+            
+            [self prepareDefinitionViewController:segue.destinationViewController withDefinitionId:definitionId withDefinition:definition withFormulaImageFilename:formulaImageFilename withSource:source];
         }
     }
 }
 
-- (void)prepareDefinitionViewController:(DefinitionViewController *)definitionViewController withDefinitionId:(NSString *)definitionId withDefinition:(NSString *)definition withFormulaImageFilename:(NSString *)formulaImageFilename
+- (void)prepareDefinitionViewController:(DefinitionViewController *)definitionViewController withDefinitionId:(NSString *)definitionId withDefinition:(NSString *)definition withFormulaImageFilename:(NSString *)formulaImageFilename withSource:(NSString *)source
 {
     definitionViewController.definitionId = definitionId;
     definitionViewController.definition = definition;
     definitionViewController.formulaImageFilename = formulaImageFilename;
+    definitionViewController.source = source;
 }
 
 

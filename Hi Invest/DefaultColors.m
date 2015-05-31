@@ -160,4 +160,31 @@
     return [[self windowBackgroundColor] colorWithAlphaComponent:0.05];
 }
 
++ (NSAttributedString *)attributedStringForReturn:(double)returnValue forDarkBackground:(BOOL)darkBackground
+{
+    UIColor *color = [UIColor lightGrayColor];
+    if (returnValue > 0) {
+        color = [UIColor colorWithRed:0.0 green:0.7 blue:0.0 alpha:1.0];
+    } else if (returnValue < 0) {
+        color = [UIColor colorWithRed:0.7 green:0.0 blue:0.0 alpha:1.0];
+    }
+    
+    NSString *signStr = returnValue > 0 ? @"+" : @"";
+    
+    NSString *returnStr = [NSString stringWithFormat:@"%@%.2f%%", signStr, (returnValue * 100)];
+    
+    NSMutableAttributedString *attributedStr = [[NSMutableAttributedString alloc] initWithString:returnStr];
+    
+    NSRange range = NSMakeRange(0, attributedStr.length);
+    
+    [attributedStr addAttribute:NSForegroundColorAttributeName value:color range:range];
+    
+    return attributedStr;
+}
+             
+             
+             
+             
+             
+
 @end

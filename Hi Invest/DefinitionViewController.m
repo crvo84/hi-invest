@@ -18,6 +18,8 @@
 @property (weak, nonatomic) IBOutlet UIImageView *formulaImageView;
 @property (weak, nonatomic) IBOutlet UIView *formulaSubview;
 @property (weak, nonatomic) IBOutlet UIImageView *cartoonImageView;
+@property (weak, nonatomic) IBOutlet UIButton *sourceButton;
+@property (weak, nonatomic) IBOutlet UILabel *sourceLabel;
 
 @end
 
@@ -27,7 +29,6 @@
 {
     [super viewDidLoad];
     
-//    self.view.backgroundColor = [DefaultColors translucentLightBackgroundColor];
     self.view.backgroundColor = [DefaultColors translucentLightBackgroundColor];
     
     // Title label
@@ -36,8 +37,6 @@
     // Definition Subview
     self.definitionSubview.layer.cornerRadius = 8; // Magic number
     self.definitionSubview.layer.masksToBounds = YES;
-//    self.definitionSubview.layer.borderWidth = [DefaultColors speechBubbleBorderWidth];
-//    self.definitionSubview.layer.borderColor = [UIColor darkGrayColor].CGColor;
     self.definitionSubview.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]];
 
     // Text View
@@ -46,9 +45,11 @@
     // Formula Subview
     self.formulaSubview.layer.cornerRadius = 8; // Magic number
     self.formulaSubview.layer.masksToBounds = YES;
-//    self.formulaSubview.layer.borderWidth = [DefaultColors speechBubbleBorderWidth];
-//    self.formulaSubview.layer.borderColor = [UIColor darkGrayColor].CGColor;
     self.formulaSubview.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]];
+    
+    // Source Label and Button
+    self.sourceButton.hidden = self.source == nil;
+    self.sourceLabel.hidden = YES;
     
     [self updateUI];
 }
@@ -85,6 +86,14 @@
         [self.textView scrollRangeToVisible:NSMakeRange(0, 1)];
         
     }
+    
+    // Source Label
+    self.sourceLabel.text = self.source;
+    
+}
+- (IBAction)sourceButtonPressed:(UIButton *)sender
+{
+    self.sourceLabel.hidden = !self.sourceLabel.isHidden;
 }
 
 #pragma mark - Dismissing
