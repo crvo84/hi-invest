@@ -181,8 +181,43 @@
     
     return attributedStr;
 }
-             
-             
+
+// Lowest (initial) level = quizLevelIndex 0
++ (UIColor *)colorForUserAccountQuizLevelIndex:(NSInteger)quizLevelIndex
+{
+    UIColor *color;
+    switch (quizLevelIndex) {
+        case 0:
+            color = [UIColor whiteColor];
+            break;
+        case 1:
+            color = [UIColor yellowColor];
+            break;
+        case 2:
+            color = [UIColor orangeColor];
+            break;
+        case 3:
+            color = [UIColor greenColor];
+            break;
+        case 4:
+            color = [UIColor blueColor];
+            break;
+        case 5:
+            color = [UIColor brownColor];
+            break;
+        case 6:
+            color = [UIColor redColor];
+            break;
+        case 7:
+            color = [UIColor blackColor];
+            break;
+        default:
+            color = nil;
+            break;
+    }
+    
+    return color;
+}
              
              
              

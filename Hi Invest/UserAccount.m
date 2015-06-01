@@ -16,9 +16,13 @@
 @property (nonatomic, readwrite) NSInteger userLevel;
 @property (copy, nonatomic) NSString *selectedScenearioId;
 @property (strong, nonatomic, readwrite) InvestingGame *currentInvestingGame;
-@property (strong, nonatomic) NSMutableDictionary *currentQuizLevels; // @{ @"QuizType" : @(Current Level) }
+@property (strong, nonatomic) NSMutableDictionary *successfulQuizzesCount; // @{ @"QuizType" : @(Current Level) }
 
 @end
+
+// 7 cannot change because it was the inital number of Quiz Type. (to maintain user level continuity)
+// Cannot change even in future versions of the application
+#define UserAccountSuccessfulQuizzesPerUserLevel 7
 
 @implementation UserAccount
 
@@ -27,7 +31,7 @@
     self = [super init];
     
     if (self) {
-        self.userLevel = 1;
+        self.userLevel = 0;
         // TODO: Should be loaded from user account
         self.simulatorInitialCash = 1000000.0;
         self.disguiseCompanies = NO;
@@ -36,41 +40,52 @@
     return self;
 }
 
-- (NSInteger)userLevel
+// Return the user level (0 is the lowest) depending on answered quizzes
+- (NSInteger)currentUserLevel;
 {
-    NSInteger quizzesSum = 0;
-    for (NSString *key in self.currentQuizLevels) {
-        
-        NSNumber *quizLevel = self.currentQuizLevels[key];
-        if (quizLevel) {
-            quizzesSum += [quizLevel integerValue] - 1;
-        }
-    }
-    
-//    return quizzesSum / QuizTypeCount + 1;
-    return quizzesSum / 7 + 1; // PROVISIONAL. NEED TO IMPLEMENT QuizType Comparisons
+    return [self totalSuccessfulQuizzesCount] / UserAccountSuccessfulQuizzesPerUserLevel;
 }
+
+
 
 #pragma mark - Quizzes
 
-- (void)increaseQuizLevelForQuizType:(QuizType)quizType
+// Return the quiz progress [0,1) to get to the next user level
+- (double)progressForNextUserLevel
 {
-    NSInteger previousQuizLevel = [self currentQuizLevelForQuizType:quizType];
-    
-    self.currentQuizLevels[[self stringKeyForQuizType:quizType]] = @(++previousQuizLevel);
+    return ([self totalSuccessfulQuizzesCount] % UserAccountSuccessfulQuizzesPerUserLevel) / (double)UserAccountSuccessfulQuizzesPerUserLevel;
 }
 
-// Return the current (Unfinished quiz level) for the given quiz type
-// Return 1 f there is no record for the given quiz type
-- (NSInteger)currentQuizLevelForQuizType:(QuizType)quizType
+- (NSInteger)totalSuccessfulQuizzesCount
 {
-    NSNumber *currentLevelNumber = self.currentQuizLevels[[self stringKeyForQuizType:quizType]];
+    NSInteger totalSuccessfulQuizzesCount = 0;
+    for (NSString *key in self.successfulQuizzesCount) {
+        
+        NSNumber *quizCount = self.successfulQuizzesCount[key];
+        totalSuccessfulQuizzesCount += [quizCount integerValue];
+    }
+
+    return totalSuccessfulQuizzesCount;
+}
+
+- (void)increaseSuccessfulQuizzesForQuizType:(QuizType)quizType
+{
+    NSInteger previousSuccessfulQuizzes = [self successfulQuizzesForQuizType:quizType];
     
-    if (currentLevelNumber) {
-        return [currentLevelNumber integerValue];
+    self.successfulQuizzesCount[[self stringKeyForQuizType:quizType]] = @(++previousSuccessfulQuizzes);
+}
+
+// Return the current number of successful quizzes for the given quiz type
+// Return 0 (initial level) if there is no record for the given quiz type
+- (NSInteger)successfulQuizzesForQuizType:(QuizType)quizType
+{
+    NSNumber *currentSuccessfulQuizzesNumber = self.successfulQuizzesCount[[self stringKeyForQuizType:quizType]];
+    
+    if (currentSuccessfulQuizzesNumber) {
+        return [currentSuccessfulQuizzesNumber integerValue];
     }
     
-    return 1;
+    return 0;
 }
 
 - (NSString *)stringKeyForQuizType:(QuizType)quizType
@@ -112,16 +127,16 @@
 
 #pragma mark - Getters
 
-- (NSMutableDictionary *)currentQuizLevels
+- (NSMutableDictionary *)successfulQuizzesCount
 {
-    if (!_currentQuizLevels) {
+    if (!_successfulQuizzesCount) {
         // Previous user? Load existing info
         
         // New user?...
-        _currentQuizLevels = [[NSMutableDictionary alloc] init];
+        _successfulQuizzesCount = [[NSMutableDictionary alloc] init];
     }
     
-    return _currentQuizLevels;
+    return _successfulQuizzesCount;
 }
 
 - (NSLocale *)localeDefault
@@ -137,8 +152,6 @@
 {
     return @"scenario_DJI001A";
 }
-
-
 
 
 

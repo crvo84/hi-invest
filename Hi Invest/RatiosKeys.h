@@ -29,11 +29,11 @@
 #define FinancialRatioFinancialLeverage @"Financial Leverage"
 #define FinancialRatioWeightInPortfolio @"Weight in Portfolio"
 
-// Array containing all Sorting Values Identifiers Keys
-#define FinancialSortingValuesIdentifiersArray @[FinancialRatioROA, FinancialRatioROE, FinancialRatioPriceEarnings, FinancialRatioPriceSales, FinancialRatioDividendYield, FinancialRatioDividendPayout, FinancialRatioPriceBook, FinancialRatioDebtEquity, FinancialRatioFinancialLeverage, FinancialRatioCurrentRatio, FinancialRatioQuickRatio, FinancialRatioCashRatio, FinancialRatioGrossMargin, FinancialRatioEBITDAMargin, FinancialRatioOperatingMargin, FinancialRatioEffectiveTaxRate,FinancialRatioProfitMargin, FinancialRatioWeightInPortfolio]
-
 // Array containing all Sorting Values Identifiers Keys which are Financial Ratios
 #define FinancialRatioIdentifiersArray @[FinancialRatioROA, FinancialRatioROE, FinancialRatioPriceEarnings, FinancialRatioPriceSales, FinancialRatioDividendYield, FinancialRatioDividendPayout, FinancialRatioPriceBook, FinancialRatioDebtEquity, FinancialRatioFinancialLeverage, FinancialRatioCurrentRatio, FinancialRatioQuickRatio, FinancialRatioCashRatio, FinancialRatioGrossMargin, FinancialRatioEBITDAMargin, FinancialRatioOperatingMargin, FinancialRatioEffectiveTaxRate, FinancialRatioProfitMargin]
+
+// Array containing all Sorting Values Identifiers Keys
+#define FinancialSortingValuesIdentifiersArray @[FinancialRatioROA, FinancialRatioROE, FinancialRatioPriceEarnings, FinancialRatioPriceSales, FinancialRatioDividendYield, FinancialRatioDividendPayout, FinancialRatioPriceBook, FinancialRatioDebtEquity, FinancialRatioFinancialLeverage, FinancialRatioCurrentRatio, FinancialRatioQuickRatio, FinancialRatioCashRatio, FinancialRatioGrossMargin, FinancialRatioEBITDAMargin, FinancialRatioOperatingMargin, FinancialRatioEffectiveTaxRate,FinancialRatioProfitMargin, FinancialRatioWeightInPortfolio]
 
 // Array containing all Sorting Values Identifiers Keys which are showed as percentage.
 #define FinancialSortingValuesPercentValuesArray @[FinancialRatioROA, FinancialRatioROE, FinancialRatioDividendYield, FinancialRatioDividendPayout, FinancialRatioGrossMargin, FinancialRatioEBITDAMargin, FinancialRatioOperatingMargin, FinancialRatioEffectiveTaxRate, FinancialRatioProfitMargin, FinancialRatioWeightInPortfolio]
@@ -75,7 +75,7 @@
 #define FinancialRatioCashRatioInterpretation @"The company is able to pay off %@ of every $1 of current liabilities using only its cash and cash equivalents."
 #define FinancialRatioGrossMarginInterpretation @"After paying inventory costs, the company still has %@ of every $1 of its sales revenue."
 #define FinancialRatioEBITDAMarginInterpretation @"After paying inventory costs and operating expenses (excluding tax, interest, depreciation and amortization), the company still has %@ of every $1 of its sales revenue."
-#define FinancialRatioOperatingMarginInterpretation @"After paying inventory costs and operating expenses, the company still has %@ of every $1 of its sales revenue."
+#define FinancialRatioOperatingMarginInterpretation @"After paying cost of goods sold and operating expenses, the company still has %@ of every $1 of its sales revenue."
 #define FinancialRatioEffectiveTaxRateInterpretation @"The company pays %@ in taxes for every $1 of pre-tax profit."
 #define FinancialRatioProfitMarginInterpretation @"The company has %@ of net income for every $1 of sales."
 #define FinancialRatioFinancialLeverageInterpretation @"The company has %@ of total assets for every $1 of stockholder's equity."

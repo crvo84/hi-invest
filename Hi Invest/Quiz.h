@@ -20,7 +20,6 @@ typedef enum : NSInteger {
     QuizTypeStockMarketDefinitions,
     QuizTypeAllDefinitions,
     QuizTypeFinancialRatioInterpretations,
-    QuizTypeFinancialRatioComparisons,
     
     QuizTypeCount // This is the number of QuizTypes in the enum 
 } QuizType;

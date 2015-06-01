@@ -11,55 +11,45 @@
 #import "RatiosKeys.h"
 #import "GlossaryKeys.h"
 
-#define QuizGeneratorMaximumQuizLevel 5
-#define QuizGeneratorNumberOfAnswers 4 // Number of answers for each QuizQuestion. 1 correct, the rest are wrong
-#define QuizGeneratorMaximumMistakesAllowed 3
+#define QuizGeneratorNumberOfAnswers 4 // Answers for each QuizQuestion (including 1 correct)
+#define QuizGeneratorMaxDifficultyLevel 6
+
+/*
+    DIFFICULTY LEVES. Are the same for all QuizTypes. New quiz types can be added.
+ 
+    Difficulty Level 0: 05 questions | 2 mistakes allowed (40%) | 20 seconds
+ 
+    Difficulty Level 1: 10 questions | 2 mistakes allowed (20%) | 20 seconds
+ 
+    Difficulty Level 2: min(15, count) questions | 3 mistakes allowed (20%) | 15 seconds
+ 
+    Difficulty Level 3: min(20, count) questions | 2 mistakes allowed (10%) | 15 seconds
+ 
+    Difficulty Level 4: min(30, count) questions | 3 mistakes allowed (10%) | 10 seconds
+ 
+    Difficulty Level 5: min(40, count) questions | 2 mistakes allowed (05%) | 10 seconds
+ 
+    Difficulty Level 6: min(50, count) questions | 2 mistakes allowed (04%) | 5 seconds
+ 
+ */
 
 @implementation QuizGenerator
 
-
-// Return a dictionary containting information for a quiz with the given characteristics.
-// QuizType is stored as a NSNumber
-- (NSDictionary *)quizInfoWithType:(QuizType)quizType andLevel:(NSInteger)quizLevel
+// Return a quiz with the given difficulty level, starting from 0
+- (Quiz *)getQuizWithType:(QuizType)quizType andDifficultyLevel:(NSInteger)difficultyLevel;
 {
-    if (![self isQuizAvailableForQuizLevel:quizLevel forQuizType:quizType]) {
-        return nil;
-    }
+    NSUInteger numberOfQuizQuestions = [self numberOfQuestionsForQuizType:quizType forDifficultyLevel:difficultyLevel];
     
-    NSString *title = [self titleForQuizType:quizType];
-    
-    NSString *numberOfQuestionsStr = [NSString stringWithFormat:@"%ld", (unsigned long)[self numberOfQuestionsForQuizType:quizType
-                                                                                                             forQuizLevel:quizLevel]];
-    NSString *secondsPerQuestionStr = [NSString stringWithFormat:@"%ld", (unsigned long)[self secondsPerQuestionForQuizType:quizType
-                                                                                                               forQuizLevel:quizLevel]];
-    NSString *mistakesAllowedStr = [NSString stringWithFormat:@"%ld", (unsigned long)[self mistakesAllowedForQuizType:quizType
-                                                                                                         forQuizLevel:quizLevel]];
-    NSString *maxScoreStr = [NSString stringWithFormat:@"%ld", (long)[self maximumScoreForQuizType:quizType
-                                                                                      forQuizLevel:quizLevel]];
-    NSString *minScoreStr = [NSString stringWithFormat:@"%ld", (long)[self minimumScoreForQuizType:quizType
-                                                                                      forQuizLevel:quizLevel]];
-    return @{ QuizInfoTitleKey : title, QuizInfoType : @(quizType), QuizInfoNumberOfQuestionsKey : numberOfQuestionsStr, QuizInfoSecondsPerQuestionKey : secondsPerQuestionStr, QuizInfoMistakesAllowedKey : mistakesAllowedStr, QuizInfoMaxScoreKey : maxScoreStr, QuizInfoMinScoreKey : minScoreStr };
-}
-
-
-// Return a quiz with the given characteristics
-- (Quiz *)getQuizWithType:(QuizType)quizType andLevel:(NSInteger)quizLevel
-{
-    if (![self isQuizAvailableForQuizLevel:quizLevel forQuizType:quizType]) {
-        return nil;
-    }
-    
-    NSUInteger numberOfQuizQuestions = [self numberOfQuestionsForQuizType:quizType forQuizLevel:quizLevel];
     NSArray *quizQuestions = [self quizQuestionsForQuizType:quizType withNumberOfQuizQuestions:numberOfQuizQuestions];
     
-    // Maybe not enough definitions to initial number request
+    // Maybe not enough definitions to initial number of questions request
     numberOfQuizQuestions = [quizQuestions count];
     
     NSString *title = [self titleForQuizType:quizType];
-    NSUInteger secondsPerQuestions = [self secondsPerQuestionForQuizType:quizType forQuizLevel:quizLevel];
-    NSUInteger mistakesAllowed = [self mistakesAllowedForQuizType:quizType forQuizLevel:quizLevel];
-    NSInteger maxScore = [self maximumScoreForQuizType:quizType forQuizLevel:quizLevel];
-    NSInteger minScore = [self minimumScoreForQuizType:quizType forQuizLevel:quizLevel];
+    NSUInteger secondsPerQuestions = [self secondsPerQuestionForQuizType:quizType forDifficultyLevel:difficultyLevel];
+    NSUInteger mistakesAllowed = [self mistakesAllowedForQuizType:quizType forDifficultyLevel:difficultyLevel];
+    NSInteger maxScore = [self maximumScoreForQuizType:quizType forDifficultyLevel:difficultyLevel];
+    NSInteger minScore = [self minimumScoreForQuizType:quizType forDifficultyLevel:difficultyLevel];
     
     return [[Quiz alloc] initWithTitle:title
                      withQuizQuestions:quizQuestions
@@ -105,7 +95,7 @@
                                          withNumberOfQuizQuestions:numberOfQuizQuestions / 2 + numberOfQuizQuestions % 2];
         
         [questions addObjectsFromArray:[self quizQuestionsForQuizType:QuizTypeFinancialRatioFormulas
-                                            withNumberOfQuizQuestions:numberOfQuizQuestions / 2]];
+                                            withNumberOfQuizQuestions:numberOfQuizQuestions - [questions count]]];
 
         quizQuestions = [self randomSortArray:questions];
 
@@ -118,11 +108,11 @@
         [questions addObjectsFromArray:[self quizQuestionsForQuizType:QuizTypeFinancialRatioFormulas
                                             withNumberOfQuizQuestions:numberOfQuizQuestions / 4]];
         
-        [questions addObjectsFromArray:[self quizQuestionsForQuizType:QuizTypeFinancialStatementDefinitions
-                                            withNumberOfQuizQuestions:numberOfQuizQuestions / 4 + numberOfQuizQuestions % 4]];
-        
         [questions addObjectsFromArray:[self quizQuestionsForQuizType:QuizTypeStockMarketDefinitions
                                             withNumberOfQuizQuestions:numberOfQuizQuestions / 4]];
+        
+        [questions addObjectsFromArray:[self quizQuestionsForQuizType:QuizTypeFinancialStatementDefinitions
+                                            withNumberOfQuizQuestions:numberOfQuizQuestions - [questions count]]];
         
         quizQuestions = [self randomSortArray:questions];
         
@@ -192,47 +182,88 @@
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
     numberFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
     numberFormatter.maximumFractionDigits = 2;
-    numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
+    
+    // All available ratio ids that haven't been selected for questions
+    NSMutableArray *ratioIdentifiersLeft = [[FinancialRatiosInterpretationsDictionary allKeys] mutableCopy];
+    
+    if (numberOfQuizQuestions > [FinancialRatiosInterpretationsDictionary count]) {
+        numberOfQuizQuestions = [FinancialRatiosInterpretationsDictionary count];
+    }
     
     for (int i = 0; i < numberOfQuizQuestions; i++) {
+        
+        NSInteger ratioIdentifiersLeftCount = [ratioIdentifiersLeft count];
+        // If there are no more ratio ids left to choose from, then break the loop.
+        // (Even if the requested number of questions haven't been met yet)
+        if (ratioIdentifiersLeftCount <= 0) {
+            break;
+        }
 
-        NSArray *allKeys = [FinancialRatiosInterpretationsDictionary allKeys];
+        // Pick a random ratioId from ratioIdentifiersLeft, then remove it from the array. (not available for questions now)
+        NSString *correctRatioId = ratioIdentifiersLeft[arc4random() % ratioIdentifiersLeftCount];
+        [ratioIdentifiersLeft removeObject:correctRatioId];
         
-        NSString *ratioId = allKeys[arc4random() % [allKeys count]];
-        
-        NSNumber *maxValueNumber = FinancialRatioMaxAndMinValuesDictionary[ratioId][FinancialRatioMaxValueKey];
-        NSNumber *minValueNumber = FinancialRatioMaxAndMinValuesDictionary[ratioId][FinancialRatioMinValueKey];
+        NSNumber *maxValueNumber = FinancialRatioMaxAndMinValuesDictionary[correctRatioId][FinancialRatioMaxValueKey];
+        NSNumber *minValueNumber = FinancialRatioMaxAndMinValuesDictionary[correctRatioId][FinancialRatioMinValueKey];
         
         NSNumber *ratioValueNumber = [self randomNumberBetweenMinimumNumber:minValueNumber andMaximumNumber:maxValueNumber];
         
         // QUESTION
+        numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
+        numberFormatter.maximumFractionDigits = 2;
         NSString *ratioValueStr = [numberFormatter stringFromNumber:ratioValueNumber];
-        NSString *questionStr = [NSString stringWithFormat:FinancialRatiosInterpretationsDictionary[ratioId], ratioValueStr];
+        NSString *questionStr = [NSString stringWithFormat:FinancialRatiosInterpretationsDictionary[correctRatioId], ratioValueStr];
         // ------------
         
         // WRONG ANSWERS
+        // Choose different ratioId for wrong answers.
         NSMutableArray *answers = [[NSMutableArray alloc] init];
+        
+        // Array of all available ratio ids except the correct answer ratio id
+        NSMutableArray *wrongAnswersAvailable = [[FinancialRatiosInterpretationsDictionary allKeys] mutableCopy];
+        [wrongAnswersAvailable removeObject:correctRatioId];
+        
         for (int i = 0; i < QuizGeneratorNumberOfAnswers - 1; i++) {
+            NSInteger wrongAnswersAvailableCount = [wrongAnswersAvailable count];
             
-            NSString *randomRatioId = allKeys[arc4random() % [allKeys count]];
+            if (wrongAnswersAvailableCount <= 0) break; // If not enough answers
             
-            while (randomRatioId == ratioId) {
-                randomRatioId = allKeys[arc4random() % [allKeys count]];
+            // Pick random wrong answer
+            NSString *randomWrongAnswer = wrongAnswersAvailable[arc4random() % wrongAnswersAvailableCount];
+            // Remove from wrong available answers
+            [wrongAnswersAvailable removeObject:randomWrongAnswer];
+            
+            // Add answer ratio value to wrong answer in corresponding number style
+            if ([FinancialSortingValuesPercentValuesArray containsObject:randomWrongAnswer]) {
+                numberFormatter.numberStyle = NSNumberFormatterPercentStyle;
+                numberFormatter.maximumFractionDigits = 0;
+            } else {
+                numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+                numberFormatter.maximumFractionDigits = 2;
             }
+            randomWrongAnswer = [NSString stringWithFormat:@"%@  |  %@", randomWrongAnswer, [numberFormatter stringFromNumber:ratioValueNumber]];
             
-            [answers addObject:randomRatioId];
+            [answers addObject:randomWrongAnswer];
         }
         // ------------
         
         if (questionStr && answers) {
             // Add the correct answer at a random index
-            NSInteger randomIndex = arc4random() % ([answers count] + 1);
-            [answers insertObject:ratioId atIndex:randomIndex];
+            if ([FinancialSortingValuesPercentValuesArray containsObject:correctRatioId]) {
+                numberFormatter.numberStyle = NSNumberFormatterPercentStyle;
+                numberFormatter.maximumFractionDigits = 0;
+            } else {
+                numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+                numberFormatter.maximumFractionDigits = 2;
+            }
+            correctRatioId = [NSString stringWithFormat:@"%@  |  %@", correctRatioId, [numberFormatter stringFromNumber:ratioValueNumber]];
+            NSInteger randomCorrectIndex = arc4random() % ([answers count] + 1);
+            [answers insertObject:correctRatioId atIndex:randomCorrectIndex];
             
             QuizQuestion *quizQuestion = [[QuizQuestion alloc] initWithType:QuizQuestionTypeTextQuestionTextAnswers
                                                                withQuestion:questionStr
                                                                 withAnswers:answers
-                                                     withCorrectAnswerIndex:randomIndex];
+                                                     withCorrectAnswerIndex:randomCorrectIndex];
             
             [questions addObject:quizQuestion];
         }
@@ -244,92 +275,39 @@
 
 #pragma mark - Quiz characteristics
 
-// Return the maximum level available for the given quizType
-// Return 0 for not implemented quizTypes
-- (NSInteger)maximumLevelForQuizType:(QuizType)quizType
+// Return the maximum difficulty level available for the given quizType
+- (NSInteger)maximumDifficultyLevelForQuizType:(QuizType)quizType;
 {
-    for (NSInteger i = 0; i <= QuizGeneratorMaximumQuizLevel; i++) {
-        if (![self isQuizAvailableForQuizLevel:(i + 1) forQuizType:quizType]) {
-            return i;
-        }
-    }
-    
-    return 0;
+    return QuizGeneratorMaxDifficultyLevel;
 }
 
-- (BOOL)isQuizAvailableForQuizLevel:(NSInteger)quizLevel forQuizType:(QuizType)quizType
-{
-    
-    
-    if (quizLevel > QuizGeneratorMaximumQuizLevel) {
-        return NO;
-    }
-    
-    NSUInteger num = [self numberOfQuestionsForQuizType:quizType forQuizLevel:quizLevel];
-    NSUInteger maxNum = 0;
-    
-    if (quizType == QuizTypeFinancialRatioFormulas) {
-        
-        maxNum = [FinancialRatiosImageFilenamesDictionary count];
-        
-    } else if (quizType == QuizTypeFinancialRatioDefinitions) {
-        
-        maxNum = [FinancialRatiosDefinitionsDictionary count];
-        
-    } else if (quizType == QuizTypeFinancialStatementDefinitions) {
-        
-        maxNum = [FinancialStatementTermDefinitionsDictionary count];
-        
-    } else if (quizType == QuizTypeStockMarketDefinitions) {
-        
-        maxNum = [StockMarketTermDefinitionsDictionary count];
-        
-    } else if (quizType == QuizTypeFinancialRatioDefinitionsAndFormulas) {
-        
-        maxNum = [FinancialRatiosImageFilenamesDictionary count] + [FinancialRatiosDefinitionsDictionary count];
-        
-    } else if (quizType == QuizTypeAllDefinitions) {
-        
-        NSUInteger ratioFormulasCount = [FinancialRatiosImageFilenamesDictionary count];
-        NSUInteger ratioDefinitionsCount = [FinancialRatiosDefinitionsDictionary count];
-        NSUInteger financialStatementDefinitionsCount = [FinancialStatementTermDefinitionsDictionary count];
-        NSUInteger stockMarketTermDefinitionsCount = [StockMarketTermDefinitionsDictionary count];
-        
-        maxNum = ratioFormulasCount + ratioDefinitionsCount + financialStatementDefinitionsCount + stockMarketTermDefinitionsCount;
-        
-    } else {
-        maxNum = num;
-    }
-    
-    if (quizType == QuizTypeFinancialRatioComparisons) { // NEED TO BE IMPLEMENTED
-        return NO;
-    }
-    
-    return num <= maxNum;
-}
 
-- (NSUInteger)numberOfQuestionsForQuizType:(QuizType)quizType forQuizLevel:(NSInteger)quizLevel
+- (NSUInteger)numberOfQuestionsForQuizType:(QuizType)quizType forDifficultyLevel:(NSInteger)difficultyLevel
 {
-    NSUInteger num;
-    
-    switch (quizLevel) {
-        case 1:
+    NSUInteger num = 0;
+    switch (difficultyLevel) {
+        case 0:
             num = 5;
+            break;
+        case 1:
+            num = 10;
             break;
         case 2:
             num = 15;
             break;
         case 3:
-            num = 30;
+            num = 20;
             break;
         case 4:
-            num = 50;
+            num = 30;
             break;
         case 5:
-            num = 100;
+            num = 40;
+            break;
+        case 6:
+            num = 50;
             break;
         default:
-            num = 0;
             break;
     }
     
@@ -367,76 +345,81 @@
         return @"Ratio Interpretation";
     }
     
-    if (quizType == QuizTypeFinancialRatioComparisons) {
-        return @"Ratio Comparison";
-    }
-    
     return nil;
 }
 
 
-- (NSUInteger)secondsPerQuestionForQuizType:(QuizType)quizType forQuizLevel:(NSInteger)quizLevel
+- (NSUInteger)secondsPerQuestionForQuizType:(QuizType)quizType forDifficultyLevel:(NSInteger)difficultyLevel
 {
-    if (quizLevel <= 2) {
-        return 20;
-    } else if (quizLevel <= 4) {
-        return 15;
-    } else if (quizLevel <= 6) {
-        return 10;
-    } else {
-        return 5;
+    NSUInteger seconds = 0;
+    switch (difficultyLevel) {
+        case 0:
+            seconds = 20;
+            break;
+        case 1:
+            seconds = 20;
+            break;
+        case 2:
+            seconds = 15;
+            break;
+        case 3:
+            seconds = 15;
+            break;
+        case 4:
+            seconds = 10;
+            break;
+        case 5:
+            seconds = 10;
+            break;
+        case 6:
+            seconds = 5;
+            break;
+        default:
+            break;
     }
+    
+    return seconds;
 }
 
-- (NSUInteger)mistakesAllowedForQuizType:(QuizType)quizType forQuizLevel:(NSInteger)quizLevel
+- (NSUInteger)mistakesAllowedForQuizType:(QuizType)quizType forDifficultyLevel:(NSInteger)difficultyLevel
 {
-    NSUInteger mistakes = [self numberOfQuestionsForQuizType:quizType forQuizLevel:quizLevel] / 30;
+    NSUInteger mistakesAllowed = 0;
+    switch (difficultyLevel) {
+        case 0:
+            mistakesAllowed = 2;
+            break;
+        case 1:
+            mistakesAllowed = 2;
+            break;
+        case 2:
+            mistakesAllowed = 3;
+            break;
+        case 3:
+            mistakesAllowed = 2;
+            break;
+        case 4:
+            mistakesAllowed = 3;
+            break;
+        case 5:
+            mistakesAllowed = 2;
+            break;
+        case 6:
+            mistakesAllowed = 2;
+            break;
+        default:
+            break;
+    }
     
-    return MIN(mistakes, QuizGeneratorMaximumMistakesAllowed);
+    return mistakesAllowed;
 }
 
-- (NSInteger)maximumScoreForQuizType:(QuizType)quizType forQuizLevel:(NSInteger)quizLevel
+- (NSInteger)maximumScoreForQuizType:(QuizType)quizType forDifficultyLevel:(NSInteger)difficultyLevel
 {
-    NSUInteger numberOfQuestions = [self numberOfQuestionsForQuizType:quizType forQuizLevel:quizLevel];
-    NSInteger pointsPerQuestion = 0;
-    
-    if (quizType == QuizTypeAllDefinitions) {
-        pointsPerQuestion = 1;
-    }
-    
-    if (quizType == QuizTypeFinancialRatioDefinitionsAndFormulas) {
-        pointsPerQuestion = 1;
-    }
-    
-    if (quizType == QuizTypeFinancialRatioDefinitions) {
-        pointsPerQuestion = 1;
-    }
-    
-    if (quizType == QuizTypeFinancialStatementDefinitions) {
-        pointsPerQuestion = 1;
-    }
-    
-    if (quizType == QuizTypeStockMarketDefinitions) {
-        pointsPerQuestion = 1;
-    }
-    
-    if (quizType == QuizTypeFinancialRatioFormulas) {
-        pointsPerQuestion = 1;
-    }
-    
-    if (quizType == QuizTypeFinancialRatioInterpretations) {
-        pointsPerQuestion = 1;
-    }
-    
-    if (quizType == QuizTypeFinancialRatioComparisons) {
-        pointsPerQuestion = 1;
-    }
-    
-    return numberOfQuestions * pointsPerQuestion;
+    return 1;
 }
 
 
-- (NSInteger)minimumScoreForQuizType:(QuizType)quizType forQuizLevel:(NSInteger)quizLevel
+- (NSInteger)minimumScoreForQuizType:(QuizType)quizType forDifficultyLevel:(NSInteger)difficultyLevel
 {
     return 0;
 }
@@ -475,7 +458,20 @@
     return @(randomValue * ([maxNumber doubleValue] - [minNumber doubleValue]) + [minNumber doubleValue]);
 }
 
+- (BOOL)isValidQuizType:(QuizType)quizType
+{
+    BOOL isValidType = NO;
 
+    if (quizType == QuizTypeFinancialRatioDefinitions) isValidType = YES;
+    if (quizType == QuizTypeFinancialRatioFormulas) isValidType = YES;
+    if (quizType == QuizTypeFinancialRatioDefinitionsAndFormulas) isValidType = YES;
+    if (quizType == QuizTypeFinancialStatementDefinitions) isValidType = YES;
+    if (quizType == QuizTypeStockMarketDefinitions) isValidType = YES;
+    if (quizType == QuizTypeAllDefinitions) isValidType = YES;
+    if (quizType == QuizTypeFinancialRatioInterpretations) isValidType = YES;
+    
+    return isValidType;
+}
 
 
 

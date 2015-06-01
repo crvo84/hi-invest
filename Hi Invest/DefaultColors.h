@@ -69,4 +69,7 @@
 
 + (NSAttributedString *)attributedStringForReturn:(double)returnValue forDarkBackground:(BOOL)darkBackground;
 
+// First level = quizLevelIndex 0
++ (UIColor *)colorForUserAccountQuizLevelIndex:(NSInteger)quizLevelIndex;
+
 @end

@@ -31,35 +31,29 @@
 
 - (void)updateUI
 {
-    for (int i = 0; i < QuizTypeCount; i++) {
+    for (int quizType = 0; quizType < QuizTypeCount; quizType++) { // Because QuizTypeCount is an enum at Quiz.h
         
         QuizGenerator *quizGenerator = [[QuizGenerator alloc] init];
-        NSInteger quizTypeLevel = [self.userAccount currentQuizLevelForQuizType:i];
-        NSInteger maxQuizTypeLevel = [quizGenerator maximumLevelForQuizType:i];
+        NSInteger quizTypeSuccessfulQuizzes = [self.userAccount successfulQuizzesForQuizType:quizType];
+        NSInteger maxQuizTypeDifficultyLevel = [quizGenerator maximumDifficultyLevelForQuizType:quizType];
         
-        QuizTableViewCell *quizCell = (QuizTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        QuizTableViewCell *quizCell = (QuizTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:quizType inSection:0]];
         
-        if (quizTypeLevel <= maxQuizTypeLevel) {
+        if (quizTypeSuccessfulQuizzes <= maxQuizTypeDifficultyLevel) {
             
             quizCell.accessoryType = UITableViewCellAccessoryNone;
             quizCell.progressView.hidden = NO;
-            [quizCell.progressView setProgress:((CGFloat)quizTypeLevel - 1) / maxQuizTypeLevel animated:YES];
+            
+            // maxQuizTypeDifficultyLevel + 1 because it has zero based index
+            [quizCell.progressView setProgress:((CGFloat)quizTypeSuccessfulQuizzes) / (maxQuizTypeDifficultyLevel + 1) animated:YES];
             
         } else {
             
             quizCell.accessoryType = UITableViewCellAccessoryCheckmark;
             quizCell.progressView.hidden = YES;
         }
-        
-
     }
 }
-
-#pragma mark - Quizzes Info
-
-
-#pragma mark - Getters
-
 
 #pragma mark - UITableView Data Source
 
@@ -70,7 +64,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return QuizTypeCount - 1; // Remove the "-1" when all QuizTypes are implemented in QuizGenerator
+    return QuizTypeCount;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -126,17 +120,17 @@
             QuizGenerator *quizGenerator = [[QuizGenerator alloc] init];
             QuizType quizType = indexPath.row;
             
-            NSInteger quizTypeLevel = [self.userAccount currentQuizLevelForQuizType:quizType];
-            NSInteger maxQuizTypeLevelAvailable = [quizGenerator maximumLevelForQuizType:quizType];
+            NSInteger quizDifficultyLevel = [self.userAccount successfulQuizzesForQuizType:quizType];
+            NSInteger maxQuizTypeLevelAvailable = [quizGenerator maximumDifficultyLevelForQuizType:quizType];
             
             BOOL quizAlreadyDone = NO;
             
-            if (quizTypeLevel > maxQuizTypeLevelAvailable) {
-                quizTypeLevel = maxQuizTypeLevelAvailable;
+            if (quizDifficultyLevel > maxQuizTypeLevelAvailable) {
+                quizDifficultyLevel = maxQuizTypeLevelAvailable;
                 quizAlreadyDone = YES;
             }
             
-            Quiz *quiz = [quizGenerator getQuizWithType:quizType andLevel:quizTypeLevel];
+            Quiz *quiz = [quizGenerator getQuizWithType:quizType andDifficultyLevel:quizDifficultyLevel];
             
             [self prepareQuizViewController:(QuizViewController *)viewController withQuiz:quiz quizType:quizType quizAlreadyDone:quizAlreadyDone];
         }
@@ -159,13 +153,14 @@
         UIViewController *viewController = ((QuizViewController *)unwindSegue.sourceViewController);
         if ([viewController isKindOfClass:[QuizViewController class]]) {
             QuizViewController *quizViewController = (QuizViewController *)viewController;
-            if (quizViewController.succesfulQuiz) {
-                [self.userAccount increaseQuizLevelForQuizType:quizViewController.quizType];
+            if (quizViewController.succesfulQuiz && !quizViewController.quizAlreadyDone) {
+                [self.userAccount increaseSuccessfulQuizzesForQuizType:quizViewController.quizType];
             }
         }
     }
 }
 
+#pragma mark - Getters
 
 
 

@@ -27,8 +27,9 @@
 // Quiz Outlets
 @property (weak, nonatomic) IBOutlet UIView *timerBarSuperview;
 @property (strong, nonatomic) UIView *timerBarView;
-@property (weak, nonatomic) IBOutlet UIImageView *mistakesLeftImageView;
-@property (weak, nonatomic) IBOutlet UILabel *mistakesLeftLabel;
+
+@property (strong, nonatomic) IBOutletCollection(UIImageView) NSArray *mistakeLeftImageViews;
+
 @property (weak, nonatomic) IBOutlet UILabel *questionCounterLabel;
 @property (weak, nonatomic) IBOutlet UILabel *questionLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *questionImageView;
@@ -70,11 +71,11 @@
     // Mistake count
     self.mistakeCount = 0;
     // Image will take UIImageView tint color. Set on interface builder
-    self.mistakesLeftImageView.image = [[UIImage imageNamed:@"ninjaEmoticon22x22"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    for (UIImageView *imageView in self.mistakeLeftImageViews) {
+        
+        [imageView setImage:[[UIImage imageNamed:@"ninjaEmoticon22x22"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+    }
     [self updateMistakesLeft];
-    // If 0 mistakes allowed, hide image and count label
-    self.mistakesLeftImageView.hidden = self.quiz.mistakesAllowed == 0;
-    self.mistakesLeftLabel.hidden = self.quiz.mistakesAllowed == 0;
     
     // Answer Buttons
     for (UIButton *answerButton in self.answerButtons) {
@@ -139,7 +140,11 @@
 - (void)updateMistakesLeft
 {
     NSInteger mistakesLeft = self.quiz.mistakesAllowed - self.mistakeCount;
-    self.mistakesLeftLabel.text = [NSString stringWithFormat:@"x%ld", (long)MAX(mistakesLeft, 0)];
+    for (UIImageView *imageView in self.mistakeLeftImageViews) {
+        [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionTransitionNone animations:^{
+            imageView.alpha = mistakesLeft < imageView.tag + 1 ? 0.0 : 1.0; // tag is 0 based index
+        } completion:nil];
+    }
 }
 
 - (void)updateQuestionCounter
