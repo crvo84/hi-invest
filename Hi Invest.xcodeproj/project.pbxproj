@@ -174,7 +174,6 @@
 		739ABD511B0165EE009EFC0E /* Main_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPhone.storyboard; sourceTree = "<group>"; };
 		739ABD531B0165FC009EFC0E /* ManagedObjectContextCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManagedObjectContextCreator.h; sourceTree = "<group>"; };
 		739ABD541B0165FC009EFC0E /* ManagedObjectContextCreator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManagedObjectContextCreator.m; sourceTree = "<group>"; };
-		739ABD561B016605009EFC0E /* OpeningDatabaseFileKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpeningDatabaseFileKeys.h; sourceTree = "<group>"; };
 		739ABD571B01660D009EFC0E /* Portfolio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Portfolio.h; sourceTree = "<group>"; };
 		739ABD581B01660D009EFC0E /* Portfolio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Portfolio.m; sourceTree = "<group>"; };
 		739ABD5A1B016616009EFC0E /* PortfolioHistoricalValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PortfolioHistoricalValue.h; sourceTree = "<group>"; };
@@ -442,7 +441,6 @@
 				73442DDB1B14DC5900F3A7ED /* FictionalNamesKeys.h */,
 				73EEC5761B04038900FAA1FE /* GlossaryKeys.h */,
 				739ABD5D1B016626009EFC0E /* PortfolioKeys.h */,
-				739ABD561B016605009EFC0E /* OpeningDatabaseFileKeys.h */,
 				739ABD111B016426009EFC0E /* CompaniesInfoKeys.h */,
 			);
 			name = "Keys Headers";

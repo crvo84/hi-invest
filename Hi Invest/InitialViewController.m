@@ -123,26 +123,26 @@
 
 - (InvestingGame *)createNewInvestingGame;
 {
-    NSManagedObjectContext *context = [ManagedObjectContextCreator createMainQueueManagedObjectContext];
-    
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Scenario"];
-    NSError *error;
-    NSArray *matches = [context executeFetchRequest:request error:&error];
-    
-    if (!matches || error || [matches count] > 1) {
-        
-        NSLog(@"Error fetching Scenario from database");
-        
-    } else if ([matches count] == 0) {
-        
-        NSLog(@"No Scenario in database");
-        
-    } else {
-        
-//        Scenario *scenario = [matches firstObject];
-//        return [[InvestingGame alloc] initInvestingGameWithInitialCash:1000000.0 scenario:scenario andPortfolioPictures:nil];
-        
-    }
+//    NSManagedObjectContext *context = [ManagedObjectContextCreator createMainQueueManagedObjectContext];
+//    
+//    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Scenario"];
+//    NSError *error;
+//    NSArray *matches = [context executeFetchRequest:request error:&error];
+//    
+//    if (!matches || error || [matches count] > 1) {
+//        
+//        NSLog(@"Error fetching Scenario from database");
+//        
+//    } else if ([matches count] == 0) {
+//        
+//        NSLog(@"No Scenario in database");
+//        
+//    } else {
+//        
+////        Scenario *scenario = [matches firstObject];
+////        return [[InvestingGame alloc] initInvestingGameWithInitialCash:1000000.0 scenario:scenario andPortfolioPictures:nil];
+//        
+//    }
     
     return nil;
 }

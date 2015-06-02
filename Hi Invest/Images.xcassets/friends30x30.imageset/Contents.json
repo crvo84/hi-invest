@@ -3,11 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "ninjaIcon_144x144.png"
+      "filename" : "friends30x30.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x"
+      "scale" : "2x",
+      "filename" : "friends60x60.png"
     },
     {
       "idiom" : "universal",

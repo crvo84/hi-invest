@@ -160,6 +160,11 @@
     return [[self windowBackgroundColor] colorWithAlphaComponent:0.05];
 }
 
++ (UIColor *)buttonDefaultColor
+{
+    return [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+}
+
 + (NSAttributedString *)attributedStringForReturn:(double)returnValue forDarkBackground:(BOOL)darkBackground
 {
     UIColor *color = [UIColor lightGrayColor];
@@ -182,34 +187,35 @@
     return attributedStr;
 }
 
-// Lowest (initial) level = quizLevelIndex 0
-+ (UIColor *)colorForUserAccountQuizLevelIndex:(NSInteger)quizLevelIndex
+// First user level = 0
++ (UIColor *)userLevelColorForLevel:(NSInteger)userLevel;
 {
+//    userLevel = 1;
     UIColor *color;
-    switch (quizLevelIndex) {
+    switch (userLevel) {
         case 0:
-            color = [UIColor whiteColor];
+            color = [UIColor colorWithRed:225.0/255.0 green:225.0/255.0 blue:225.0/255.0 alpha:1.0];
             break;
         case 1:
-            color = [UIColor yellowColor];
+            color = [UIColor colorWithRed:255.0/255.0 green:200.0/255.0 blue:0.0/255.0 alpha:1.0];
             break;
         case 2:
-            color = [UIColor orangeColor];
+            color = [UIColor colorWithRed:255.0/255.0 green:100.0/255.0 blue:0.0/255.0 alpha:1.0];
             break;
         case 3:
-            color = [UIColor greenColor];
+            color = [UIColor colorWithRed:0.0/255.0 green:128.0/255.0 blue:0.0/255.0 alpha:1.0];
             break;
         case 4:
-            color = [UIColor blueColor];
+            color = [UIColor colorWithRed:0.0/255.0 green:72.0/255.0 blue:128.0/255.0 alpha:1.0];
             break;
         case 5:
-            color = [UIColor brownColor];
+            color = [UIColor colorWithRed:120.0/255.0 green:64.0/255.0 blue:0.0/255.0 alpha:1.0];
             break;
         case 6:
-            color = [UIColor redColor];
+            color = [UIColor colorWithRed:225.0/255.0 green:0.0/255.0 blue:0.0/255.0 alpha:1.0];
             break;
         case 7:
-            color = [UIColor blackColor];
+            color = [UIColor colorWithRed:40.0/255.0 green:40.0/255.0 blue:40.0/255.0 alpha:1.0];
             break;
         default:
             color = nil;
@@ -218,8 +224,6 @@
     
     return color;
 }
-             
-             
              
 
 @end

@@ -13,8 +13,7 @@
 
 @interface UserAccount ()
 
-@property (nonatomic, readwrite) NSInteger userLevel;
-@property (copy, nonatomic) NSString *selectedScenearioId;
+@property (copy, nonatomic) NSString *selectedScenearioFilename;
 @property (strong, nonatomic, readwrite) InvestingGame *currentInvestingGame;
 @property (strong, nonatomic) NSMutableDictionary *successfulQuizzesCount; // @{ @"QuizType" : @(Current Level) }
 
@@ -31,7 +30,6 @@
     self = [super init];
     
     if (self) {
-        self.userLevel = 0;
         // TODO: Should be loaded from user account
         self.simulatorInitialCash = 1000000.0;
         self.disguiseCompanies = NO;
@@ -40,12 +38,18 @@
     return self;
 }
 
+#pragma mark - User Info
+
+- (NSString *)userName
+{
+    return @"Carlos Rogelio";
+}
+
 // Return the user level (0 is the lowest) depending on answered quizzes
-- (NSInteger)currentUserLevel;
+- (NSInteger)userLevel;
 {
     return [self totalSuccessfulQuizzesCount] / UserAccountSuccessfulQuizzesPerUserLevel;
 }
-
 
 
 #pragma mark - Quizzes
@@ -97,7 +101,7 @@
 {
     // TODO: Edit ManagedObjectContextCreator to get a context with a given scenario id
     // using self.selectedScenarioId
-    NSManagedObjectContext *context = [ManagedObjectContextCreator createMainQueueManagedObjectContext];
+    NSManagedObjectContext *context = [ManagedObjectContextCreator createMainQueueManagedObjectContextWithScenarioFilename:self.selectedScenearioFilename];
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Scenario"];
     NSError *error;
@@ -148,7 +152,7 @@
     return _localeDefault;
 }
 
-- (NSString *)selectedScenearioId
+- (NSString *)selectedScenearioFilename
 {
     return @"scenario_DJI001A";
 }

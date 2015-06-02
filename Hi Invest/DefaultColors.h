@@ -67,9 +67,13 @@
 
 + (UIColor *)scenarioButtonBackgroundColor;
 
++ (UIColor *)buttonDefaultColor;
+
 + (NSAttributedString *)attributedStringForReturn:(double)returnValue forDarkBackground:(BOOL)darkBackground;
 
-// First level = quizLevelIndex 0
-+ (UIColor *)colorForUserAccountQuizLevelIndex:(NSInteger)quizLevelIndex;
+// First user level = 0
++ (UIColor *)userLevelColorForLevel:(NSInteger)userLevel;
+
+
 
 @end

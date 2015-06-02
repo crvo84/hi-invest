@@ -26,12 +26,14 @@
 - (NSInteger)successfulQuizzesForQuizType:(QuizType)quizType;
 
 // Return the user ninja level (0 is the lowest) depending on answered quizzes
-- (NSInteger)currentUserLevel;
+- (NSInteger)userLevel;
 
 // Return the quiz progress [0,1) to get to the next user level
 - (double)progressForNextUserLevel;
 
 - (void)newInvestingGame;
 - (void)exitInvestingGame;
+
+- (NSString *)userName;
 
 @end

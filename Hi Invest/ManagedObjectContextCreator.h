@@ -11,6 +11,10 @@
 
 @interface ManagedObjectContextCreator : NSObject
 
-+ (NSManagedObjectContext *)createMainQueueManagedObjectContext;
++ (NSManagedObjectContext *)createMainQueueManagedObjectContextWithScenarioFilename:(NSString *)scenarioFilename;
+
++ (BOOL)scenarioDatabaseExistsAtApplicationDocumentsDirectoryWithFilename:(NSString *)scenarioFilename;
+
++ (BOOL)scenarioDatabaseExistsAtBundleWithFilename:(NSString *)scenarioFilename;
 
 @end

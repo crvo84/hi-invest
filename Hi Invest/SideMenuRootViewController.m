@@ -83,7 +83,9 @@
 
 - (void)sideMenu:(RESideMenu *)sideMenu willShowMenuViewController:(UIViewController *)menuViewController
 {
-
+    if ([menuViewController isKindOfClass:[LeftMenuViewController class]]) {
+        [((LeftMenuViewController *)menuViewController) updateUI];
+    }
 }
 
 - (void)sideMenu:(RESideMenu *)sideMenu didShowMenuViewController:(UIViewController *)menuViewController

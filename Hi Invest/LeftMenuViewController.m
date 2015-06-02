@@ -20,8 +20,11 @@
 
 @interface LeftMenuViewController () <UITableViewDataSource, UITableViewDelegate, RESideMenuDelegate>
 
+@property (weak, nonatomic) IBOutlet UIView *backgroundColorSubview;
+@property (weak, nonatomic) IBOutlet UIView *userImageBackgroundView;
+@property (weak, nonatomic) IBOutlet UIButton *userImageButton;
+@property (weak, nonatomic) IBOutlet UIButton *userNameButton;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (weak, nonatomic) IBOutlet UIButton *userButton;
 @property (nonatomic) NSInteger selectedRowIndex;
 @property (strong, nonatomic) UIView *selectedCellSubview;
 
@@ -34,10 +37,31 @@
     [super viewDidLoad];
 
     self.selectedRowIndex = -1;
+    
+    // Background color subview
+    self.backgroundColorSubview.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.85];
+    
+    // User level brackground view setup
+    self.userImageBackgroundView.layer.cornerRadius = 5;
+    self.userImageBackgroundView.layer.masksToBounds = YES;
+
+    // User name button setup
+    self.userNameButton.titleLabel.numberOfLines = 2;
+    self.userNameButton.titleLabel.minimumScaleFactor = 0.6;
+    
+    [self updateUI];
 }
 
 - (void)updateUI
 {
+    // If facebook user image available set is as user image. If not, user ninjaImage;
+    // Provisional: only ninja for the moment
+    [self.userImageButton setImage:[UIImage imageNamed:@"ninjaIconClear64x54"] forState:UIControlStateNormal];
+    
+    self.userImageBackgroundView.backgroundColor = [DefaultColors userLevelColorForLevel:[self.userAccount userLevel]];
+    
+    [self.userNameButton setTitle:[self.userAccount userName] forState:UIControlStateNormal];
+    
     [self.tableView reloadData];
 }
 

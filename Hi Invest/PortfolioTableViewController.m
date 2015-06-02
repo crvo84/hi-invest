@@ -64,7 +64,7 @@
 
 - (void)updateCurrentDayInfoLabels
 {
-    self.infoSubview.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:0.82];
+    self.infoSubview.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]];
     
     // NETWORTH LABEL
     self.numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
