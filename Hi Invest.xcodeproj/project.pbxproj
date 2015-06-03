@@ -10,7 +10,7 @@
 		73442DC01B12805B00F3A7ED /* Dividend.m in Sources */ = {isa = PBXBuildFile; fileRef = 73442DBF1B12805B00F3A7ED /* Dividend.m */; };
 		73442DC41B139B4600F3A7ED /* TransactionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 73442DC31B139B4600F3A7ED /* TransactionTableViewCell.m */; };
 		73442DCB1B13E72900F3A7ED /* FinancialDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 73442DC91B13E72900F3A7ED /* FinancialDataModel.xcdatamodeld */; };
-		73442DCC1B13E74D00F3A7ED /* scenario_DJI001A.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 73442DC81B13E72200F3A7ED /* scenario_DJI001A.sqlite */; };
+		73442DCC1B13E74D00F3A7ED /* DJI_001A.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 73442DC81B13E72200F3A7ED /* DJI_001A.sqlite */; };
 		73442DCF1B13E81000F3A7ED /* Scenario.m in Sources */ = {isa = PBXBuildFile; fileRef = 73442DCE1B13E81000F3A7ED /* Scenario.m */; };
 		73442DD61B1407D200F3A7ED /* CompanyDisguiseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 73442DD51B1407D200F3A7ED /* CompanyDisguiseManager.m */; };
 		73442DE21B1672E800F3A7ED /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73442DE11B1672E800F3A7ED /* SettingsTableViewController.m */; };
@@ -73,6 +73,9 @@
 		73D7C3731B0A7E0700653A4C /* SignupLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D7C3721B0A7E0700653A4C /* SignupLoginViewController.m */; };
 		73D7C3861B0AD86C00653A4C /* SimulatorTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D7C3851B0AD86C00653A4C /* SimulatorTabBarController.m */; };
 		73D7C38B1B0AFB2800653A4C /* QuizTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D7C3891B0AFB2800653A4C /* QuizTableViewCell.m */; };
+		73E642BF1B1E4CA5005609B0 /* ScenarioTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 73E642BE1B1E4CA5005609B0 /* ScenarioTableViewCell.m */; };
+		73E642C21B1E56AD005609B0 /* ScenarioPurchaseInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 73E642C11B1E56AD005609B0 /* ScenarioPurchaseInfo.m */; };
+		73E642C41B1E9110005609B0 /* DEMO_001A.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 73E642C31B1E9093005609B0 /* DEMO_001A.sqlite */; };
 		73E966D21B10EA5600431AAC /* PortfolioActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73E966D11B10EA5600431AAC /* PortfolioActivityViewController.m */; };
 		73E966D51B10F02A00431AAC /* PortfolioTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 73E966D41B10F02A00431AAC /* PortfolioTransaction.m */; };
 		73EEC57C1B040E9300FAA1FE /* UserAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 73EEC57B1B040E9300FAA1FE /* UserAccount.m */; };
@@ -95,7 +98,7 @@
 		73442DBF1B12805B00F3A7ED /* Dividend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Dividend.m; sourceTree = "<group>"; };
 		73442DC21B139B4600F3A7ED /* TransactionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransactionTableViewCell.h; sourceTree = "<group>"; };
 		73442DC31B139B4600F3A7ED /* TransactionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransactionTableViewCell.m; sourceTree = "<group>"; };
-		73442DC81B13E72200F3A7ED /* scenario_DJI001A.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = scenario_DJI001A.sqlite; sourceTree = "<group>"; };
+		73442DC81B13E72200F3A7ED /* DJI_001A.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = DJI_001A.sqlite; sourceTree = "<group>"; };
 		73442DCA1B13E72900F3A7ED /* FinancialDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FinancialDataModel.xcdatamodel; sourceTree = "<group>"; };
 		73442DCD1B13E81000F3A7ED /* Scenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scenario.h; sourceTree = "<group>"; };
 		73442DCE1B13E81000F3A7ED /* Scenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Scenario.m; sourceTree = "<group>"; };
@@ -224,6 +227,11 @@
 		73D7C3851B0AD86C00653A4C /* SimulatorTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimulatorTabBarController.m; sourceTree = "<group>"; };
 		73D7C3881B0AFB2800653A4C /* QuizTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuizTableViewCell.h; sourceTree = "<group>"; };
 		73D7C3891B0AFB2800653A4C /* QuizTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuizTableViewCell.m; sourceTree = "<group>"; };
+		73E642BD1B1E4CA5005609B0 /* ScenarioTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScenarioTableViewCell.h; sourceTree = "<group>"; };
+		73E642BE1B1E4CA5005609B0 /* ScenarioTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScenarioTableViewCell.m; sourceTree = "<group>"; };
+		73E642C01B1E56AD005609B0 /* ScenarioPurchaseInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScenarioPurchaseInfo.h; sourceTree = SOURCE_ROOT; };
+		73E642C11B1E56AD005609B0 /* ScenarioPurchaseInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScenarioPurchaseInfo.m; sourceTree = SOURCE_ROOT; };
+		73E642C31B1E9093005609B0 /* DEMO_001A.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = DEMO_001A.sqlite; sourceTree = "<group>"; };
 		73E966D01B10EA5600431AAC /* PortfolioActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PortfolioActivityViewController.h; sourceTree = "<group>"; };
 		73E966D11B10EA5600431AAC /* PortfolioActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PortfolioActivityViewController.m; sourceTree = "<group>"; };
 		73E966D31B10F02A00431AAC /* PortfolioTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PortfolioTransaction.h; sourceTree = "<group>"; };
@@ -449,7 +457,8 @@
 		739ABD361B01650E009EFC0E /* Core Data */ = {
 			isa = PBXGroup;
 			children = (
-				73442DC81B13E72200F3A7ED /* scenario_DJI001A.sqlite */,
+				73E642C31B1E9093005609B0 /* DEMO_001A.sqlite */,
+				73442DC81B13E72200F3A7ED /* DJI_001A.sqlite */,
 				73442DC91B13E72900F3A7ED /* FinancialDataModel.xcdatamodeld */,
 				739ABCDF1B01639C009EFC0E /* NSManagedObject Subclasses */,
 				739ABD531B0165FC009EFC0E /* ManagedObjectContextCreator.h */,
@@ -490,6 +499,8 @@
 			children = (
 				73EEC57A1B040E9300FAA1FE /* UserAccount.h */,
 				73EEC57B1B040E9300FAA1FE /* UserAccount.m */,
+				73E642C01B1E56AD005609B0 /* ScenarioPurchaseInfo.h */,
+				73E642C11B1E56AD005609B0 /* ScenarioPurchaseInfo.m */,
 				73D7C3771B0AD37B00653A4C /* Controller */,
 			);
 			name = "User Info";
@@ -659,6 +670,8 @@
 		73D7C3871B0AFAD900653A4C /* Custom Cells */ = {
 			isa = PBXGroup;
 			children = (
+				73E642BD1B1E4CA5005609B0 /* ScenarioTableViewCell.h */,
+				73E642BE1B1E4CA5005609B0 /* ScenarioTableViewCell.m */,
 				739ABD201B01647F009EFC0E /* CompanyTableViewCell.h */,
 				739ABD211B01647F009EFC0E /* CompanyTableViewCell.m */,
 				73D7C3881B0AFB2800653A4C /* QuizTableViewCell.h */,
@@ -749,7 +762,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73442DCC1B13E74D00F3A7ED /* scenario_DJI001A.sqlite in Resources */,
+				73E642C41B1E9110005609B0 /* DEMO_001A.sqlite in Resources */,
+				73442DCC1B13E74D00F3A7ED /* DJI_001A.sqlite in Resources */,
 				739ABD521B0165EE009EFC0E /* Main_iPhone.storyboard in Resources */,
 				739ABD4C1B0165C0009EFC0E /* LaunchScreen.xib in Resources */,
 				739ABD3E1B016536009EFC0E /* Images.xcassets in Resources */,
@@ -814,6 +828,7 @@
 				739ABD321B0164F8009EFC0E /* DefinitionViewController.m in Sources */,
 				73442DE21B1672E800F3A7ED /* SettingsTableViewController.m in Sources */,
 				739ABD1B1B01645F009EFC0E /* CompanyInfoViewController.m in Sources */,
+				73E642C21B1E56AD005609B0 /* ScenarioPurchaseInfo.m in Sources */,
 				739ABD071B0163EF009EFC0E /* BEMAverageLine.m in Sources */,
 				739ABD701B016661009EFC0E /* Price.m in Sources */,
 				739ABD441B01656B009EFC0E /* InfoPageContentViewController.m in Sources */,
@@ -822,6 +837,7 @@
 				739ABD931B016740009EFC0E /* SpeechBubbleView.m in Sources */,
 				739ABD051B0163EF009EFC0E /* BEMAnalogClockView.m in Sources */,
 				739ABCE91B0163E1009EFC0E /* CashFlow.m in Sources */,
+				73E642BF1B1E4CA5005609B0 /* ScenarioTableViewCell.m in Sources */,
 				73442DC01B12805B00F3A7ED /* Dividend.m in Sources */,
 				739ABD411B016544009EFC0E /* IncomeStatement.m in Sources */,
 				739ABCE61B0163D8009EFC0E /* BuySellTableViewController.m in Sources */,

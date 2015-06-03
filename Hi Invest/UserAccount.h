@@ -14,7 +14,9 @@
 @interface UserAccount : NSObject
 
 @property (strong, nonatomic, readonly) InvestingGame *currentInvestingGame;
+@property (copy, nonatomic) NSString *selectedScenearioFilename;
 @property (copy, nonatomic) NSLocale *localeDefault; // Default NSLocale (Others: QuizGenerator, each scenario)
+@property (strong, nonatomic, readonly) NSArray *availableScenarios; // of ScenarioPurchaseInfo
 // Settings
 @property (nonatomic) double simulatorInitialCash;
 @property (nonatomic) BOOL disguiseCompanies;

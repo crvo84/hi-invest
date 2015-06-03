@@ -103,7 +103,12 @@
     return persistentStoreCoordinator;
 }
 
-+ (BOOL)scenarioDatabaseExistsAtApplicationDocumentsDirectoryWithFilename:(NSString *)scenarioFilename
++ (BOOL)scenarioDatabaseExistsAtBundleOrDocumentsDirectoryWithFilename:(NSString *)scenarioFilename
+{
+    return [self scenarioDatabaseExistsAtBundleWithFilename:scenarioFilename] || [self scenarioDatabaseExistsAtDocumentsDirectoryWithFilename:scenarioFilename];
+}
+
++ (BOOL)scenarioDatabaseExistsAtDocumentsDirectoryWithFilename:(NSString *)scenarioFilename
 {
     NSString *databasePathComponent = [NSString stringWithFormat:@"%@.%@", scenarioFilename, ScenarioDatabaseExtension];
 

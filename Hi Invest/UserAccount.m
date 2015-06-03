@@ -9,13 +9,14 @@
 #import "UserAccount.h"
 #import "InvestingGame.h"
 #import "ManagedObjectContextCreator.h"
+#import "ScenarioPurchaseInfo.h"
 #import "Quiz.h"
 
 @interface UserAccount ()
 
-@property (copy, nonatomic) NSString *selectedScenearioFilename;
 @property (strong, nonatomic, readwrite) InvestingGame *currentInvestingGame;
 @property (strong, nonatomic) NSMutableDictionary *successfulQuizzesCount; // @{ @"QuizType" : @(Current Level) }
+@property (strong, nonatomic, readwrite) NSArray *availableScenarios; // of ScenarioPurchaseInfo
 
 @end
 
@@ -33,6 +34,8 @@
         // TODO: Should be loaded from user account
         self.simulatorInitialCash = 1000000.0;
         self.disguiseCompanies = NO;
+        
+        self.selectedScenearioFilename = @"DEMO_001A";
     }
     
     return self;
@@ -152,12 +155,44 @@
     return _localeDefault;
 }
 
-- (NSString *)selectedScenearioFilename
+- (NSArray *)availableScenarios
 {
-    return @"scenario_DJI001A";
+    if (!_availableScenarios) {
+        
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"MM/dd/yyyy"];
+        
+        // DEMO SCENARIO
+        ScenarioPurchaseInfo *scenarioPurchaseInfoDemo = [[ScenarioPurchaseInfo alloc] init];
+        scenarioPurchaseInfoDemo.name = @"DEMO";
+        scenarioPurchaseInfoDemo.filename = @"DEMO_001A";
+        scenarioPurchaseInfoDemo.descriptionForScenario = @"Scenario Demo";
+        scenarioPurchaseInfoDemo.initialDate = [dateFormatter dateFromString:@"8/20/2014"];
+        scenarioPurchaseInfoDemo.endingDate = [dateFormatter dateFromString:@"12/19/2014"];
+        scenarioPurchaseInfoDemo.numberOfCompanies = 5;
+        scenarioPurchaseInfoDemo.numberOfDays = 120;
+        scenarioPurchaseInfoDemo.withAdds = NO;
+        scenarioPurchaseInfoDemo.price = 0.0; // Free Demo
+        scenarioPurchaseInfoDemo.sizeInMegas = 0.5; // PROVISIONAL
+        
+        // DEFAULT DOW JONES SCENARIO
+        ScenarioPurchaseInfo *scenarioPurchaseInfo1 = [[ScenarioPurchaseInfo alloc] init];
+        scenarioPurchaseInfo1.name = @"DOW JONES 30";
+        scenarioPurchaseInfo1.filename = @"DJI_001A";
+        scenarioPurchaseInfo1.descriptionForScenario = @"Dow Jones Industrial Average Companies.";
+        scenarioPurchaseInfo1.initialDate = [dateFormatter dateFromString:@"12/20/2010"];
+        scenarioPurchaseInfo1.endingDate = [dateFormatter dateFromString:@"12/19/2014"];
+        scenarioPurchaseInfo1.numberOfCompanies = 30;
+        scenarioPurchaseInfo1.numberOfDays = 1460;
+        scenarioPurchaseInfo1.withAdds = NO;
+        scenarioPurchaseInfo1.price = 0.99;
+        scenarioPurchaseInfo1.sizeInMegas = 1.96;
+        
+        _availableScenarios = @[scenarioPurchaseInfoDemo, scenarioPurchaseInfo1];
+    }
+    
+    return _availableScenarios;
 }
-
-
 
 
 

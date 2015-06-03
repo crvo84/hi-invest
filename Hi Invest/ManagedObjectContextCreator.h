@@ -13,8 +13,10 @@
 
 + (NSManagedObjectContext *)createMainQueueManagedObjectContextWithScenarioFilename:(NSString *)scenarioFilename;
 
-+ (BOOL)scenarioDatabaseExistsAtApplicationDocumentsDirectoryWithFilename:(NSString *)scenarioFilename;
++ (BOOL)scenarioDatabaseExistsAtDocumentsDirectoryWithFilename:(NSString *)scenarioFilename;
 
 + (BOOL)scenarioDatabaseExistsAtBundleWithFilename:(NSString *)scenarioFilename;
+
++ (BOOL)scenarioDatabaseExistsAtBundleOrDocumentsDirectoryWithFilename:(NSString *)scenarioFilename;
 
 @end

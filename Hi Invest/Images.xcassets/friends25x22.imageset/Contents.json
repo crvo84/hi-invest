@@ -3,16 +3,17 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "friends30x30.png"
+      "filename" : "friends25x22.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "friends60x60.png"
+      "filename" : "friends50x44.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "3x"
+      "scale" : "3x",
+      "filename" : "friends75x66.png"
     }
   ],
   "info" : {
