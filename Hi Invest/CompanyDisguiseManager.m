@@ -7,6 +7,8 @@
 //
 
 #import "CompanyDisguiseManager.h"
+#import "Ticker+Create.h"
+#import "GameInfo.h"
 
 @interface CompanyDisguiseManager ()
 
@@ -21,8 +23,10 @@
 #define FictionalNameCompanyTypes @[@"INC", @"CO", @"CORP"]
 
 // Designated initializer
-// Receive an NSArray of real Tickers to disguise and a NSDictionary mapping fictional names with fictional tickers @{name : ticker}
-- (instancetype)initWithCompaniesRealTickers:(NSArray *)realTickers withFictionalNamesAndTickers:(NSDictionary *)fictionalNamesAndTickers
+// Receive a GameInfo managed object, a NSArray of real Tickers to disguise and a NSDictionary mapping fictional names with fictional tickers @{name : ticker}
+// If it is a new game generate new disguised info
+// If it is an existing game, user existing info
+- (instancetype)initWithGameInfo:(GameInfo *)gameInfo withCompanyRealTickers:(NSArray *)realTickers withFictionalNamesAndTickers:(NSDictionary *)fictionalNamesAndTickers
 {
     self = [super init];
     
@@ -32,39 +36,54 @@
         self.namesChanged = [[NSMutableDictionary alloc] init];
         self.priceMultipliers = [[NSMutableDictionary alloc] init];
         
-        NSMutableArray *namesLeft = [[fictionalNamesAndTickers allKeys] mutableCopy];
-        NSMutableSet *existingFictionalTickers = [[NSMutableSet alloc] init];
-        
-        for (NSString *realTicker in realTickers) {
+        NSArray *tickersFromGameInfo = [gameInfo.tickers allObjects];
+        if ([tickersFromGameInfo count] > 0) { // Existing game
             
-            while ([namesLeft count] > 0) {
-
+            for (Ticker *ticker in tickersFromGameInfo) {
+                NSString *realTicker = ticker.realTicker;
+                self.tickersChanged[realTicker] = ticker.uiTicker;
+                self.namesChanged[realTicker] = ticker.uiName;
+                self.priceMultipliers[realTicker] = ticker.uiPriceMultiplier;
+            }
+            
+        } else if ([tickersFromGameInfo count] == 0) { // New Game
+            
+            NSMutableArray *namesLeft = [[fictionalNamesAndTickers allKeys] mutableCopy];
+            NSMutableSet *existingFictionalTickers = [[NSMutableSet alloc] init];
+            
+            for (NSString *realTicker in realTickers) {
                 
-                NSInteger randomNameIndex = arc4random() % [namesLeft count];
-                
-                NSString *fictionalName = namesLeft[randomNameIndex];
-                NSString *fictionalTicker = [fictionalNamesAndTickers[fictionalName] uppercaseString];
-                
-                [namesLeft removeObject:fictionalName];
-                
-                if ([existingFictionalTickers containsObject:fictionalTicker]) {
-                    fictionalTicker = [self fictionalTickerForName:fictionalName notPresentInSet:existingFictionalTickers];
-                }
-                
-                if (fictionalTicker) {
-                    [existingFictionalTickers addObject:fictionalTicker];
+                while ([namesLeft count] > 0) {
                     
-                    NSInteger randomCompanyTypeIndex = arc4random() % [FictionalNameCompanyTypes count];
-                    fictionalName = [[NSString stringWithFormat:@"%@ %@", fictionalName, FictionalNameCompanyTypes[randomCompanyTypeIndex]] uppercaseString];
                     
-                    // Random NSUInteger greater than 1 to multiply prices
-                    NSUInteger priceMultiplier = (arc4random() % 3) + 2;
+                    NSInteger randomNameIndex = arc4random() % [namesLeft count];
                     
-                    self.tickersChanged[realTicker] = fictionalTicker;
-                    self.namesChanged[realTicker] = fictionalName;
-                    self.priceMultipliers[realTicker] = @(priceMultiplier);
+                    NSString *fictionalName = namesLeft[randomNameIndex];
+                    NSString *fictionalTicker = [fictionalNamesAndTickers[fictionalName] uppercaseString];
                     
-                    break;
+                    [namesLeft removeObject:fictionalName];
+                    
+                    if ([existingFictionalTickers containsObject:fictionalTicker]) {
+                        fictionalTicker = [self fictionalTickerForName:fictionalName notPresentInSet:existingFictionalTickers];
+                    }
+                    
+                    if (fictionalTicker) {
+                        [existingFictionalTickers addObject:fictionalTicker];
+                        
+                        NSInteger randomCompanyTypeIndex = arc4random() % [FictionalNameCompanyTypes count];
+                        fictionalName = [[NSString stringWithFormat:@"%@ %@", fictionalName, FictionalNameCompanyTypes[randomCompanyTypeIndex]] uppercaseString];
+                        
+                        // Random NSUInteger greater than 1 to multiply prices
+                        NSUInteger priceMultiplier = (arc4random() % 3) + 2;
+                        
+                        self.tickersChanged[realTicker] = fictionalTicker;
+                        self.namesChanged[realTicker] = fictionalName;
+                        self.priceMultipliers[realTicker] = @(priceMultiplier);
+                        
+                        [Ticker tickerWithGameInfo:gameInfo realTickerStr:realTicker UITicker:fictionalTicker UIName:fictionalName UIPriceMultiplier:priceMultiplier];
+                        
+                        break;
+                    }
                 }
             }
         }

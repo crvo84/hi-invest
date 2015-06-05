@@ -71,7 +71,7 @@
     }
     
     // SCENARIO LABEL
-    self.scenarioNameLabel.text = [self.game.scenarioInfo.name uppercaseString];
+    self.scenarioNameLabel.text = [self.game.scenario.name uppercaseString];
     
     // DAYS LABEL
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];

@@ -17,6 +17,7 @@
 @property (weak, nonatomic) IBOutlet UISwitch *disguiseCompaniesSwitch;
 @property (strong, nonatomic) NSNumberFormatter *numberFormatter;
 @property (weak, nonatomic) IBOutlet UIButton *resetSimulatorButton;
+@property (nonatomic) BOOL onlyForNewGamesAlertPresented;
 
 @end
 
@@ -29,6 +30,7 @@
     self.initialCashStepper.stepValue = 50000;
     self.initialCashStepper.minimumValue = 50000;
     self.initialCashStepper.maximumValue = 1000000000;
+    self.onlyForNewGamesAlertPresented = NO;
     
     [self updateUI];
 }
@@ -50,72 +52,43 @@
 
 - (IBAction)initialCashStepperValueChanged:(UIStepper *)sender
 {
-    if (self.userAccount.currentInvestingGame) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Simulator needs to be reset."
-                                                                       message:@"Do you want to continue?"
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *continueAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            
-            [self.userAccount exitInvestingGame];
-            self.userAccount.simulatorInitialCash = self.initialCashStepper.value;
-            [self updateUI];
-        }];
-        
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
-        
-        [alert addAction:cancelAction];
-        [alert addAction:continueAction];
-        
-        [self presentViewController:alert animated:YES completion:nil];
-        
-    } else {
-        
-        self.userAccount.simulatorInitialCash = self.initialCashStepper.value;
-        [self updateUI];
-
+    if (!self.onlyForNewGamesAlertPresented) {
+        [self presentOnlyForNewGamesAlert];
+        self.onlyForNewGamesAlertPresented = YES;
     }
-
+    self.userAccount.simulatorInitialCash = self.initialCashStepper.value;
+    [self updateUI];
 }
 
 - (IBAction)disguiseCompaniesSwitchValueChanged:(UISwitch *)sender
 {
-    if (self.userAccount.currentInvestingGame) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Simulator needs to be reset."
-                                                                       message:@"Do you want to continue?"
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *continueAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            
-            [self.userAccount exitInvestingGame];
-            self.userAccount.disguiseCompanies = self.disguiseCompaniesSwitch.on;
-            [self updateUI];
-
-        }];
-        
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-            [self updateUI];
-        }];
-        
-        [alert addAction:cancelAction];
-        [alert addAction:continueAction];
-        
-        [self presentViewController:alert animated:YES completion:nil];
-        
-    } else {
-        
-        self.userAccount.disguiseCompanies = self.disguiseCompaniesSwitch.on;
+    if (!self.onlyForNewGamesAlertPresented) {
+        [self presentOnlyForNewGamesAlert];
+        self.onlyForNewGamesAlertPresented = YES;
     }
+    self.userAccount.disguiseCompanies = self.disguiseCompaniesSwitch.on;
+}
 
-
+- (void)presentOnlyForNewGamesAlert
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Changes will apply for new scenarios only."
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *continueAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    
+    [alert addAction:continueAction];
+    
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (IBAction)resetSimulatorButtonPressed:(UIButton *)sender
 {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Reset simulator?"
-                                                                   message:nil
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Selected scenario will be reset."
+                                                                   message:@"Do you want to continue?"
                                                             preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *continueAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         
-        [self.userAccount exitInvestingGame];
+        [self.userAccount deleteCurrentInvestingGame];
         self.resetSimulatorButton.enabled = NO;
         
     }];

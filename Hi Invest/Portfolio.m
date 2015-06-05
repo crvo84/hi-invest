@@ -8,46 +8,28 @@
 
 #import "Portfolio.h"
 #import "StockInvestment.h"
-#import "PortfolioPicture.h"
-#import "PortfolioTransaction.h"
+#import "GameInfo.h"
+#import "Transaction+Create.h"
 
 @interface Portfolio ()
 
 @property (nonatomic, readwrite) double cash;
 @property (strong, nonatomic, readwrite) NSMutableDictionary *equity; // { Ticker NSString : StockInvestment }
-@property (strong, nonatomic) NSMutableDictionary *transactions; // { [@(Day Number) asString] : NSMutableArray (of PortfolioTransaction) }
-@property (nonatomic, readwrite) double totalCommissionsPaid;
-@property (nonatomic, readwrite) double totalDividendsReceived;
 
 @end
 
 @implementation Portfolio
 
 // Initializer
-- (instancetype)initPortfolioWithCash:(double)cash
+- (instancetype)initPortfolioWithGameInfo:(GameInfo *)gameInfo withCash:(double)cash
 {
     self = [super init];
     
     if (self) {
+        self.gameInfo = gameInfo;
         self.cash = cash;
-        self.totalCommissionsPaid = 0;
     }
     
-    return self;
-}
-
-// Initializer
-- (instancetype)initPortfolioWithPortfolioPicture:(PortfolioPicture *)portfolioPicture
-{
-    self = [super init];
-    
-    if (self) {
-        self.cash = portfolioPicture.cash;
-        if (portfolioPicture.equity) {
-            self.equity = [portfolioPicture.equity mutableCopy];
-        }
-    }
-
     return self;
 }
 
@@ -58,6 +40,7 @@
                  numberOfShares:(NSUInteger)shares
                  commissionPaid:(double)commission
                           atDay:(NSInteger)day
+          recreatingTransaction:(BOOL)recreatingTransaction
 {
     // CHECK IF POSSIBLE
     if (price * shares + commission > self.cash) {
@@ -83,26 +66,15 @@
     
     [self.equity setObject:si forKey:ticker];
     
-    self.totalCommissionsPaid += commission;
-    
-    // REGISTER TRANSACTION
-    // Add purchase transaction
-    PortfolioTransaction *purchaseTransaction = [[PortfolioTransaction alloc] init];
-    purchaseTransaction.transactionType = PortfolioTransactionTypePurchase;
-    purchaseTransaction.ticker = ticker;
-    purchaseTransaction.day = day;
-    purchaseTransaction.shares = shares;
-    purchaseTransaction.amount = price * shares;
-    [self registerTransaction:purchaseTransaction atDay:day];
-    
-    // Add commission transaction
-    PortfolioTransaction *commissionTransaction  = [[PortfolioTransaction alloc] init];
-    commissionTransaction.transactionType = PortfolioTransactionTypeCommissionPurchase;
-    commissionTransaction.ticker = ticker;
-    commissionTransaction.day = day;
-    commissionTransaction.amount = commission;
-    [self registerTransaction:commissionTransaction atDay:day];
-    
+    if (!recreatingTransaction) {
+        // REGISTER TRANSACTION
+        // Add purchase transaction
+        [Transaction transactionWithGameInfo:self.gameInfo type:PortfolioTransactionTypePurchase day:day amount:(price *shares) shares:shares andTicker:ticker];
+        
+        // Add commission transaction
+        [Transaction transactionWithGameInfo:self.gameInfo type:PortfolioTransactionTypeCommissionPurchase day:day amount:commission shares:0 andTicker:ticker];
+    }
+
     return YES;
 }
 
@@ -112,6 +84,7 @@
                    numberOfShares:(NSUInteger)shares
                    commissionPaid:(double)commission
                             atDay:(NSInteger)day
+            recreatingTransaction:(BOOL)recreatingTransaction
 {
     // CHECK IF POSSIBLE
     StockInvestment *si = self.equity[ticker];
@@ -132,28 +105,18 @@
         si.shares -= shares;
     }
     
-    self.totalCommissionsPaid += commission;
-    
-    // REGISTER TRANSACTION
-    // Add sale transaction
-    PortfolioTransaction *saleTransaction = [[PortfolioTransaction alloc] init];
-    saleTransaction.transactionType = PortfolioTransactionTypeSale;
-    saleTransaction.ticker = ticker;
-    saleTransaction.day = day;
-    saleTransaction.shares = shares;
-    saleTransaction.amount = price * shares;
-    [self registerTransaction:saleTransaction atDay:day];
-    
-    // Add commission transaction
-    PortfolioTransaction *commissionTransaction  = [[PortfolioTransaction alloc] init];
-    commissionTransaction.transactionType = PortfolioTransactionTypeCommissionSale;
-    commissionTransaction.ticker = ticker;
-    commissionTransaction.day = day;
-    commissionTransaction.amount = commission;
-    [self registerTransaction:commissionTransaction atDay:day];
-    
+    if (!recreatingTransaction) {
+        // REGISTER TRANSACTION
+        // Add sale transaction
+        [Transaction transactionWithGameInfo:self.gameInfo type:PortfolioTransactionTypeSale day:day amount:(price * shares) shares:shares andTicker:ticker];
+        
+        // Add commission transaction
+        [Transaction transactionWithGameInfo:self.gameInfo type:PortfolioTransactionTypeCommissionSale day:day amount:commission shares:shares andTicker:ticker];
+    }
+
     return YES;
 }
+
 
 // Return true if dividend reception was successful. False otherwise (if no investments for that company)
 - (BOOL)receiveDividendsFromStockWithTicker:(NSString *)ticker
@@ -170,36 +133,14 @@
     self.cash += cashAmount;
     
     // REGISTER TRANSACTION
-    PortfolioTransaction *dividendTransaction = [[PortfolioTransaction alloc ] init];
-    dividendTransaction.transactionType = PortfolioTransactionTypeDividends;
-    dividendTransaction.ticker = ticker;
-    dividendTransaction.day = day;
-    dividendTransaction.shares = shares;
-    dividendTransaction.amount = cashAmount;
-    [self registerTransaction:dividendTransaction atDay:day];
+    [Transaction transactionWithGameInfo:self.gameInfo type:PortfolioTransactionTypeDividends day:day amount:cashAmount shares:shares andTicker:ticker];
     
     return YES;
 }
 
-- (void)registerTransaction:(PortfolioTransaction *)transaction atDay:(NSInteger)day
+- (NSArray *)transactionsFromDay:(NSInteger)day
 {
-    NSString *dayKey = [@(day) stringValue];
-    
-    NSMutableArray *dayTransactions = self.transactions[dayKey];
-    
-    if (!dayTransactions) {
-        
-        dayTransactions = [[NSMutableArray alloc] init];
-    }
-    
-    [dayTransactions addObject:transaction];
-    
-    self.transactions[dayKey] = dayTransactions;
-}
-
-- (NSArray *)transactionsFromDay:(NSInteger)day;
-{
-    return self.transactions[[@(day) stringValue]];
+    return [Transaction transactionsFromGameInfo:self.gameInfo fromDay:day];
 }
 
 - (NSInteger)sharesInPortfolioOfStockWithTicker:(NSString *)ticker
@@ -240,6 +181,30 @@
     }
 }
 
+#pragma mark - Game Recreation
+
+- (void)recreateTransaction:(Transaction *)transaction
+{
+    PortfolioTransactionType type = [transaction.type integerValue];
+    
+    if (type == PortfolioTransactionTypeCommissionPurchase || type == PortfolioTransactionTypeCommissionSale) {
+        self.cash -= [transaction.amount doubleValue];
+    } else if (type == PortfolioTransactionTypeDividends) {
+        self.cash += [transaction.amount doubleValue];
+    } else {
+        NSString *ticker = transaction.ticker;
+        NSInteger day = [transaction.day integerValue];
+        double amount = [transaction.amount doubleValue];
+        NSInteger shares = [transaction.shares integerValue];
+        double price = amount / shares;
+        if (type == PortfolioTransactionTypePurchase) {
+            [self investInStockWithTicker:ticker price:price numberOfShares:shares commissionPaid:0 atDay:day recreatingTransaction:YES];
+        } else if (type == PortfolioTransactionTypeSale) {
+            [self deinvestInStockWithTicker:ticker price:price numberOfShares:shares commissionPaid:0 atDay:day recreatingTransaction:YES];
+        }
+    }
+}
+
 #pragma mark - Getters
 
 - (NSMutableDictionary *)equity
@@ -249,15 +214,6 @@
     }
     
     return _equity;
-}
-
-- (NSMutableDictionary *)transactions
-{
-    if (!_transactions) {
-        _transactions = [[NSMutableDictionary alloc] init];
-    }
-    
-    return _transactions;
 }
 
 

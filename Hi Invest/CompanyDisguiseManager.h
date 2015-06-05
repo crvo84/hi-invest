@@ -8,11 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
+@class GameInfo;
+@class Ticker;
+
 @interface CompanyDisguiseManager : NSObject
 
 // Designated initializer
-// Receive an NSArray of real Tickers to disguise and a NSDictionary mapping fictional names with fictional tickers @{name : ticker}
-- (instancetype)initWithCompaniesRealTickers:(NSArray *)realTickers withFictionalNamesAndTickers:(NSDictionary *)fictionalNamesAndTickers;
+// Receive a GameInfo managed object, a NSArray of real Tickers to disguise and a NSDictionary mapping fictional names with fictional tickers @{name : ticker}
+// If it is a new game generate new disguised info
+// If it is an existing game, user existing info
+- (instancetype)initWithGameInfo:(GameInfo *)gameInfo withCompanyRealTickers:(NSArray *)realTickers withFictionalNamesAndTickers:(NSDictionary *)fictionalNamesAndTickers;
 
 - (NSString *)nameFromTicker:(NSString *)ticker;
 - (NSString *)tickerFromTicker:(NSString *)ticker;

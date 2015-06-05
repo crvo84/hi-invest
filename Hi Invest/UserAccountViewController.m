@@ -12,6 +12,7 @@
 #import "DefaultColors.h"
 #import "ScenarioTableViewCell.h"
 #import "ScenarioPurchaseInfo.h"
+#import "ScenarioInfoViewController.h"
 
 @interface UserAccountViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -63,6 +64,13 @@
     
     [self.userLevelProgressView setProgress:([self.userAccount progressForNextUserLevel])];
 }
+- (IBAction)friendsButtonPressed:(id)sender {
+}
+
+- (IBAction)userStatsButtonPressed:(UIButton *)sender
+{
+    
+}
 
 
 #pragma mark - UITableView Data Source
@@ -94,9 +102,9 @@
     
     NSString *yearPeriodStr;
     if ([initialDateComponents year] == [endingDateComponents year]) {
-        yearPeriodStr = [NSString stringWithFormat:@"%ld", [initialDateComponents year]];
+        yearPeriodStr = [NSString stringWithFormat:@"%ld", (long)[initialDateComponents year]];
     } else {
-        yearPeriodStr = [NSString stringWithFormat:@"%ld - %ld", [initialDateComponents year], [endingDateComponents year]];
+        yearPeriodStr = [NSString stringWithFormat:@"%ld - %ld", (long)[initialDateComponents year], (long)[endingDateComponents year]];
     }
     
     // Detail Info Label
@@ -113,7 +121,7 @@
     [scenarioCell.purchaseButton setTitle:priceStr forState:UIControlStateNormal];
     
     // Scenario Selection
-    if ([self.userAccount.selectedScenearioFilename isEqualToString:scenarioPurchaseInfo.filename]) {
+    if ([self.userAccount.selectedScenarioFilename isEqualToString:scenarioPurchaseInfo.filename]) {
         scenarioCell.purchaseButton.hidden = YES;
         scenarioCell.accessoryType = UITableViewCellAccessoryCheckmark;
     } else {
@@ -129,22 +137,45 @@
 
 #pragma mark - UITableView Delegate
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    if (section == 0) {
+        return @"Simulator scenarios";
+    }
+    
+    return nil;
+}
+
+
+#pragma mark - Scenario Cell
+
 - (IBAction)purchaseButtonPressed:(UIButton *)sender
 {
     ScenarioPurchaseInfo *scenarioInfo = self.userAccount.availableScenarios[sender.tag];
-    self.userAccount.selectedScenearioFilename = scenarioInfo.filename;
+    self.userAccount.selectedScenarioFilename = scenarioInfo.filename;
     [self.tableView reloadData];
 }
 
-- (IBAction)scenarioNameButtonPressed:(UIButton *)sender {
+
+
+#pragma mark - Navigation
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.destinationViewController isKindOfClass:[ScenarioInfoViewController class]]) {
+        if ([sender isKindOfClass:[UIButton class]]) {
+            NSInteger tag = ((UIButton *)sender).tag;
+            ScenarioPurchaseInfo *scenarioPurchaseInfo = self.userAccount.availableScenarios[tag];
+            [self prepareScenarioInfoViewController:segue.destinationViewController withScenarioPurchaseInfo:scenarioPurchaseInfo withLocale:self.userAccount.localeDefault];
+        }
+    }
 }
 
-
-
-
-
-
-
+- (void)prepareScenarioInfoViewController:(ScenarioInfoViewController *)scenarioInfoViewController withScenarioPurchaseInfo:(ScenarioPurchaseInfo *)scenarioPurchaseInfo withLocale:(NSLocale *)locale
+{
+    scenarioInfoViewController.scenarioPurchaseInfo = scenarioPurchaseInfo;
+    scenarioInfoViewController.locale = locale;
+}
 
 
 

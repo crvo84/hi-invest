@@ -8,33 +8,34 @@
 
 #import <Foundation/Foundation.h>
 
-@class PortfolioPicture;
-@class PortfolioTransaction;
+@class GameInfo;
+@class Transaction;
 
 @interface Portfolio : NSObject
 
+@property (strong, nonatomic) GameInfo *gameInfo;
 @property (nonatomic, readonly) double cash;
 @property (strong, nonatomic, readonly) NSMutableDictionary *equity; // { Ticker NSString : StockInvestment }
-@property (nonatomic, readonly) double totalDividendsReceived;
-@property (nonatomic, readonly) double totalCommissionsPaid;
 
-// Initializers
-- (instancetype)initPortfolioWithCash:(double)cash;
-- (instancetype)initPortfolioWithPortfolioPicture:(PortfolioPicture *)portfolioPicture;
+
+// Initializer
+- (instancetype)initPortfolioWithGameInfo:(GameInfo *)gameInfo withCash:(double)cash;
 
 // Return true if investment was successful. false otherwise
 - (BOOL)investInStockWithTicker:(NSString *)ticker
                       price:(double)price
                 numberOfShares:(NSUInteger)shares
                  commissionPaid:(double)commission
-                          atDay:(NSInteger)day;
+                          atDay:(NSInteger)day
+          recreatingTransaction:(BOOL)recreatingTransaction;
 
 // Return true if deinvestment was successful. false otherwise
 - (BOOL)deinvestInStockWithTicker:(NSString *)ticker
                         price:(double)price
                   numberOfShares:(NSUInteger)shares
                    commissionPaid:(double)commission
-                            atDay:(NSInteger)day;
+                            atDay:(NSInteger)day
+            recreatingTransaction:(BOOL)recreatingTransaction;
 
 // Return true if dividend reception was successful. False otherwise (if no investments for that company)
 - (BOOL)receiveDividendsFromStockWithTicker:(NSString *)ticker
@@ -52,5 +53,7 @@
 
 // Return NSNotFound if no shares owned of the company of the given ticker
 - (double)averageCostForCompanyWithTicker:(NSString *)ticker;
+
+- (void)recreateTransaction:(Transaction *)transaction;
 
 @end

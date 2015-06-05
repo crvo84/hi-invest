@@ -11,12 +11,15 @@
 #import "ManagedObjectContextCreator.h"
 #import "ScenarioPurchaseInfo.h"
 #import "Quiz.h"
+#import "Scenario.h"
+#import "GameInfo+Create.h"
 
 @interface UserAccount ()
 
 @property (strong, nonatomic, readwrite) InvestingGame *currentInvestingGame;
 @property (strong, nonatomic) NSMutableDictionary *successfulQuizzesCount; // @{ @"QuizType" : @(Current Level) }
 @property (strong, nonatomic, readwrite) NSArray *availableScenarios; // of ScenarioPurchaseInfo
+@property (strong, nonatomic) NSManagedObjectContext *gameInfoContext;
 
 @end
 
@@ -35,7 +38,7 @@
         self.simulatorInitialCash = 1000000.0;
         self.disguiseCompanies = NO;
         
-        self.selectedScenearioFilename = @"DEMO_001A";
+        self.selectedScenarioFilename = @"DEMO_001A";
     }
     
     return self;
@@ -104,11 +107,11 @@
 {
     // TODO: Edit ManagedObjectContextCreator to get a context with a given scenario id
     // using self.selectedScenarioId
-    NSManagedObjectContext *context = [ManagedObjectContextCreator createMainQueueManagedObjectContextWithScenarioFilename:self.selectedScenearioFilename];
+    NSManagedObjectContext *scenarioContext = [ManagedObjectContextCreator createMainQueueManagedObjectContextWithScenarioFilename:self.selectedScenarioFilename];
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Scenario"];
     NSError *error;
-    NSArray *matches = [context executeFetchRequest:request error:&error];
+    NSArray *matches = [scenarioContext executeFetchRequest:request error:&error];
     
     if (!matches || error || [matches count] > 1) {
         
@@ -121,18 +124,33 @@
     } else {
         
         Scenario *scenario = [matches firstObject];
-        self.currentInvestingGame = [[InvestingGame alloc] initInvestingGameWithInitialCash:self.simulatorInitialCash disguisingRealNamesAndTickers:self.disguiseCompanies scenario:scenario andPortfolioPictures:nil];
         
+        GameInfo *gameInfo = [GameInfo gameInfoWithScenarioFilename:self.selectedScenarioFilename initialCash:self.simulatorInitialCash currentDate:scenario.initialScenarioDate disguisingCompanies:self.disguiseCompanies intoManagedObjectContext:self.gameInfoContext];
+
+        if (gameInfo) {
+            self.currentInvestingGame = [[InvestingGame alloc] initInvestingGameWithGameInfo:gameInfo withScenario:scenario];
+        }
     }
 }
 
-- (void)exitInvestingGame
+- (void)deleteCurrentInvestingGame
 {
+    [GameInfo removeExistingGameInfoWithScenarioFilename:self.selectedScenarioFilename
+                                intoManagedObjectContext:self.currentInvestingGame.gameInfoContext];
     self.currentInvestingGame = nil;
 }
 
 
 #pragma mark - Getters
+
+- (NSManagedObjectContext *)gameInfoContext
+{
+    if (!_gameInfoContext) {
+        _gameInfoContext = [ManagedObjectContextCreator createMainQueueGameActivityManagedObjectContext];
+    }
+    
+    return _gameInfoContext;
+}
 
 - (NSMutableDictionary *)successfulQuizzesCount
 {
@@ -170,7 +188,7 @@
         scenarioPurchaseInfoDemo.initialDate = [dateFormatter dateFromString:@"8/20/2014"];
         scenarioPurchaseInfoDemo.endingDate = [dateFormatter dateFromString:@"12/19/2014"];
         scenarioPurchaseInfoDemo.numberOfCompanies = 5;
-        scenarioPurchaseInfoDemo.numberOfDays = 120;
+        scenarioPurchaseInfoDemo.numberOfDays = 121;
         scenarioPurchaseInfoDemo.withAdds = NO;
         scenarioPurchaseInfoDemo.price = 0.0; // Free Demo
         scenarioPurchaseInfoDemo.sizeInMegas = 0.5; // PROVISIONAL
@@ -194,7 +212,15 @@
     return _availableScenarios;
 }
 
+#pragma mark - Setters
 
+- (void)setSelectedScenarioFilename:(NSString *)selectedScenarioFilename
+{
+    if (![selectedScenarioFilename isEqualToString:_selectedScenarioFilename]) {
+        _selectedScenarioFilename = selectedScenarioFilename;
+        [self newInvestingGame];
+    }
+}
 
 
 @end

@@ -65,7 +65,7 @@
             
         } else { // Market info
             
-            titleStr = @"Market Index";
+            titleStr = @"Benchmark";
             returnValue = annualized ? [self.game currentMarketAnnualizedReturn] : [self.game currentMarketReturn];
         }
         

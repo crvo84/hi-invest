@@ -168,7 +168,7 @@
         BOOL justCurrentValue = NO;
         if ([FinancialRatioIdentifiersArray containsObject:self.valueId]) {
             
-            valueInfo = [FinancialDatabaseManager dictionaryOfRatioValuesForCompanyWithPrice:price withRatiosIdentifiers:@[self.valueId] fromManagedObjectContext:self.game.managedObjectContext];
+            valueInfo = [FinancialDatabaseManager dictionaryOfRatioValuesForCompanyWithPrice:price withRatiosIdentifiers:@[self.valueId] fromManagedObjectContext:self.game.scenarioContext];
             
         }
         
@@ -180,7 +180,7 @@
             
             if (justCurrentValue) break;
             
-            valueInfo = [FinancialDatabaseManager dictionaryOfRatioValuesForCompanyWithPrice:price withRatiosIdentifiers:@[self.valueId] fromManagedObjectContext:self.game.managedObjectContext];
+            valueInfo = [FinancialDatabaseManager dictionaryOfRatioValuesForCompanyWithPrice:price withRatiosIdentifiers:@[self.valueId] fromManagedObjectContext:self.game.scenarioContext];
             
             index++;
         }

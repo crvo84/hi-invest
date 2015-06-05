@@ -285,31 +285,31 @@
 - (NSUInteger)numberOfQuestionsForQuizType:(QuizType)quizType forDifficultyLevel:(NSInteger)difficultyLevel
 {
     NSUInteger num = 0;
-//    switch (difficultyLevel) {
-//        case 0:
-//            num = 5;
-//            break;
-//        case 1:
-//            num = 10;
-//            break;
-//        case 2:
-//            num = 15;
-//            break;
-//        case 3:
-//            num = 20;
-//            break;
-//        case 4:
-//            num = 30;
-//            break;
-//        case 5:
-//            num = 40;
-//            break;
-//        case 6:
-//            num = 50;
-//            break;
-//        default:
-//            break;
-//    }
+    switch (difficultyLevel) {
+        case 0:
+            num = 5;
+            break;
+        case 1:
+            num = 10;
+            break;
+        case 2:
+            num = 15;
+            break;
+        case 3:
+            num = 20;
+            break;
+        case 4:
+            num = 30;
+            break;
+        case 5:
+            num = 40;
+            break;
+        case 6:
+            num = 50;
+            break;
+        default:
+            break;
+    }
     
     return num;
 }

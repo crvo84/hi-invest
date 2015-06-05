@@ -11,12 +11,32 @@
 
 @interface ManagedObjectContextCreator : NSObject
 
+// Database File Extensions
+#define DataModelFileExtension @"momd"
+#define DatabaseFileExtension @"sqlite"
+
+#pragma mark - Simulator Scenarios
+
+// Scenario Database Filenames
+#define ScenarioDataModelFilename @"FinancialDataModel"
+
 + (NSManagedObjectContext *)createMainQueueManagedObjectContextWithScenarioFilename:(NSString *)scenarioFilename;
 
-+ (BOOL)scenarioDatabaseExistsAtDocumentsDirectoryWithFilename:(NSString *)scenarioFilename;
-
-+ (BOOL)scenarioDatabaseExistsAtBundleWithFilename:(NSString *)scenarioFilename;
-
 + (BOOL)scenarioDatabaseExistsAtBundleOrDocumentsDirectoryWithFilename:(NSString *)scenarioFilename;
+
+
+#pragma mark - Investing Game Activity
+
+// InvestingGameActivity Database Filenames
+#define InvestingGameActivityDatabaseFilename @"InvestingGameActivity"
+#define InvestingGameActivityDataModelFilename @"InvestingGameActivityDataModel"
+
++ (NSManagedObjectContext *)createMainQueueGameActivityManagedObjectContext;
+
++ (BOOL)investingGameActivityDatabaseExistsAtBundleOrDocumentDirectory;
+
+
+
+
 
 @end

@@ -454,13 +454,16 @@
                                                          price:realPriceValue
                                                 numberOfShares:realSharesSelected
                                                 commissionPaid:commissionPaid
-                                                         atDay:[self.game currentDay]];
+                                                         atDay:[self.game currentDay]
+                                         recreatingTransaction:NO];
+        
     } else {
         success = [self.game.portfolio deinvestInStockWithTicker:self.ticker
                                                            price:realPriceValue
                                                   numberOfShares:realSharesSelected
                                                   commissionPaid:commissionPaid
-                                                           atDay:[self.game currentDay]];
+                                                           atDay:[self.game currentDay]
+                                           recreatingTransaction:NO];
     }
     
     [self presentTransactionAlertWithSuccess:success];

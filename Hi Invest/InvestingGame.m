@@ -12,20 +12,24 @@
 #import "CompanyDisguiseManager.h"
 #import "FictionalNamesKeys.h"
 #import "FinancialDatabaseManager.h"
-#import "PortfolioTransaction.h"
 #import "Scenario.h"
 #import "PortfolioPicture.h"
-#import "PortfolioHistoricalValue.h"
 #import "RatiosKeys.h"
 #import "PortfolioKeys.h"
 #import "CompaniesInfoKeys.h"
 #import "Company.h"
 #import "Price.h"
 #import "Dividend.h"
+#import "Transaction+Create.h"
+#import "HistoricalValue+Create.h"
 
 
 @interface InvestingGame ()
 
+@property (strong, nonatomic, readwrite) Scenario *scenario;
+@property (strong, nonatomic, readwrite) GameInfo *gameInfo;
+@property (strong, nonatomic, readwrite) NSManagedObjectContext *scenarioContext;
+@property (strong, nonatomic, readwrite) NSManagedObjectContext *gameInfoContext;
 @property (strong, nonatomic, readwrite) Portfolio *portfolio;
 @property (strong, nonatomic, readwrite) NSArray *tickersOfCompaniesAvailable; // of NSString
 @property (strong, nonatomic, readwrite) NSDate *initialDate;
@@ -34,8 +38,6 @@
 @property (strong, nonatomic, readwrite) NSDictionary *currentPrices; // @{NSString ticker : Price}
 @property (nonatomic, readwrite) BOOL disguiseRealNamesAndTickers;
 @property (strong, nonatomic, readwrite) CompanyDisguiseManager *disguiseManager;
-@property (strong, nonatomic, readwrite) NSMutableArray *portfolioPictures; // of PortfolioPicture
-@property (strong, nonatomic, readwrite) NSMutableArray *portfolioHistoricalValues; // of PortfolioHistoricalValue
 @property (nonatomic, readwrite) double initialNetworth;
 @property (nonatomic, readwrite) BOOL finishedSuccessfully;
 
@@ -45,47 +47,41 @@
 
 #define InvestingGameDefaultTransactionCommissionRate 0.0015
 
-// Designated Initializer
-// Return a initialized InvestingGame with initial cash and initial date
-// If portfolioPictures parameter is given as nil, then is a new game.
-- (instancetype)initInvestingGameWithInitialCash:(double)initialCash
-                     disguisingRealNamesAndTickers:(BOOL)disguiseRealNamesAndTickers
-                                        scenario:(Scenario *)scenario
-                            andPortfolioPictures:(NSArray *)portfolioPictures
+- (instancetype)initInvestingGameWithGameInfo:(GameInfo *)gameInfo withScenario:(Scenario *)scenario
 {
     self = [super init];
     
     if (self) {
-        self.initialNetworth = initialCash;
-        self.scenarioInfo = scenario;
+        if (![gameInfo.scenarioFilename isEqualToString:scenario.referenceId]) {
+            return nil;
+        }
+        
+        self.initialNetworth = [gameInfo.initialCash doubleValue];
+        self.scenario = scenario;
+        self.gameInfo = gameInfo;
+        self.scenarioContext = scenario.managedObjectContext;
+        self.gameInfoContext = gameInfo.managedObjectContext;
         self.tickersOfCompaniesAvailable = [scenario.companyTickersStr componentsSeparatedByString:@","];
         self.initialDate = scenario.initialScenarioDate;
         self.endDate = scenario.endingScenarioDate;
-        self.disguiseRealNamesAndTickers = disguiseRealNamesAndTickers;
+        self.disguiseRealNamesAndTickers = [gameInfo.disguiseCompanies boolValue];
+        self.finishedSuccessfully = [gameInfo.finished boolValue];
         self.transactionCommissionRate = InvestingGameDefaultTransactionCommissionRate;
-        self.managedObjectContext = scenario.managedObjectContext;
-        self.finishedSuccessfully = NO;
         
-        if (portfolioPictures && [portfolioPictures count] > 0) {
-            PortfolioPicture *lastPicture = [portfolioPictures lastObject];
+        self.currentDate = gameInfo.currentDate;
+        self.portfolio = [[Portfolio alloc] initPortfolioWithGameInfo:gameInfo withCash:[gameInfo.initialCash doubleValue]];
+        
+        // If its a completely new game, add Day 0 historical Value
+        NSArray *historicalValues = [HistoricalValue historicalValuesFromGameInfo:gameInfo];
+        if ([historicalValues count] == 0) {
+            [HistoricalValue historicalValueWithGameInfo:gameInfo portfolioValue:[gameInfo.initialCash doubleValue] andDay:0];
             
-            if ([scenario.endingScenarioDate timeIntervalSinceDate:lastPicture.date] < -(60*60*12)) {
-                NSLog(@"Cannot load a game with a current date later than the maximum date");
-                return nil;
-            }
-            
-            if ([lastPicture.date timeIntervalSinceDate:scenario.initialScenarioDate] < -(60*60*12)) {
-                NSLog(@"Cannot load a game with a current date earlier than minimum date");
-                return nil;
-            }
-            
-            self.currentDate = lastPicture.date;
-            self.portfolio = [[Portfolio alloc] initPortfolioWithPortfolioPicture:lastPicture];
-            self.portfolioPictures = [portfolioPictures mutableCopy];
-            
-        } else {
-            self.currentDate = scenario.initialScenarioDate;
-            self.portfolio = [[Portfolio alloc] initPortfolioWithCash:initialCash];
+        }
+       
+        // Recreate previous transactions
+        NSArray *transactions = [Transaction transactionsFromGameInfo:gameInfo inAscendingOrder:YES];
+        for (Transaction *transaction in transactions) {
+            [self.portfolio recreateTransaction:transaction];
         }
     }
     
@@ -106,7 +102,7 @@
         newDate = self.endDate;// End date must have valid prices available
     }
     
-    while (![FinancialDatabaseManager arePricesAvailableForDate:newDate fromScenario:self.scenarioInfo]) {
+    while (![FinancialDatabaseManager arePricesAvailableForDate:newDate fromScenario:self.scenario]) {
         newDate = [FinancialDatabaseManager dateWithTimeDifferenceinYears:0 months:0 days:1 hours:0 fromDate:newDate];
         
         if ([newDate timeIntervalSinceDate:self.endDate] > (60*60*12)) {
@@ -123,11 +119,6 @@
         PortfolioPicture *currentPortfolioPicture = [self takePortfolioPicture];
         
         [self updatePortfolioHistoricalValuesFromPortfolioPicture:currentPortfolioPicture untilADayBeforeDate:newDate];
-        
-        // If there were any changes in the portfolio composition. Add the picture to the end of the portfolioPictures array property.
-        if (![currentPortfolioPicture hasEqualCompositionThanPortfolioPicture:[self.portfolioPictures lastObject]]) {
-            [self.portfolioPictures addObject:currentPortfolioPicture];
-        }
     }
     
     [self collectDividendsFromCompaniesWithTickers:[self.portfolio tickersOfStocksInPortfolio]
@@ -135,20 +126,25 @@
                                             toDate:newDate];
 
     self.currentDate = newDate;
+    self.gameInfo.currentDate = newDate;
     self.currentPrices = nil; // reset prices to get the new date prices
     
     if ([self currentDay] >= [self dayNumberFromDate:self.endDate]) {
         self.finishedSuccessfully = YES;
+        self.gameInfo.finished = @(YES);
     }
     
-//    NSLog(@"Portfolio historical values count: %ld", [self.portfolioHistoricalValues count]);
+    NSError *saveError;
+    if (![self.gameInfo.managedObjectContext save:&saveError]) {
+        NSLog(@"%@", [saveError localizedDescription]);
+    }
     
     return YES;
 }
 
 - (void)collectDividendsFromCompaniesWithTickers:(NSArray *)tickers fromDate:(NSDate *)initialDate toDate:(NSDate *)finalDate
 {
-    NSArray *dividends = [FinancialDatabaseManager arrayOfDividendsPaidFromCompaniesWithTickers:tickers fromDate:initialDate toDate:finalDate fromManagedObjectContext:self.managedObjectContext];
+    NSArray *dividends = [FinancialDatabaseManager arrayOfDividendsPaidFromCompaniesWithTickers:tickers fromDate:initialDate toDate:finalDate fromManagedObjectContext:self.scenarioContext];
     
     for (Dividend *dividend in dividends) {
         NSInteger dividendDay = [self dayNumberFromDate:dividend.date];
@@ -238,9 +234,9 @@
     if ([self.initialDate timeIntervalSinceDate:date] > (60*60*6) || [date timeIntervalSinceDate:self.endDate] > (60*60*12)) {
         return nil;
     }
-    NSArray *allMarketTickers = [self.scenarioInfo.marketTickersStr componentsSeparatedByString:@","];
+    NSArray *allMarketTickers = [self.scenario.marketTickersStr componentsSeparatedByString:@","];
     NSString *scenarioMarketTicker = [allMarketTickers firstObject];
-    Price *scenarioMarketPrice = [[FinancialDatabaseManager arrayOfPricesWithTickers:@[scenarioMarketTicker] atDate:date fromManagedObjectContext:self.managedObjectContext] firstObject];
+    Price *scenarioMarketPrice = [[FinancialDatabaseManager arrayOfPricesWithTickers:@[scenarioMarketTicker] atDate:date fromManagedObjectContext:self.scenarioContext] firstObject];
     if (scenarioMarketPrice) {
         return scenarioMarketPrice.price;
     }
@@ -318,7 +314,7 @@
     if ([sortingValueId isEqualToString:FinancialRatioWeightInPortfolio]) {
         sortingValues = [self weigthInPortfolioOfStocksWithTickers:nil];
     } else {
-        sortingValues = [FinancialDatabaseManager dictionaryOfSortingValuesWithPrices:self.currentPrices atDate:self.currentDate withSortingValueIdentifier:sortingValueId fromManagedObjectContext:self.managedObjectContext];
+        sortingValues = [FinancialDatabaseManager dictionaryOfSortingValuesWithPrices:self.currentPrices atDate:self.currentDate withSortingValueIdentifier:sortingValueId fromManagedObjectContext:self.scenarioContext];
     }
     
     return sortingValues;
@@ -414,10 +410,10 @@
         
         while ([limitDate timeIntervalSinceDate:date] > (60*60*12)) {
             
-            PortfolioHistoricalValue *portfolioHistoricalValue = [self portfolioHistoricalValueFromPortfolioPicture:portfolioPicture atDate:date withManagedObjectContext:self.managedObjectContext];
+            double portfolioHistoricalValue = [self portfolioHistoricalValueFromPortfolioPicture:portfolioPicture atDate:date withManagedObjectContext:self.scenarioContext];
             
-            if (portfolioHistoricalValue) { // Check for weekends and bank holidays when there are no prices available
-                [self.portfolioHistoricalValues addObject:portfolioHistoricalValue];
+            if (portfolioHistoricalValue != NSNotFound) { // Check for weekends and bank holidays when there are no prices available
+                [HistoricalValue historicalValueWithGameInfo:self.gameInfo portfolioValue:portfolioHistoricalValue andDay:[self dayNumberFromDate:date]];
             }
             
             date = [FinancialDatabaseManager dateWithTimeDifferenceinYears:0 months:0 days:1 hours:0 fromDate:date];
@@ -427,9 +423,9 @@
 
 // Return a NSNumber with a double of the portfolio value with the given PortfolioPicture at the given date.
 // If the date parameter is nil, it uses the PortfolioPicture date.
-- (PortfolioHistoricalValue *)portfolioHistoricalValueFromPortfolioPicture:(PortfolioPicture *)portfolioPicture atDate:(NSDate *)date withManagedObjectContext:(NSManagedObjectContext *)context
+- (double)portfolioHistoricalValueFromPortfolioPicture:(PortfolioPicture *)portfolioPicture atDate:(NSDate *)date withManagedObjectContext:(NSManagedObjectContext *)context
 {
-    PortfolioHistoricalValue *portfolioHistoricalValue = nil;
+    double portfolioHistoricalValue = NSNotFound;
     
     if (!date) {
         date = portfolioPicture.date;
@@ -452,34 +448,11 @@
             }
         }
         
-        portfolioHistoricalValue = [[PortfolioHistoricalValue alloc] init];
-        portfolioHistoricalValue.date = date;
-        portfolioHistoricalValue.value = value;
+        portfolioHistoricalValue = value;
     }
     
     return portfolioHistoricalValue;
 }
-
-// Return a NSArray of PortfolioTransaction objects
-// If initialDate is nil, the earliest game date will be used.
-// If finalDate is nil, the current game date will be used.
-// At least one transactionType must be given.
-- (NSArray *)portfolioTransactionHistoryFromDate:(NSDate *)initialDate toDate:(NSDate *)finalDate withTransactionTypes:(PortfolioTransactionType)transactionType
-{
-    NSMutableArray *transactions = [[NSMutableArray alloc] init];
-    
-    if (!initialDate) {
-        initialDate = self.initialDate;
-    }
-    
-    if (!finalDate) {
-        finalDate = self.currentDate;
-    }
-    
-    
-    return transactions;
-}
-
 
 
 #pragma mark - Getters
@@ -491,7 +464,7 @@
         NSMutableDictionary *prices = [[NSMutableDictionary alloc] init];
         NSArray *pricesFetched = [FinancialDatabaseManager arrayOfPricesWithTickers:self.tickersOfCompaniesAvailable
                                                                              atDate:self.currentDate
-                                                           fromManagedObjectContext:self.managedObjectContext];
+                                                           fromManagedObjectContext:self.scenarioContext];
         for (Price *price in pricesFetched) {
             prices[price.ticker] = price;
         }
@@ -501,35 +474,10 @@
     return _currentPrices;
 }
 
-- (NSMutableArray *)portfolioPictures
-{
-    if (!_portfolioPictures) {
-        _portfolioPictures = [[NSMutableArray alloc] init];
-    }
-    
-    return _portfolioPictures;
-}
-
-- (NSMutableArray *)portfolioHistoricalValues
-{
-    if (!_portfolioHistoricalValues) {
-        
-        _portfolioHistoricalValues = [[NSMutableArray alloc] init];
-        
-        PortfolioHistoricalValue *startingPortfolioValue = [[PortfolioHistoricalValue alloc] init];
-        startingPortfolioValue.date = [NSDate dateWithTimeInterval:-(60*60*24) sinceDate:self.initialDate];
-        startingPortfolioValue.value = self.initialNetworth;
-        
-        [_portfolioHistoricalValues addObject:startingPortfolioValue];
-    }
-    
-    return _portfolioHistoricalValues;
-}
-
 - (NSLocale *)locale
 {
     if (!_locale) {
-        _locale = [NSLocale localeWithLocaleIdentifier:self.scenarioInfo.localeStr];
+        _locale = [NSLocale localeWithLocaleIdentifier:self.scenario.localeStr];
     }
     
     return _locale;
@@ -538,7 +486,7 @@
 - (CompanyDisguiseManager *)disguiseManager
 {
     if (!_disguiseManager) {
-        _disguiseManager = [[CompanyDisguiseManager alloc] initWithCompaniesRealTickers:self.tickersOfCompaniesAvailable withFictionalNamesAndTickers:FictionalNamesGOTHousesDictionary];
+        _disguiseManager = [[CompanyDisguiseManager alloc] initWithGameInfo:self.gameInfo withCompanyRealTickers:self.tickersOfCompaniesAvailable withFictionalNamesAndTickers:FictionalNamesGOTHousesDictionary];
     }
     
     return _disguiseManager;

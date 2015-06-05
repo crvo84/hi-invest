@@ -217,7 +217,7 @@
     // UNWIND FROM SimulatorGameOverViewController
     if ([unwindSegue.sourceViewController isKindOfClass:[SimulatorGameOverViewController class]]) {
         if ([unwindSegue.identifier isEqualToString:@"unwindToSideMenuRootViewController Reset Game"]) {
-            [self.userAccount exitInvestingGame];
+            [self.userAccount deleteCurrentInvestingGame];
             [self.userAccount newInvestingGame];
             if ([self.contentViewController isKindOfClass:[SimulatorTabBarController class]]) {
                 ((SimulatorTabBarController *)self.contentViewController).userAccount = self.userAccount;

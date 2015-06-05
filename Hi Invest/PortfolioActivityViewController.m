@@ -8,14 +8,14 @@
 
 #import "PortfolioActivityViewController.h"
 #import "InvestingGame.h"
-#import "PortfolioTransaction.h"
 #import "TransactionTableViewCell.h"
+#import "Transaction+Create.h"
 
 @interface PortfolioActivityViewController () <UITableViewDataSource, UITableViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UILabel *noActivityLabel;
-@property (strong, nonatomic) NSArray *transactions; // of NSArray of PortfolioTransaction
+@property (strong, nonatomic) NSArray *transactions; // of NSArray of Transaction
 @property (strong, nonatomic) NSNumberFormatter *numberFormatter;
 
 @end
@@ -58,19 +58,19 @@
     TransactionTableViewCell *transactionCell = [self.tableView dequeueReusableCellWithIdentifier:@"Transaction Cell"];
     
     NSArray *dayTransactions = self.transactions[indexPath.section];
-    PortfolioTransaction *transaction = dayTransactions[indexPath.row];
+    Transaction *transaction = dayTransactions[indexPath.row];
     
     NSUInteger priceMultiplier = [self.game UIPriceMultiplierForTicker:transaction.ticker];
     
     NSString *UITransactionTicker = [self.game UITickerForTicker:transaction.ticker];
-    NSInteger UItransactionShares = transaction.shares / priceMultiplier;
+    NSInteger UItransactionShares = [transaction.shares integerValue] / priceMultiplier;
     
     NSString *title;
     NSString *description;
     NSString *amount;
     UIColor *amountColor;
     
-    switch (transaction.transactionType) {
+    switch ([transaction.type integerValue]) {
         case 0:
             title = [NSString stringWithFormat:@"Buy - %@", UITransactionTicker];
             
@@ -127,7 +127,7 @@
     }
     
     self.numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
-    amount = [self.numberFormatter stringFromNumber:@(transaction.amount)];
+    amount = [self.numberFormatter stringFromNumber:transaction.amount];
     
     transactionCell.titleLabel.text = title;
     transactionCell.descriptionLabel.text = description;
@@ -142,11 +142,11 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     NSArray *dayTransactions = self.transactions[section];
-    NSInteger day = ((PortfolioTransaction *)[dayTransactions firstObject]).day;
+    Transaction *firstDayTransaction = [dayTransactions firstObject];
     
     self.numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
     
-    return [NSString stringWithFormat:@"Day %@", [self.numberFormatter stringFromNumber:@(day)]];
+    return [NSString stringWithFormat:@"Day %@", [self.numberFormatter stringFromNumber:firstDayTransaction.day]];
 }
 
 #pragma mark - Getters
@@ -158,8 +158,8 @@
         
         for (NSInteger i = 0; i < [self.game currentDay]; i++) {
             
-            NSArray *dayTransactions = [self.game.portfolio transactionsFromDay:i + 1];
-            if (dayTransactions) [transactions addObject:dayTransactions];
+            NSArray *dayTransactions = [Transaction transactionsFromGameInfo:self.game.gameInfo fromDay:i + 1];
+            if ([dayTransactions count] > 0) [transactions addObject:dayTransactions];
         }
         
         _transactions = transactions;

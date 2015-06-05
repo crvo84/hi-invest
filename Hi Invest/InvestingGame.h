@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "PortfolioTransaction.h"
 #import "Portfolio.h"
+#import "GameInfo.h"
 
 @class Scenario;
 @class CompanyDisguiseManager;
@@ -18,6 +18,10 @@
 
 @interface InvestingGame : NSObject
 
+@property (strong, nonatomic, readonly) Scenario *scenario;
+@property (strong, nonatomic, readonly) GameInfo *gameInfo;
+@property (strong, nonatomic, readonly) NSManagedObjectContext *scenarioContext;
+@property (strong, nonatomic, readonly) NSManagedObjectContext *gameInfoContext;
 @property (strong, nonatomic, readonly) Portfolio *portfolio;
 @property (strong, nonatomic, readonly) NSArray *tickersOfCompaniesAvailable;
 @property (strong, nonatomic, readonly) NSDate *initialDate;
@@ -27,21 +31,13 @@
 @property (nonatomic, readonly) BOOL disguiseRealNamesAndTickers;
 @property (strong, nonatomic, readonly) CompanyDisguiseManager *disguiseManager;
 @property (nonatomic) double transactionCommissionRate;
-@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (strong, nonatomic, readonly) NSMutableArray *portfolioPictures; // of PortfolioPicture
-@property (strong, nonatomic, readonly) NSMutableArray *portfolioHistoricalValues; // of PortfolioHistoricalValue
 @property (nonatomic, readonly) double initialNetworth;
-@property (strong, nonatomic) Scenario *scenarioInfo;
 @property (strong, nonatomic) NSLocale *locale;
 @property (nonatomic, readonly) BOOL finishedSuccessfully;
 
 // Designated Initializer
-// Return a initialized InvestingGame with initial cash and initial date
-// If portfolioPictures parameter is given as nil, then is a new game.
-- (instancetype)initInvestingGameWithInitialCash:(double)initialCash
-                     disguisingRealNamesAndTickers:(BOOL)disguiseRealNamesAndTickers
-                                        scenario:(Scenario *)scenario
-                            andPortfolioPictures:(NSArray *)portfolioPictures;
+- (instancetype)initInvestingGameWithGameInfo:(GameInfo *)gameInfo
+                                 withScenario:(Scenario *)scenario;;
 
 
 // Sets the "current date" as a date with the given time difference from the current "current date"
@@ -86,11 +82,6 @@
 // If parameter tickers is nil, return information of all available companies. If parameter sortingValueId is nil, the result wont contain sorting value information. Includes the market average with mkt name as ticker (if apply)
 - (NSMutableArray *)informationOfCompanies:(NSArray *)tickers withSortingValueId:(NSString *)sortingValueId;
 
-// Return a NSArray of PortfolioTransaction objects
-// If initialDate is nil, the earliest game date will be used.
-// If finalDate is nil, the current game date will be used.
-// At least one transactionType must be given.
-- (NSArray *)portfolioTransactionHistoryFromDate:(NSDate *)initialDate toDate:(NSDate *)finalDate withTransactionTypes:(PortfolioTransactionType)transactionType;
 
 
 

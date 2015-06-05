@@ -90,7 +90,7 @@
     if (indexPath.row == 0) {
         
         cell.textLabel.text = @"Simulator";
-        cell.detailTextLabel.text = [self.userAccount currentInvestingGame].scenarioInfo.name;
+        cell.detailTextLabel.text = [self.userAccount currentInvestingGame].scenario.name;
         cell.imageView.image = [[UIImage imageNamed:@"controller25x25"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         
     } else if (indexPath.row == 1) {

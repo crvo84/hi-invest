@@ -8,9 +8,9 @@
 
 #import "PortfolioTableViewController.h"
 #import "PortfolioPieChartViewController.h"
-#import "PortfolioHistoricalValue.h"
 #import "PortfolioActivityViewController.h"
 #import "BEMSimpleLineGraphView.h"
+#import "HistoricalValue+Create.h"
 #import "InvestingGame.h"
 #import "DefaultColors.h"
 #import "PortfolioKeys.h"
@@ -25,6 +25,7 @@
 @property (strong, nonatomic) NSArray *tickersOrderedByWeight;
 @property (weak, nonatomic) IBOutlet BEMSimpleLineGraphView *graphView;
 @property (strong, nonatomic) NSNumberFormatter *numberFormatter;
+@property (strong, nonatomic) NSArray *historicalValues; // of HistoricalValue
 
 @end
 
@@ -55,6 +56,8 @@
 {
     self.weightOfStocksInPortfolio = nil;
     self.tickersOrderedByWeight = nil;
+    
+    self.historicalValues = nil;
     
     [self.tableView reloadData];
     [self.graphView reloadGraph];
@@ -168,6 +171,15 @@
     return _numberFormatter;
 }
 
+- (NSArray *)historicalValues
+{
+    if (!_historicalValues ) {
+        _historicalValues = [HistoricalValue historicalValuesFromGameInfo:self.game.gameInfo];
+    }
+    
+    return _historicalValues;
+}
+
 #pragma mark - Setters
 
   //--------------/
@@ -245,17 +257,17 @@
 
 - (NSInteger)numberOfPointsInLineGraph:(BEMSimpleLineGraphView *)graph
 {
-    return [self.game.portfolioHistoricalValues count] + 1; // historical values + current net worth
+    return [self.historicalValues count] + 1; // historical values + current net worth
 }
 
 - (CGFloat)lineGraph:(BEMSimpleLineGraphView *)graph valueForPointAtIndex:(NSInteger)index
 {
-    NSInteger count = [self.game.portfolioHistoricalValues count];
+    NSInteger count = [self.historicalValues count];
     
     if (index < count) {
         
-        PortfolioHistoricalValue *portfolioHistoricalValue = self.game.portfolioHistoricalValues[index];
-        return portfolioHistoricalValue.value / 1000; // value in thousands
+        HistoricalValue *historicalValue = self.historicalValues[index];
+        return [historicalValue.portfolioValue doubleValue] / 1000; // value in thousands
         
     } else {
         
@@ -268,7 +280,7 @@
 
 - (NSInteger)numberOfGapsBetweenLabelsOnLineGraph:(BEMSimpleLineGraphView *)graph
 {
-    NSInteger count = [self.game.portfolioHistoricalValues count];
+    NSInteger count = [self.historicalValues count];
 
     return (count + 1) / 10;
 }
@@ -283,11 +295,11 @@
     NSNumber *dayNumber;
     NSNumber *historicalValueNumber;
     
-    if (index < [self.game.portfolioHistoricalValues count]) { // Historical values
+    if (index < [self.historicalValues count]) { // Historical values
         
-        PortfolioHistoricalValue *portfolioHistoricalValue = self.game.portfolioHistoricalValues[index];
-        dayNumber = @([self.game dayNumberFromDate:portfolioHistoricalValue.date]);
-        historicalValueNumber = @(portfolioHistoricalValue.value);
+        HistoricalValue *historicalValue = self.historicalValues[index];
+        dayNumber = historicalValue.day;
+        historicalValueNumber = historicalValue.portfolioValue;
         
     } else { // Current values
         

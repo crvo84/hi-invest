@@ -84,7 +84,7 @@
 
 - (void)updateUI
 {
-    self.scenarioLabel.text = [self.game.scenarioInfo.name uppercaseString];
+    self.scenarioLabel.text = [self.game.scenario.name uppercaseString];
     
     UIViewController *viewController = [self.infoPageViewController.viewControllers firstObject];
     if (viewController && [viewController respondsToSelector:@selector(updateUI)]) {
