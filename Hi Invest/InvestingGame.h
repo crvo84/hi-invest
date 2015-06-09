@@ -46,6 +46,9 @@
 // Return YES if the change was made. NO if the change was not made (maybe new date was later than endDate).
 - (BOOL)changeCurrentDateToDateWithTimeDifferenceInYears:(NSInteger)years months:(NSInteger)months andDays:(NSInteger)days;
 
+// Set current info (currentDay, currentDate, finished, currentReturn) to GameInfo
+- (void)saveInvestingGameCurrentState;
+
 // Return the number of days from the currentDate until the endDate
 - (NSInteger)daysLeft;
 

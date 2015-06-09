@@ -14,7 +14,6 @@
 		73442DCF1B13E81000F3A7ED /* Scenario.m in Sources */ = {isa = PBXBuildFile; fileRef = 73442DCE1B13E81000F3A7ED /* Scenario.m */; };
 		73442DD61B1407D200F3A7ED /* CompanyDisguiseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 73442DD51B1407D200F3A7ED /* CompanyDisguiseManager.m */; };
 		73442DE21B1672E800F3A7ED /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73442DE11B1672E800F3A7ED /* SettingsTableViewController.m */; };
-		73442DE51B178E5800F3A7ED /* SimulatorGameOverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73442DE41B178E5800F3A7ED /* SimulatorGameOverViewController.m */; };
 		739ABCB61B0162F6009EFC0E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABCB51B0162F6009EFC0E /* main.m */; };
 		739ABCD01B0162F6009EFC0E /* Hi_InvestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABCCF1B0162F6009EFC0E /* Hi_InvestTests.m */; };
 		739ABCDE1B016390009EFC0E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABCDD1B016390009EFC0E /* AppDelegate.m */; };
@@ -66,15 +65,18 @@
 		739ABD931B016740009EFC0E /* SpeechBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABD921B016740009EFC0E /* SpeechBubbleView.m */; };
 		739ABD961B01674E009EFC0E /* StockInvestment.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABD951B01674E009EFC0E /* StockInvestment.m */; };
 		739ABD991B01675C009EFC0E /* TimeSimulationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABD981B01675C009EFC0E /* TimeSimulationViewController.m */; };
+		73BFF3381B263ED70010F9E9 /* GameInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 73BFF3371B263ED70010F9E9 /* GameInfo.m */; };
+		73BFF33B1B263ED80010F9E9 /* Ticker.m in Sources */ = {isa = PBXBuildFile; fileRef = 73BFF33A1B263ED80010F9E9 /* Ticker.m */; };
+		73BFF33E1B263ED80010F9E9 /* HistoricalValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 73BFF33D1B263ED80010F9E9 /* HistoricalValue.m */; };
+		73BFF3411B263ED80010F9E9 /* Transaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 73BFF3401B263ED80010F9E9 /* Transaction.m */; };
+		73BFF3441B2672270010F9E9 /* GameTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 73BFF3431B2672270010F9E9 /* GameTableViewCell.m */; };
+		73BFF3471B267E5E0010F9E9 /* SavedGamesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73BFF3461B267E5E0010F9E9 /* SavedGamesViewController.m */; };
+		73BFF34A1B2683EF0010F9E9 /* UserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73BFF3491B2683EF0010F9E9 /* UserInfoViewController.m */; };
 		73D24BE81B1EBF4F001524C4 /* InvestingGameActivityDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 73D24BE61B1EBF4F001524C4 /* InvestingGameActivityDataModel.xcdatamodeld */; };
 		73D24C041B1FA1E1001524C4 /* GameInfo+Create.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D24C031B1FA1E1001524C4 /* GameInfo+Create.m */; };
 		73D24C131B1FB05E001524C4 /* HistoricalValue+Create.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D24C121B1FB05E001524C4 /* HistoricalValue+Create.m */; };
 		73D24C461B1FBF27001524C4 /* Transaction+Create.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D24C451B1FBF27001524C4 /* Transaction+Create.m */; };
 		73D24C791B1FCCC9001524C4 /* Ticker+Create.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D24C781B1FCCC9001524C4 /* Ticker+Create.m */; };
-		73D24C941B1FDF72001524C4 /* Ticker.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D24C931B1FDF72001524C4 /* Ticker.m */; };
-		73D24C971B1FDF73001524C4 /* Transaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D24C961B1FDF73001524C4 /* Transaction.m */; };
-		73D24C9A1B1FDF73001524C4 /* HistoricalValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D24C991B1FDF73001524C4 /* HistoricalValue.m */; };
-		73D24C9D1B1FDF73001524C4 /* GameInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D24C9C1B1FDF73001524C4 /* GameInfo.m */; };
 		73D7C3691B096A6B00653A4C /* GlossarySelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D7C3681B096A6B00653A4C /* GlossarySelectionViewController.m */; };
 		73D7C36C1B0971A700653A4C /* GlossaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D7C36B1B0971A700653A4C /* GlossaryViewController.m */; };
 		73D7C36F1B0A717F00653A4C /* UserAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D7C36E1B0A717F00653A4C /* UserAccountViewController.m */; };
@@ -117,8 +119,6 @@
 		73442DDB1B14DC5900F3A7ED /* FictionalNamesKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FictionalNamesKeys.h; sourceTree = "<group>"; };
 		73442DE01B1672E800F3A7ED /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
 		73442DE11B1672E800F3A7ED /* SettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
-		73442DE31B178E5800F3A7ED /* SimulatorGameOverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimulatorGameOverViewController.h; sourceTree = "<group>"; };
-		73442DE41B178E5800F3A7ED /* SimulatorGameOverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimulatorGameOverViewController.m; sourceTree = "<group>"; };
 		739ABCB01B0162F6009EFC0E /* Hi Invest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hi Invest.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		739ABCB41B0162F6009EFC0E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		739ABCB51B0162F6009EFC0E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -223,6 +223,20 @@
 		739ABD951B01674E009EFC0E /* StockInvestment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StockInvestment.m; sourceTree = "<group>"; };
 		739ABD971B01675C009EFC0E /* TimeSimulationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeSimulationViewController.h; sourceTree = "<group>"; };
 		739ABD981B01675C009EFC0E /* TimeSimulationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeSimulationViewController.m; sourceTree = "<group>"; };
+		73BFF3361B263ED70010F9E9 /* GameInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameInfo.h; sourceTree = "<group>"; };
+		73BFF3371B263ED70010F9E9 /* GameInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameInfo.m; sourceTree = "<group>"; };
+		73BFF3391B263ED80010F9E9 /* Ticker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ticker.h; sourceTree = "<group>"; };
+		73BFF33A1B263ED80010F9E9 /* Ticker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Ticker.m; sourceTree = "<group>"; };
+		73BFF33C1B263ED80010F9E9 /* HistoricalValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoricalValue.h; sourceTree = "<group>"; };
+		73BFF33D1B263ED80010F9E9 /* HistoricalValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoricalValue.m; sourceTree = "<group>"; };
+		73BFF33F1B263ED80010F9E9 /* Transaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transaction.h; sourceTree = "<group>"; };
+		73BFF3401B263ED80010F9E9 /* Transaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Transaction.m; sourceTree = "<group>"; };
+		73BFF3421B2672270010F9E9 /* GameTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameTableViewCell.h; sourceTree = "<group>"; };
+		73BFF3431B2672270010F9E9 /* GameTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameTableViewCell.m; sourceTree = "<group>"; };
+		73BFF3451B267E5E0010F9E9 /* SavedGamesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SavedGamesViewController.h; sourceTree = "<group>"; };
+		73BFF3461B267E5E0010F9E9 /* SavedGamesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SavedGamesViewController.m; sourceTree = "<group>"; };
+		73BFF3481B2683EF0010F9E9 /* UserInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoViewController.h; sourceTree = "<group>"; };
+		73BFF3491B2683EF0010F9E9 /* UserInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoViewController.m; sourceTree = "<group>"; };
 		73D24BE71B1EBF4F001524C4 /* InvestingGameActivityDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = InvestingGameActivityDataModel.xcdatamodel; sourceTree = "<group>"; };
 		73D24C021B1FA1E1001524C4 /* GameInfo+Create.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GameInfo+Create.h"; sourceTree = "<group>"; };
 		73D24C031B1FA1E1001524C4 /* GameInfo+Create.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GameInfo+Create.m"; sourceTree = "<group>"; };
@@ -232,14 +246,6 @@
 		73D24C451B1FBF27001524C4 /* Transaction+Create.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Transaction+Create.m"; sourceTree = "<group>"; };
 		73D24C771B1FCCC9001524C4 /* Ticker+Create.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Ticker+Create.h"; sourceTree = "<group>"; };
 		73D24C781B1FCCC9001524C4 /* Ticker+Create.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Ticker+Create.m"; sourceTree = "<group>"; };
-		73D24C921B1FDF72001524C4 /* Ticker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ticker.h; sourceTree = "<group>"; };
-		73D24C931B1FDF72001524C4 /* Ticker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Ticker.m; sourceTree = "<group>"; };
-		73D24C951B1FDF73001524C4 /* Transaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transaction.h; sourceTree = "<group>"; };
-		73D24C961B1FDF73001524C4 /* Transaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Transaction.m; sourceTree = "<group>"; };
-		73D24C981B1FDF73001524C4 /* HistoricalValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoricalValue.h; sourceTree = "<group>"; };
-		73D24C991B1FDF73001524C4 /* HistoricalValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoricalValue.m; sourceTree = "<group>"; };
-		73D24C9B1B1FDF73001524C4 /* GameInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameInfo.h; sourceTree = "<group>"; };
-		73D24C9C1B1FDF73001524C4 /* GameInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameInfo.m; sourceTree = "<group>"; };
 		73D7C3671B096A6B00653A4C /* GlossarySelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlossarySelectionViewController.h; sourceTree = "<group>"; };
 		73D7C3681B096A6B00653A4C /* GlossarySelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlossarySelectionViewController.m; sourceTree = "<group>"; };
 		73D7C36A1B0971A700653A4C /* GlossaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlossaryViewController.h; sourceTree = "<group>"; };
@@ -535,14 +541,14 @@
 		73D24BE51B1EBEE1001524C4 /* Game Activity NSManagedObject Subclasses */ = {
 			isa = PBXGroup;
 			children = (
-				73D24C9B1B1FDF73001524C4 /* GameInfo.h */,
-				73D24C9C1B1FDF73001524C4 /* GameInfo.m */,
-				73D24C981B1FDF73001524C4 /* HistoricalValue.h */,
-				73D24C991B1FDF73001524C4 /* HistoricalValue.m */,
-				73D24C951B1FDF73001524C4 /* Transaction.h */,
-				73D24C961B1FDF73001524C4 /* Transaction.m */,
-				73D24C921B1FDF72001524C4 /* Ticker.h */,
-				73D24C931B1FDF72001524C4 /* Ticker.m */,
+				73BFF33F1B263ED80010F9E9 /* Transaction.h */,
+				73BFF3401B263ED80010F9E9 /* Transaction.m */,
+				73BFF33C1B263ED80010F9E9 /* HistoricalValue.h */,
+				73BFF33D1B263ED80010F9E9 /* HistoricalValue.m */,
+				73BFF3391B263ED80010F9E9 /* Ticker.h */,
+				73BFF33A1B263ED80010F9E9 /* Ticker.m */,
+				73BFF3361B263ED70010F9E9 /* GameInfo.h */,
+				73BFF3371B263ED70010F9E9 /* GameInfo.m */,
 				73D24C021B1FA1E1001524C4 /* GameInfo+Create.h */,
 				73D24C031B1FA1E1001524C4 /* GameInfo+Create.m */,
 				73D24C111B1FB05E001524C4 /* HistoricalValue+Create.h */,
@@ -583,10 +589,14 @@
 				73D7C3721B0A7E0700653A4C /* SignupLoginViewController.m */,
 				73D7C36D1B0A717F00653A4C /* UserAccountViewController.h */,
 				73D7C36E1B0A717F00653A4C /* UserAccountViewController.m */,
+				73BFF3481B2683EF0010F9E9 /* UserInfoViewController.h */,
+				73BFF3491B2683EF0010F9E9 /* UserInfoViewController.m */,
 				73DEE4D61B2170E6007B533C /* FriendsViewController.h */,
 				73DEE4D71B2170E6007B533C /* FriendsViewController.m */,
 				73DEE4DF1B218240007B533C /* ScenarioInfoViewController.h */,
 				73DEE4E01B218240007B533C /* ScenarioInfoViewController.m */,
+				73BFF3451B267E5E0010F9E9 /* SavedGamesViewController.h */,
+				73BFF3461B267E5E0010F9E9 /* SavedGamesViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -635,8 +645,6 @@
 				739ABD8E1B01671E009EFC0E /* SimulatorInfoViewController.m */,
 				739ABD421B01656B009EFC0E /* InfoPageContentViewController.h */,
 				739ABD431B01656B009EFC0E /* InfoPageContentViewController.m */,
-				73442DE31B178E5800F3A7ED /* SimulatorGameOverViewController.h */,
-				73442DE41B178E5800F3A7ED /* SimulatorGameOverViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -740,6 +748,8 @@
 		73D7C3871B0AFAD900653A4C /* Custom Cells */ = {
 			isa = PBXGroup;
 			children = (
+				73BFF3421B2672270010F9E9 /* GameTableViewCell.h */,
+				73BFF3431B2672270010F9E9 /* GameTableViewCell.m */,
 				73DEE4D91B21731C007B533C /* FriendTableViewCell.h */,
 				73DEE4DA1B21731C007B533C /* FriendTableViewCell.m */,
 				73E642BD1B1E4CA5005609B0 /* ScenarioTableViewCell.h */,
@@ -863,7 +873,6 @@
 				73EEC57C1B040E9300FAA1FE /* UserAccount.m in Sources */,
 				73442DC41B139B4600F3A7ED /* TransactionTableViewCell.m in Sources */,
 				739ABCDE1B016390009EFC0E /* AppDelegate.m in Sources */,
-				73D24C971B1FDF73001524C4 /* Transaction.m in Sources */,
 				73D24C461B1FBF27001524C4 /* Transaction+Create.m in Sources */,
 				73EEC5801B042FEA00FAA1FE /* Quiz.m in Sources */,
 				739ABD7A1B016686009EFC0E /* QuizQuestion.m in Sources */,
@@ -876,10 +885,9 @@
 				73D7C3691B096A6B00653A4C /* GlossarySelectionViewController.m in Sources */,
 				73442DCB1B13E72900F3A7ED /* FinancialDataModel.xcdatamodeld in Sources */,
 				739ABD0B1B0163EF009EFC0E /* BEMSimpleLineGraphView.m in Sources */,
-				73442DE51B178E5800F3A7ED /* SimulatorGameOverViewController.m in Sources */,
 				739ABCE21B0163B4009EFC0E /* BalanceSheet.m in Sources */,
 				73D7C38B1B0AFB2800653A4C /* QuizTableViewCell.m in Sources */,
-				73D24C941B1FDF72001524C4 /* Ticker.m in Sources */,
+				73BFF3411B263ED80010F9E9 /* Transaction.m in Sources */,
 				739ABD8F1B01671E009EFC0E /* SimulatorInfoViewController.m in Sources */,
 				739ABD351B016505009EFC0E /* FinancialDatabaseManager.m in Sources */,
 				739ABD471B0165A8009EFC0E /* InitialViewController.m in Sources */,
@@ -892,8 +900,6 @@
 				739ABD0A1B0163EF009EFC0E /* BEMPermanentPopupView.m in Sources */,
 				739ABD181B016453009EFC0E /* Company.m in Sources */,
 				739ABD0D1B0163EF009EFC0E /* RESideMenu.m in Sources */,
-				73D24C9D1B1FDF73001524C4 /* GameInfo.m in Sources */,
-				73D24C9A1B1FDF73001524C4 /* HistoricalValue.m in Sources */,
 				739ABD6B1B016656009EFC0E /* PortfolioStockInfoContainerViewController.m in Sources */,
 				739ABD6C1B016656009EFC0E /* PortfolioStockInfoViewController.m in Sources */,
 				73DEE4D81B2170E6007B533C /* FriendsViewController.m in Sources */,
@@ -902,10 +908,12 @@
 				73EEC5861B0449EE00FAA1FE /* QuizGenerator.m in Sources */,
 				73E966D21B10EA5600431AAC /* PortfolioActivityViewController.m in Sources */,
 				73442DCF1B13E81000F3A7ED /* Scenario.m in Sources */,
+				73BFF3441B2672270010F9E9 /* GameTableViewCell.m in Sources */,
 				73DEE4E11B218240007B533C /* ScenarioInfoViewController.m in Sources */,
 				739ABD601B01662E009EFC0E /* PortfolioPicture.m in Sources */,
 				739ABD811B0166B9009EFC0E /* Report.m in Sources */,
 				739ABD321B0164F8009EFC0E /* DefinitionViewController.m in Sources */,
+				73BFF3471B267E5E0010F9E9 /* SavedGamesViewController.m in Sources */,
 				73442DE21B1672E800F3A7ED /* SettingsTableViewController.m in Sources */,
 				739ABD1B1B01645F009EFC0E /* CompanyInfoViewController.m in Sources */,
 				739ABD071B0163EF009EFC0E /* BEMAverageLine.m in Sources */,
@@ -917,8 +925,12 @@
 				739ABD051B0163EF009EFC0E /* BEMAnalogClockView.m in Sources */,
 				739ABCE91B0163E1009EFC0E /* CashFlow.m in Sources */,
 				73E642BF1B1E4CA5005609B0 /* ScenarioTableViewCell.m in Sources */,
+				73BFF33E1B263ED80010F9E9 /* HistoricalValue.m in Sources */,
+				73BFF33B1B263ED80010F9E9 /* Ticker.m in Sources */,
+				73BFF34A1B2683EF0010F9E9 /* UserInfoViewController.m in Sources */,
 				73DEE4DE1B217FA1007B533C /* ScenarioPurchaseInfo.m in Sources */,
 				73442DC01B12805B00F3A7ED /* Dividend.m in Sources */,
+				73BFF3381B263ED70010F9E9 /* GameInfo.m in Sources */,
 				739ABD411B016544009EFC0E /* IncomeStatement.m in Sources */,
 				739ABCE61B0163D8009EFC0E /* BuySellTableViewController.m in Sources */,
 				739ABD961B01674E009EFC0E /* StockInvestment.m in Sources */,

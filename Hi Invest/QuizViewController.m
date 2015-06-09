@@ -98,6 +98,11 @@
     self.initialSubview.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.90];
     self.finalSubview.hidden = YES;
     self.finalSubview.alpha = 0.0;
+    
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(handleEnteredBackground)
+                                                 name: UIApplicationDidEnterBackgroundNotification
+                                               object: nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -108,7 +113,18 @@
                                                 selector:@selector(countdownTimerAction)
                                                 userInfo:nil
                                                  repeats:YES];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
     
+    [super viewWillDisappear:animated];
+}
+
+- (void)handleEnteredBackground
+{
+    [self cancelQuiz:nil];
 }
 
 - (void)countdownTimerAction

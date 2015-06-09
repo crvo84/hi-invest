@@ -13,6 +13,7 @@
 
 @interface UserAccount : NSObject
 
+@property (copy, nonatomic, readonly) NSString *userId;
 @property (copy, nonatomic) NSLocale *localeDefault; // Default NSLocale (Others: QuizGenerator, each scenario)
 // Investing Game
 @property (strong, nonatomic, readonly) InvestingGame *currentInvestingGame;
@@ -36,7 +37,13 @@
 - (double)progressForNextUserLevel;
 
 - (void)newInvestingGame;
+// Set the current investing game to nil
+- (void)exitCurrentInvestingGame;
+// Remove current investing game, if there is one.
 - (void)deleteCurrentInvestingGame;
+// Remove all investing games of the current user.
+- (void)deleteAllInvestingGames;
+
 
 - (NSString *)userName;
 

@@ -17,7 +17,6 @@
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 @property (weak, nonatomic) IBOutlet UIImageView *formulaImageView;
 @property (weak, nonatomic) IBOutlet UIView *formulaSubview;
-@property (weak, nonatomic) IBOutlet UIImageView *cartoonImageView;
 @property (weak, nonatomic) IBOutlet UIButton *sourceButton;
 @property (weak, nonatomic) IBOutlet UILabel *sourceLabel;
 
@@ -59,11 +58,6 @@
 
 - (void)updateUI
 {
-    // Cartoon Image View
-    NSArray *imageSufixes = @[@"B", @"C", @"F"];
-    NSInteger randomIndex = arc4random() % [imageSufixes count];
-    self.cartoonImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"ninja%@", imageSufixes[randomIndex]]];
-    
     // Formula Image View
     if (self.formulaImageFilename) {
         UIImage *formulaImage = [UIImage imageNamed:self.formulaImageFilename];

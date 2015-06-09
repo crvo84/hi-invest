@@ -16,6 +16,7 @@
 
 @interface UserAccount ()
 
+@property (copy, nonatomic, readwrite) NSString *userId;
 @property (strong, nonatomic, readwrite) InvestingGame *currentInvestingGame;
 @property (strong, nonatomic) NSMutableDictionary *successfulQuizzesCount; // @{ @"QuizType" : @(Current Level) }
 @property (strong, nonatomic, readwrite) NSArray *availableScenarios; // of ScenarioPurchaseInfo
@@ -125,7 +126,7 @@
         
         Scenario *scenario = [matches firstObject];
         
-        GameInfo *gameInfo = [GameInfo gameInfoWithScenarioFilename:self.selectedScenarioFilename initialCash:self.simulatorInitialCash currentDate:scenario.initialScenarioDate disguisingCompanies:self.disguiseCompanies intoManagedObjectContext:self.gameInfoContext];
+        GameInfo *gameInfo = [GameInfo gameInfoWithUserId:self.userId scenarioFilename:self.selectedScenarioFilename scenarioName:scenario.name initialCash:self.simulatorInitialCash currentDate:scenario.initialScenarioDate disguisingCompanies:self.disguiseCompanies intoManagedObjectContext:self.gameInfoContext];
 
         if (gameInfo) {
             self.currentInvestingGame = [[InvestingGame alloc] initInvestingGameWithGameInfo:gameInfo withScenario:scenario];
@@ -133,15 +134,45 @@
     }
 }
 
-- (void)deleteCurrentInvestingGame
+// Set the current investing game to nil
+- (void)exitCurrentInvestingGame
 {
-    [GameInfo removeExistingGameInfoWithScenarioFilename:self.selectedScenarioFilename
-                                intoManagedObjectContext:self.currentInvestingGame.gameInfoContext];
     self.currentInvestingGame = nil;
 }
 
+// Remove current investing game, if there is one.
+- (void)deleteCurrentInvestingGame
+{
+    [GameInfo removeExistingGameInfoWithScenarioFilename:self.selectedScenarioFilename withUserId:self.userId intoManagedObjectContext:self.currentInvestingGame.gameInfoContext];
+    
+    self.currentInvestingGame = nil;
+}
+
+// Remove all investing games of the current user.
+- (void)deleteAllInvestingGames
+{
+    NSManagedObjectContext *context = self.currentInvestingGame.gameInfoContext;
+
+    if (!context) {
+        context = [ManagedObjectContextCreator createMainQueueGameActivityManagedObjectContext];
+    }
+    
+    [GameInfo removeExistingGameInfoWithScenarioFilename:nil withUserId:self.userId intoManagedObjectContext:context];
+    
+    self.currentInvestingGame = nil;
+}
 
 #pragma mark - Getters
+
+- (NSString *)userId
+{
+    // TODO: Update with facebook id info
+    if (!_userId) {
+        _userId = @"Guest";
+    }
+    
+    return _userId;
+}
 
 - (NSManagedObjectContext *)gameInfoContext
 {
@@ -188,10 +219,10 @@
         scenarioPurchaseInfoDemo.initialDate = [dateFormatter dateFromString:@"8/20/2014"];
         scenarioPurchaseInfoDemo.endingDate = [dateFormatter dateFromString:@"12/19/2014"];
         scenarioPurchaseInfoDemo.numberOfCompanies = 5;
-        scenarioPurchaseInfoDemo.numberOfDays = 121;
+        scenarioPurchaseInfoDemo.numberOfDays = 122;
         scenarioPurchaseInfoDemo.withAdds = NO;
         scenarioPurchaseInfoDemo.price = 0.0; // Free Demo
-        scenarioPurchaseInfoDemo.sizeInMegas = 0.5; // PROVISIONAL
+        scenarioPurchaseInfoDemo.sizeInMegas = [ManagedObjectContextCreator sizeInMegabytesOfDatabaseWithFilename:@"DEMO_001A"];
         
         // DEFAULT DOW JONES SCENARIO
         ScenarioPurchaseInfo *scenarioPurchaseInfo1 = [[ScenarioPurchaseInfo alloc] init];
@@ -201,10 +232,10 @@
         scenarioPurchaseInfo1.initialDate = [dateFormatter dateFromString:@"12/20/2010"];
         scenarioPurchaseInfo1.endingDate = [dateFormatter dateFromString:@"12/19/2014"];
         scenarioPurchaseInfo1.numberOfCompanies = 30;
-        scenarioPurchaseInfo1.numberOfDays = 1460;
+        scenarioPurchaseInfo1.numberOfDays = 1461;
         scenarioPurchaseInfo1.withAdds = NO;
         scenarioPurchaseInfo1.price = 0.99;
-        scenarioPurchaseInfo1.sizeInMegas = 1.96;
+        scenarioPurchaseInfo1.sizeInMegas = [ManagedObjectContextCreator sizeInMegabytesOfDatabaseWithFilename:@"DJI_001A"];
         
         _availableScenarios = @[scenarioPurchaseInfoDemo, scenarioPurchaseInfo1];
     }
@@ -217,8 +248,8 @@
 - (void)setSelectedScenarioFilename:(NSString *)selectedScenarioFilename
 {
     if (![selectedScenarioFilename isEqualToString:_selectedScenarioFilename]) {
+        self.currentInvestingGame = nil;
         _selectedScenarioFilename = selectedScenarioFilename;
-        [self newInvestingGame];
     }
 }
 

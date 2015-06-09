@@ -26,6 +26,13 @@
     // Do any additional setup after loading the view.
 }
 
+- (void)didReceiveMemoryWarning
+{
+    [self.game.gameInfoContext save:nil];
+    
+    [super didReceiveMemoryWarning];
+}
+
 
 
 #pragma mark - Setters

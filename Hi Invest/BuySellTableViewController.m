@@ -466,6 +466,8 @@
                                            recreatingTransaction:NO];
     }
     
+    [self.game saveInvestingGameCurrentState];
+    
     [self presentTransactionAlertWithSuccess:success];
 }
 

@@ -2,7 +2,7 @@
 //  Transaction.m
 //  Hi Invest
 //
-//  Created by Carlos Rogelio Villanueva Ousset on 6/3/15.
+//  Created by Carlos Rogelio Villanueva Ousset on 6/8/15.
 //  Copyright (c) 2015 Villou. All rights reserved.
 //
 
@@ -12,13 +12,13 @@
 
 @implementation Transaction
 
-@dynamic day;
-@dynamic shares;
 @dynamic amount;
-@dynamic scenarioFilename;
-@dynamic type;
+@dynamic day;
 @dynamic orderingValue;
+@dynamic scenarioFilename;
+@dynamic shares;
 @dynamic ticker;
+@dynamic type;
 @dynamic gameInfo;
 
 @end

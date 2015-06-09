@@ -15,7 +15,9 @@
 @property (weak, nonatomic) IBOutlet UIView *subview;
 @property (weak, nonatomic) IBOutlet UILabel *scenarioNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *scenarioDescriptionLabel;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UILabel *noInfoLabel;
 
 @end
 
@@ -25,18 +27,36 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    // View setup
     self.view.backgroundColor = [DefaultColors translucentLightBackgroundColor];
     
+    // Subview setup
     self.subview.layer.cornerRadius = 8;
     self.subview.layer.masksToBounds = YES;
+    
+    // Segmented control setup
+    self.segmentedControl.selectedSegmentIndex = 0; // Scenario info segment selected
+    
+    // Scenario name and description
+    self.scenarioNameLabel.text = self.scenarioPurchaseInfo.name;
+    self.scenarioDescriptionLabel.text = self.scenarioPurchaseInfo.descriptionForScenario;
     
     [self updateUI];
 }
 
 - (void)updateUI
 {
-    self.scenarioNameLabel.text = self.scenarioPurchaseInfo.name;
-    self.scenarioDescriptionLabel.text = self.scenarioPurchaseInfo.descriptionForScenario;
+    [self.tableView reloadData];
+    
+    BOOL noInfo = [self.tableView numberOfRowsInSection:0] == 0;
+    
+    self.noInfoLabel.hidden = !noInfo;
+    self.tableView.hidden = noInfo;
+}
+
+- (IBAction)segmentedControlValueChanged:(UISegmentedControl *)sender
+{
+    [self updateUI];
 }
 
 #pragma mark - UITableView Data Source
@@ -48,47 +68,60 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 5;
+    if (self.segmentedControl.selectedSegmentIndex == 0) {
+        return self.isFileInBundle ? 3 : 4;
+        
+    } else {
+        return 0;
+        
+    }
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"Scenario Info Cell"];
     
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.locale = self.locale;
-    dateFormatter.dateFormat = @"MMM yyyy"; // only show month and year
-    //            dateFormatter.dateStyle = NSDateFormatterMediumStyle; // shows day, month and year
-    
-    switch (indexPath.row) {
-        case 0:
-            cell.textLabel.text = @"Starting date";
-            cell.detailTextLabel.text = [dateFormatter stringFromDate:self.scenarioPurchaseInfo.initialDate];
-            break;
-            
-        case 1:
-            cell.textLabel.text = @"Ending date";
-            cell.detailTextLabel.text = [dateFormatter stringFromDate:self.scenarioPurchaseInfo.endingDate];
-            break;
-            
-        case 2:
-            cell.textLabel.text = @"Number of days";
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld", (long)self.scenarioPurchaseInfo.numberOfDays];
-            break;
-            
-        case 3:
-            cell.textLabel.text = @"Number of companies";
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld", (long)self.scenarioPurchaseInfo.numberOfCompanies];
-            break;
-            
-        case 4:
-            cell.textLabel.text = @"File size";
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%.2f MB", self.scenarioPurchaseInfo.sizeInMegas];
-            break;
-            
-        default:
-            break;
+    if (self.segmentedControl.selectedSegmentIndex == 0) {
+        
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.locale = self.locale;
+        dateFormatter.dateFormat = @"MMM yyyy"; // only show month and year
+        //            dateFormatter.dateStyle = NSDateFormatterMediumStyle; // shows day, month and year
+        
+        switch (indexPath.row) {
+            case 0:
+                cell.textLabel.text = @"Period";
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ - %@", [dateFormatter stringFromDate:self.scenarioPurchaseInfo.initialDate], [dateFormatter stringFromDate:self.scenarioPurchaseInfo.endingDate]];
+                break;
+                
+            case 1:
+                cell.textLabel.text = @"Days";
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld", (long)self.scenarioPurchaseInfo.numberOfDays];
+                break;
+                
+            case 2:
+                cell.textLabel.text = @"Companies";
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld", (long)self.scenarioPurchaseInfo.numberOfCompanies];
+                break;
+                
+            case 3:
+                cell.textLabel.text = @"File size";
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%.2f MB", self.scenarioPurchaseInfo.sizeInMegas];
+                break;
+                
+            default:
+                break;
+        }
+    } else {
+        
+        
+        
+        
+        
     }
+    
+
     
     return cell;
 }

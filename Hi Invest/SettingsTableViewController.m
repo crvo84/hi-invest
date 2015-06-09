@@ -71,10 +71,10 @@
 
 - (void)presentOnlyForNewGamesAlert
 {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Changes will apply for new scenarios only."
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Changes will apply for new games only."
                                                                    message:nil
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *continueAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    UIAlertAction *continueAction = [UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleDefault handler:nil];
     
     [alert addAction:continueAction];
     
@@ -83,12 +83,12 @@
 
 - (IBAction)resetSimulatorButtonPressed:(UIButton *)sender
 {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Selected scenario will be reset."
-                                                                   message:@"Do you want to continue?"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Reset all scenarios?"
+                                                                   message:nil
                                                             preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *continueAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         
-        [self.userAccount deleteCurrentInvestingGame];
+        [self.userAccount deleteAllInvestingGames];
         self.resetSimulatorButton.enabled = NO;
         
     }];
@@ -120,12 +120,6 @@
     
     return _numberFormatter;
 }
-
-
-
-
-
-
 
 
 

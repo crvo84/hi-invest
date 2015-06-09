@@ -2,7 +2,7 @@
 //  HistoricalValue.m
 //  Hi Invest
 //
-//  Created by Carlos Rogelio Villanueva Ousset on 6/3/15.
+//  Created by Carlos Rogelio Villanueva Ousset on 6/8/15.
 //  Copyright (c) 2015 Villou. All rights reserved.
 //
 
@@ -12,8 +12,8 @@
 
 @implementation HistoricalValue
 
-@dynamic portfolioValue;
 @dynamic day;
+@dynamic portfolioValue;
 @dynamic scenarioFilename;
 @dynamic gameInfo;
 

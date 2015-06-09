@@ -14,5 +14,6 @@
 
 @property (strong, nonatomic) ScenarioPurchaseInfo *scenarioPurchaseInfo;
 @property (strong, nonatomic) NSLocale *locale;
+@property (nonatomic) BOOL isFileInBundle;
 
 @end

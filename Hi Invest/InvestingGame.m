@@ -83,6 +83,13 @@
         for (Transaction *transaction in transactions) {
             [self.portfolio recreateTransaction:transaction];
         }
+        
+        NSInteger numberOfDays = [self dayNumberFromDate:self.endDate];
+        gameInfo.numberOfDays = @(numberOfDays);
+        NSError *saveError;
+        if (![gameInfo.managedObjectContext save:&saveError]) {
+            NSLog(@"%@", [saveError localizedDescription]);
+        }
     }
     
     return self;
@@ -126,20 +133,37 @@
                                             toDate:newDate];
 
     self.currentDate = newDate;
-    self.gameInfo.currentDate = newDate;
     self.currentPrices = nil; // reset prices to get the new date prices
     
     if ([self currentDay] >= [self dayNumberFromDate:self.endDate]) {
         self.finishedSuccessfully = YES;
-        self.gameInfo.finished = @(YES);
     }
+    
+    [self saveInvestingGameCurrentState];
+    
+    return YES;
+}
+
+- (void)saveInvestingGameCurrentState
+{
+    NSInteger currentDay = [self currentDay];
+    
+    self.gameInfo.currentDay = @(currentDay);
+    self.gameInfo.currentDate = self.currentDate;
+    self.gameInfo.finished = @(self.finishedSuccessfully);
+    
+    double currentReturn;
+    if (currentDay  < 365) {
+        currentReturn = [self currentPortfolioReturn];
+    } else {
+        currentReturn = [self currentPortfolioAnnualizedReturn];
+    }
+    self.gameInfo.currentReturn = @(currentReturn);
     
     NSError *saveError;
     if (![self.gameInfo.managedObjectContext save:&saveError]) {
         NSLog(@"%@", [saveError localizedDescription]);
     }
-    
-    return YES;
 }
 
 - (void)collectDividendsFromCompaniesWithTickers:(NSArray *)tickers fromDate:(NSDate *)initialDate toDate:(NSDate *)finalDate

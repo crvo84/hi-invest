@@ -10,14 +10,20 @@
 
 @interface GameInfo (Create)
 
-// Create and return a new GameInfo Managed Object. If a GameInfo with same scenario Filename is already in database, return nil.
-+ (GameInfo *)gameInfoWithScenarioFilename:(NSString *)scenarioFilename
-                               initialCash:(double)initialCash
-                               currentDate:(NSDate *)currentDate
-                       disguisingCompanies:(BOOL)disguiseCompanies
-                  intoManagedObjectContext:(NSManagedObjectContext *)context;
++ (GameInfo *)gameInfoWithUserId:(NSString *)userId
+                scenarioFilename:(NSString *)scenarioFilename
+                    scenarioName:(NSString *)scenarioName
+                     initialCash:(double)initialCash
+                     currentDate:(NSDate *)currentDate
+             disguisingCompanies:(BOOL)disguiseCompanies
+        intoManagedObjectContext:(NSManagedObjectContext *)context;
 
+// Remove the GameInfo managed object with the given scenario filename, with the given userId.
+// If scenarioFilename is given as nil, remove GameInfo managed objects for that userId
+// If userId is given as nil, remove all GameInfo managed objects for that scenarioFilename
+// If string parameters are given as nil, remove all existing GameInfo managed objects.
 + (void)removeExistingGameInfoWithScenarioFilename:(NSString *)scenarioFilename
+                                        withUserId:(NSString *)userId
                           intoManagedObjectContext:(NSManagedObjectContext *)context;
 
 @end

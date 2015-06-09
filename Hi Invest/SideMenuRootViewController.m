@@ -16,7 +16,6 @@
 #import "LeftMenuViewController.h"
 #import "TimeSimulationViewController.h"
 #import "SimulatorInfoViewController.h"
-#import "SimulatorGameOverViewController.h"
 
 @interface SideMenuRootViewController ()
 
@@ -114,7 +113,7 @@
     NSInteger daysLeft = [game daysLeft];
     
     if (daysLeft == 0) {
-        [self presentGameOverAfterNumberOfSeconds:0.1];
+        [self presentDayUpdateAfterNumberOfSeconds:0.1];
         return;
     }
     
@@ -201,22 +200,13 @@
     
     // UNWIND FROM TimeSimulationViewController
     if ([unwindSegue.sourceViewController isKindOfClass:[TimeSimulationViewController class]]) {
-        InvestingGame *game = self.userAccount.currentInvestingGame;
-        NSInteger simulatorCurrentDay = game.currentDay;
-        NSInteger lastScenarioDay = [game dayNumberFromDate:game.endDate];
-        
-        if (simulatorCurrentDay < lastScenarioDay) {
+
             [self presentDayUpdateAfterNumberOfSeconds:0.1];
-            
-        } else {
-            [self presentGameOverAfterNumberOfSeconds:0.1];
-        }
-        
     }
     
     // UNWIND FROM SimulatorGameOverViewController
-    if ([unwindSegue.sourceViewController isKindOfClass:[SimulatorGameOverViewController class]]) {
-        if ([unwindSegue.identifier isEqualToString:@"unwindToSideMenuRootViewController Reset Game"]) {
+    if ([unwindSegue.sourceViewController isKindOfClass:[SimulatorInfoViewController class]]) {
+        if ([unwindSegue.identifier isEqualToString:@"Reset Game"]) {
             [self.userAccount deleteCurrentInvestingGame];
             [self.userAccount newInvestingGame];
             if ([self.contentViewController isKindOfClass:[SimulatorTabBarController class]]) {
@@ -252,15 +242,6 @@
     });
 }
 
-- (void)presentGameOverAfterNumberOfSeconds:(double)seconds
-{
-    // Wait some time to let TimeSimulationViewController dismiss completely
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, seconds * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void){
-        //code to be executed on the main queue after delay
-        [self performSegueWithIdentifier:@"Simulator Game Over" sender:self];
-    });
-}
-
 #pragma mark - Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -276,10 +257,6 @@
             [self prepareTimeSimulationViewController:segue.destinationViewController withNumberOfDays:numberOfDays];
         }
     }
-    
-    if ([segue.destinationViewController isKindOfClass:[SimulatorGameOverViewController class]]) {
-        [self prepareSimulatorGameOverViewController:segue.destinationViewController withInvestingGame:self.userAccount.currentInvestingGame];
-    }
 }
 
 - (void)prepareSimulatorInfoViewController:(SimulatorInfoViewController *)simulatorInfoViewController withInvestingGame:(InvestingGame *)game
@@ -290,11 +267,6 @@
 - (void)prepareTimeSimulationViewController:(TimeSimulationViewController *)timeSimulationViewController withNumberOfDays:(NSInteger)numberOfDays
 {
     timeSimulationViewController.daysNum = numberOfDays;
-}
-
-- (void)prepareSimulatorGameOverViewController:(SimulatorGameOverViewController *)simulatorGameOverViewController withInvestingGame:(InvestingGame *)game
-{
-    simulatorGameOverViewController.game = game;
 }
 
 

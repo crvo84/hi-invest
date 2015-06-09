@@ -13,16 +13,18 @@
 
 @implementation GameInfo (Create)
 
-+ (GameInfo *)gameInfoWithScenarioFilename:(NSString *)scenarioFilename
-                               initialCash:(double)initialCash
-                               currentDate:(NSDate *)currentDate
-                       disguisingCompanies:(BOOL)disguiseCompanies
-                  intoManagedObjectContext:(NSManagedObjectContext *)context
++ (GameInfo *)gameInfoWithUserId:(NSString *)userId
+                scenarioFilename:(NSString *)scenarioFilename
+                    scenarioName:(NSString *)scenarioName
+                     initialCash:(double)initialCash
+                     currentDate:(NSDate *)currentDate
+             disguisingCompanies:(BOOL)disguiseCompanies
+        intoManagedObjectContext:(NSManagedObjectContext *)context
 {
     GameInfo *gameInfo = nil;
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"GameInfo"];
-    request.predicate = [NSPredicate predicateWithFormat:@"scenarioFilename = %@", scenarioFilename];
+    request.predicate = [NSPredicate predicateWithFormat:@"(scenarioFilename = %@) AND (userId = %@)", scenarioFilename, userId];
     
     NSError *error;
     NSArray *matches = [context executeFetchRequest:request error:&error];
@@ -36,11 +38,15 @@
     } else {
         
         gameInfo = [NSEntityDescription insertNewObjectForEntityForName:@"GameInfo" inManagedObjectContext:context];
+        gameInfo.userId = userId;
         gameInfo.scenarioFilename = scenarioFilename;
+        gameInfo.scenarioName = scenarioName;
         gameInfo.initialCash = @(initialCash);
         gameInfo.currentDate = currentDate;
         gameInfo.disguiseCompanies = @(disguiseCompanies);
         gameInfo.finished = @(NO);
+        gameInfo.currentDay = @(1);
+        gameInfo.currentReturn = @(0.0);
         
         NSError *saveError;
         if (![context save:&saveError]) {
@@ -52,11 +58,26 @@
 }
 
 
+// Remove the GameInfo managed object with the given scenario filename, with the given userId.
+// If scenarioFilename is given as nil, remove GameInfo managed objects for that userId
+// If userId is given as nil, remove all GameInfo managed objects for that scenarioFilename
+// If string parameters are given as nil, remove all existing GameInfo managed objects.
 + (void)removeExistingGameInfoWithScenarioFilename:(NSString *)scenarioFilename
+                                        withUserId:(NSString *)userId
                           intoManagedObjectContext:(NSManagedObjectContext *)context
 {
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"GameInfo"];
-    request.predicate = [NSPredicate predicateWithFormat:@"scenarioFilename = %@", scenarioFilename];
+    
+    if (scenarioFilename && userId) { // All GameInfo with given scenarioFilename and userId
+        request.predicate = [NSPredicate predicateWithFormat:@"(scenarioFilename = %@) AND (userId = %@)", scenarioFilename, userId];
+        
+    } else if (scenarioFilename) { // All GameInfo with a given scenarioFilename
+        request.predicate = [NSPredicate predicateWithFormat:@"scenarioFilename = %@", scenarioFilename];
+        
+    } else if (userId) { // All GameInfo with a given userId
+        request.predicate = [NSPredicate predicateWithFormat:@"userId = %@", userId];
+        
+    }
     
     NSError *error;
     NSArray *matches = [context executeFetchRequest:request error:&error];

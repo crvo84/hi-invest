@@ -35,8 +35,13 @@
 
 + (BOOL)investingGameActivityDatabaseExistsAtBundleOrDocumentDirectory;
 
++ (double)sizeInMegabytesOfDatabaseWithFilename:(NSString *)databaseFilename;
 
 
+#pragma mark - File managing
 
++ (BOOL)databaseExistsAtDocumentsDirectoryWithFilename:(NSString *)databaseFilename;
+
++ (BOOL)databaseExistsAtBundleWithFilename:(NSString *)databaseFilename;
 
 @end

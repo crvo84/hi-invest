@@ -163,11 +163,7 @@
                 SimulatorTabBarController *simulatorTabBarController = [self.storyboard instantiateViewControllerWithIdentifier:@"SimulatorTabBarController"];
                 simulatorTabBarController.userAccount = self.userAccount;
                 [self.sideMenuViewController setContentViewController:simulatorTabBarController animated:YES];
-                if (self.userAccount.currentInvestingGame.finishedSuccessfully) {
-                    [self.sideMenuViewController performSegueWithIdentifier:@"Simulator Game Over" sender:self];
-                } else {
-                    [self.sideMenuViewController performSegueWithIdentifier:@"Simulator Info" sender:self];
-                }
+                [self.sideMenuViewController performSegueWithIdentifier:@"Simulator Info" sender:self];
             }
             break;
             

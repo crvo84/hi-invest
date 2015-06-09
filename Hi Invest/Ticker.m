@@ -2,7 +2,7 @@
 //  Ticker.m
 //  Hi Invest
 //
-//  Created by Carlos Rogelio Villanueva Ousset on 6/3/15.
+//  Created by Carlos Rogelio Villanueva Ousset on 6/8/15.
 //  Copyright (c) 2015 Villou. All rights reserved.
 //
 
@@ -13,10 +13,10 @@
 @implementation Ticker
 
 @dynamic realTicker;
-@dynamic uiTicker;
+@dynamic scenarioFilename;
 @dynamic uiName;
 @dynamic uiPriceMultiplier;
-@dynamic scenarioFilename;
+@dynamic uiTicker;
 @dynamic gameInfo;
 
 @end

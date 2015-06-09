@@ -2,7 +2,7 @@
 //  GameInfo.m
 //  Hi Invest
 //
-//  Created by Carlos Rogelio Villanueva Ousset on 6/3/15.
+//  Created by Carlos Rogelio Villanueva Ousset on 6/8/15.
 //  Copyright (c) 2015 Villou. All rights reserved.
 //
 
@@ -14,13 +14,18 @@
 
 @implementation GameInfo
 
+@dynamic currentDate;
+@dynamic disguiseCompanies;
+@dynamic finished;
 @dynamic initialCash;
 @dynamic scenarioFilename;
-@dynamic disguiseCompanies;
-@dynamic currentDate;
-@dynamic finished;
+@dynamic scenarioName;
+@dynamic userId;
+@dynamic currentDay;
+@dynamic currentReturn;
+@dynamic numberOfDays;
+@dynamic historicalValues;
 @dynamic tickers;
 @dynamic transactions;
-@dynamic historicalValues;
 
 @end

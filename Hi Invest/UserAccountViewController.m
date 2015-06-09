@@ -13,6 +13,7 @@
 #import "ScenarioTableViewCell.h"
 #import "ScenarioPurchaseInfo.h"
 #import "ScenarioInfoViewController.h"
+#import "SavedGamesViewController.h"
 
 @interface UserAccountViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -20,7 +21,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *userImageView;
 @property (weak, nonatomic) IBOutlet UIProgressView *userLevelProgressView;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
-@property (weak, nonatomic) IBOutlet UIButton *userLevelButton;
+@property (weak, nonatomic) IBOutlet UILabel *userLevelLabel;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @end
@@ -60,16 +61,9 @@
     }
 
     // Current user level + 1 only for UI purposes. Internally is all 0 based.
-    [self.userLevelButton setTitle:[NSString stringWithFormat:@"Ninja Level %ld", (long)currentUserLevel + 1] forState:UIControlStateNormal];
+    self.userLevelLabel.text = [NSString stringWithFormat:@"Ninja Level %ld", (long)currentUserLevel + 1];;
     
     [self.userLevelProgressView setProgress:([self.userAccount progressForNextUserLevel])];
-}
-- (IBAction)friendsButtonPressed:(id)sender {
-}
-
-- (IBAction)userStatsButtonPressed:(UIButton *)sender
-{
-    
 }
 
 
@@ -78,61 +72,72 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.userAccount.availableScenarios count];
+    if (section == 0) {
+        return [self.userAccount.availableScenarios count];
+        
+    } else if (section == 1) {
+        return 1;
+    }
+    
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ScenarioTableViewCell *scenarioCell = [self.tableView dequeueReusableCellWithIdentifier:@"Scenario Cell"];
+    UITableViewCell *cell = nil;
     
-    scenarioCell.purchaseDetailLabel.hidden = YES; // No ads implemented yet
     
-    ScenarioPurchaseInfo *scenarioPurchaseInfo = self.userAccount.availableScenarios[indexPath.row];
-    
-    // Name Label
-    [scenarioCell.nameButton setTitle:scenarioPurchaseInfo.name forState:UIControlStateNormal];
-    
-    NSDateComponents *initialDateComponents = [[NSCalendar currentCalendar] components:NSCalendarUnitYear fromDate:scenarioPurchaseInfo.initialDate];
-    NSDateComponents *endingDateComponents = [[NSCalendar currentCalendar] components:NSCalendarUnitYear fromDate:scenarioPurchaseInfo.endingDate];
-    
-    NSString *yearPeriodStr;
-    if ([initialDateComponents year] == [endingDateComponents year]) {
-        yearPeriodStr = [NSString stringWithFormat:@"%ld", (long)[initialDateComponents year]];
-    } else {
-        yearPeriodStr = [NSString stringWithFormat:@"%ld - %ld", (long)[initialDateComponents year], (long)[endingDateComponents year]];
-    }
-    
-    // Detail Info Label
-    scenarioCell.infoLabel.text = [NSString stringWithFormat:@"%03ld companies | %@", (long)scenarioPurchaseInfo.numberOfCompanies, yearPeriodStr];
-    
-    // Purchase Button
-    NSString *priceStr;
-    if (scenarioPurchaseInfo.price == 0) {
-        priceStr = @"Free";
+    if (indexPath.section == 0) {
         
-    } else {
-        priceStr = [NSString stringWithFormat:@"$%.2f", scenarioPurchaseInfo.price];
+        ScenarioTableViewCell *scenarioCell = [self.tableView dequeueReusableCellWithIdentifier:@"Scenario Cell"];
+        
+        ScenarioPurchaseInfo *scenarioPurchaseInfo = self.userAccount.availableScenarios[indexPath.row];
+        
+        // Name Label
+        [scenarioCell.nameButton setTitle:scenarioPurchaseInfo.name forState:UIControlStateNormal];
+        
+        
+        
+        // Purchase Button
+        NSString *priceStr;
+        if (scenarioPurchaseInfo.price == 0) {
+            priceStr = scenarioPurchaseInfo.withAdds ? @"Ads" : @"Free";
+            
+        } else {
+            priceStr = [NSString stringWithFormat:@"$%.2f", scenarioPurchaseInfo.price];
+            
+        }
+        [scenarioCell.purchaseButton setTitle:priceStr forState:UIControlStateNormal];
+        
+        // Scenario Selection
+        if ([self.userAccount.selectedScenarioFilename isEqualToString:scenarioPurchaseInfo.filename]) {
+            scenarioCell.purchaseButton.hidden = YES;
+            scenarioCell.accessoryType = UITableViewCellAccessoryCheckmark;
+            
+        } else {
+            scenarioCell.purchaseButton.hidden = NO;
+            scenarioCell.accessoryType = UITableViewCellAccessoryNone;
+        }
+        
+        scenarioCell.nameButton.tag = indexPath.row;
+        scenarioCell.purchaseButton.tag = indexPath.row;
+        
+        cell = scenarioCell;
+        
+    } else if (indexPath.section == 1) {
+        
+        cell = [self.tableView dequeueReusableCellWithIdentifier:@"Load Game Cell"];
+        
+        cell.textLabel.text = @"Saved games";
+        
     }
-    [scenarioCell.purchaseButton setTitle:priceStr forState:UIControlStateNormal];
-    
-    // Scenario Selection
-    if ([self.userAccount.selectedScenarioFilename isEqualToString:scenarioPurchaseInfo.filename]) {
-        scenarioCell.purchaseButton.hidden = YES;
-        scenarioCell.accessoryType = UITableViewCellAccessoryCheckmark;
-    } else {
-        scenarioCell.purchaseButton.hidden = NO;
-        scenarioCell.accessoryType = UITableViewCellAccessoryNone;
-    }
-    
-    scenarioCell.nameButton.tag = indexPath.row;
-    scenarioCell.purchaseButton.tag = indexPath.row;
-    
-    return scenarioCell;
+
+    return cell;
 }
 
 #pragma mark - UITableView Delegate
@@ -140,17 +145,45 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     if (section == 0) {
-        return @"Simulator scenarios";
-    }
+        return @"Simulator Scenarios";
+        
+    } 
     
     return nil;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 0) {
+        return 57;
+        
+    } else if (indexPath.section == 1) {
+        return 48;
+    }
+    
+    return 0;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if (section == 0) {
+        return 34;
+        
+    } else {
+        return 20;
+    }
+}
 
 #pragma mark - Scenario Cell
 
 - (IBAction)purchaseButtonPressed:(UIButton *)sender
 {
+    // TODO: Connect with appstore to check if already purchased
     ScenarioPurchaseInfo *scenarioInfo = self.userAccount.availableScenarios[sender.tag];
     self.userAccount.selectedScenarioFilename = scenarioInfo.filename;
     [self.tableView reloadData];
@@ -166,18 +199,28 @@
         if ([sender isKindOfClass:[UIButton class]]) {
             NSInteger tag = ((UIButton *)sender).tag;
             ScenarioPurchaseInfo *scenarioPurchaseInfo = self.userAccount.availableScenarios[tag];
-            [self prepareScenarioInfoViewController:segue.destinationViewController withScenarioPurchaseInfo:scenarioPurchaseInfo withLocale:self.userAccount.localeDefault];
+            BOOL isFileAtBundle = [ManagedObjectContextCreator databaseExistsAtBundleWithFilename:scenarioPurchaseInfo.filename];
+            [self prepareScenarioInfoViewController:segue.destinationViewController withScenarioPurchaseInfo:scenarioPurchaseInfo locale:self.userAccount.localeDefault isFileInBundle:isFileAtBundle];
         }
     }
+    
+    if ([segue.destinationViewController isKindOfClass:[SavedGamesViewController class]]) {
+        [self prepareSavedGamesViewController:segue.destinationViewController withUserAccount:self.userAccount];
+    }
+    
 }
 
-- (void)prepareScenarioInfoViewController:(ScenarioInfoViewController *)scenarioInfoViewController withScenarioPurchaseInfo:(ScenarioPurchaseInfo *)scenarioPurchaseInfo withLocale:(NSLocale *)locale
+- (void)prepareScenarioInfoViewController:(ScenarioInfoViewController *)scenarioInfoViewController withScenarioPurchaseInfo:(ScenarioPurchaseInfo *)scenarioPurchaseInfo locale:(NSLocale *)locale isFileInBundle:(BOOL)isFileInBundle
 {
     scenarioInfoViewController.scenarioPurchaseInfo = scenarioPurchaseInfo;
     scenarioInfoViewController.locale = locale;
+    scenarioInfoViewController.isFileInBundle = isFileInBundle;
 }
 
-
+- (void)prepareSavedGamesViewController:(SavedGamesViewController *)savedGamesViewController withUserAccount:(UserAccount *)userAccount
+{
+    savedGamesViewController.userAccount = userAccount;
+}
 
 
 @end

@@ -167,7 +167,7 @@
 
 + (NSAttributedString *)attributedStringForReturn:(double)returnValue forDarkBackground:(BOOL)darkBackground
 {
-    UIColor *color = [UIColor lightGrayColor];
+    UIColor *color = darkBackground ? [UIColor lightGrayColor] : [UIColor darkGrayColor];
     if (returnValue > 0) {
         color = [UIColor colorWithRed:0.0 green:0.7 blue:0.0 alpha:1.0];
     } else if (returnValue < 0) {
