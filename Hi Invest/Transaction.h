@@ -2,7 +2,7 @@
 //  Transaction.h
 //  Hi Invest
 //
-//  Created by Carlos Rogelio Villanueva Ousset on 6/8/15.
+//  Created by Carlos Rogelio Villanueva Ousset on 6/9/15.
 //  Copyright (c) 2015 Villou. All rights reserved.
 //
 

@@ -2,7 +2,7 @@
 //  GameInfo.h
 //  Hi Invest
 //
-//  Created by Carlos Rogelio Villanueva Ousset on 6/8/15.
+//  Created by Carlos Rogelio Villanueva Ousset on 6/9/15.
 //  Copyright (c) 2015 Villou. All rights reserved.
 //
 
@@ -14,15 +14,16 @@
 @interface GameInfo : NSManagedObject
 
 @property (nonatomic, retain) NSDate * currentDate;
+@property (nonatomic, retain) NSNumber * currentDay;
+@property (nonatomic, retain) NSNumber * currentReturn;
 @property (nonatomic, retain) NSNumber * disguiseCompanies;
 @property (nonatomic, retain) NSNumber * finished;
 @property (nonatomic, retain) NSNumber * initialCash;
+@property (nonatomic, retain) NSNumber * numberOfDays;
 @property (nonatomic, retain) NSString * scenarioFilename;
 @property (nonatomic, retain) NSString * scenarioName;
 @property (nonatomic, retain) NSString * userId;
-@property (nonatomic, retain) NSNumber * currentDay;
-@property (nonatomic, retain) NSNumber * currentReturn;
-@property (nonatomic, retain) NSNumber * numberOfDays;
+@property (nonatomic, retain) NSString * uniqueId;
 @property (nonatomic, retain) NSSet *historicalValues;
 @property (nonatomic, retain) NSSet *tickers;
 @property (nonatomic, retain) NSSet *transactions;

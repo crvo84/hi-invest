@@ -10,6 +10,7 @@
 #import "Quiz.h"
 
 @class InvestingGame;
+@class GameInfo;
 
 @interface UserAccount : NSObject
 
@@ -37,6 +38,8 @@
 - (double)progressForNextUserLevel;
 
 - (void)newInvestingGame;
+// Load an investing game. If given GameInfo managed object is nil, then create a completely new GameInfo.
+- (void)loadInvestingGameWithGameInfo:(GameInfo *)gameInfo;
 // Set the current investing game to nil
 - (void)exitCurrentInvestingGame;
 // Remove current investing game, if there is one.

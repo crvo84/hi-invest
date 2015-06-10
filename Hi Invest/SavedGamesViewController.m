@@ -55,6 +55,7 @@
 }
 
 
+
 #pragma mark - UITableView Data Source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -73,18 +74,34 @@
     
     GameInfo *gameInfo = self.gameInfoManagedObjects[indexPath.section];
     
-    self.numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
     
+    // TITLE LABLE
+    self.numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
     NSString *currentDayStr = [self.numberFormatter stringFromNumber:gameInfo.currentDay];
     NSString *numberOfDaysStr = [self.numberFormatter stringFromNumber:gameInfo.numberOfDays];
     gameCell.titleLabel.text = [NSString stringWithFormat:@"Day %@/%@", currentDayStr, numberOfDaysStr];
     
+    
+    // SUBTITLE LABEL
     NSMutableAttributedString *attributedStr = [[NSMutableAttributedString alloc] initWithString:[gameInfo.currentDay integerValue] > 365 ? @"Ann. Return: " : @"Return: " ];
+    
     [attributedStr appendAttributedString:[DefaultColors attributedStringForReturn:[gameInfo.currentReturn doubleValue] forDarkBackground:NO]];
     
     NSString *disguisedStr = [gameInfo.disguiseCompanies boolValue] ? @"  |  Disguised" : @"";
     [attributedStr appendAttributedString:[[NSAttributedString alloc] initWithString:disguisedStr]];
+    
     gameCell.subtitleLabel.attributedText = attributedStr;
+    
+    
+    // CURRENT GAME OR LOAD BUTTON
+    GameInfo *currentGameInfo = self.userAccount.currentInvestingGame.gameInfo;
+    BOOL isCurrentGameInfo = [gameInfo.uniqueId isEqualToString:currentGameInfo.uniqueId];
+
+    gameCell.currentGameLabel.hidden = !isCurrentGameInfo;
+    gameCell.loadButton.hidden = isCurrentGameInfo;
+    
+    // LOAD BUTTON TAG
+    gameCell.loadButton.tag = indexPath.section;
     
     return gameCell;
 }
@@ -126,6 +143,19 @@
     }
 }
 
+#pragma mark - Loading Games
+
+- (IBAction)loadGameButtonPressed:(UIButton *)sender
+{
+    GameInfo *gameInfo = self.gameInfoManagedObjects[sender.tag];
+    
+    self.userAccount.selectedScenarioFilename = gameInfo.scenarioFilename;
+    
+    [self.userAccount loadInvestingGameWithGameInfo:gameInfo];
+    
+    [self.tableView reloadData];
+    [self updateUI];
+}
 
 #pragma mark - Getters
 

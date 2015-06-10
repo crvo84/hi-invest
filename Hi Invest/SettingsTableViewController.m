@@ -16,7 +16,7 @@
 @property (weak, nonatomic) IBOutlet UIStepper *initialCashStepper;
 @property (weak, nonatomic) IBOutlet UISwitch *disguiseCompaniesSwitch;
 @property (strong, nonatomic) NSNumberFormatter *numberFormatter;
-@property (weak, nonatomic) IBOutlet UIButton *resetSimulatorButton;
+//@property (weak, nonatomic) IBOutlet UIButton *resetSimulatorButton;
 @property (nonatomic) BOOL onlyForNewGamesAlertPresented;
 
 @end
@@ -46,8 +46,8 @@
     // Disguise companies
     [self.disguiseCompaniesSwitch setOn:self.userAccount.disguiseCompanies animated:NO];
     
-    // Reset simulator button
-    self.resetSimulatorButton.enabled = self.userAccount.currentInvestingGame != nil;
+//    // Reset simulator button
+//    self.resetSimulatorButton.enabled = self.userAccount.currentInvestingGame != nil;
 }
 
 - (IBAction)initialCashStepperValueChanged:(UIStepper *)sender
@@ -81,26 +81,26 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-- (IBAction)resetSimulatorButtonPressed:(UIButton *)sender
-{
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Reset all scenarios?"
-                                                                   message:nil
-                                                            preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *continueAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        
-        [self.userAccount deleteAllInvestingGames];
-        self.resetSimulatorButton.enabled = NO;
-        
-    }];
-    
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
-    
-    [alert addAction:cancelAction];
-    [alert addAction:continueAction];
-    
-    [self presentViewController:alert animated:YES completion:nil];
-
-}
+//- (IBAction)resetSimulatorButtonPressed:(UIButton *)sender
+//{
+//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Reset all scenarios?"
+//                                                                   message:nil
+//                                                            preferredStyle:UIAlertControllerStyleAlert];
+//    UIAlertAction *continueAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+//        
+//        [self.userAccount deleteAllInvestingGames];
+//        self.resetSimulatorButton.enabled = NO;
+//        
+//    }];
+//    
+//    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+//    
+//    [alert addAction:cancelAction];
+//    [alert addAction:continueAction];
+//    
+//    [self presentViewController:alert animated:YES completion:nil];
+//
+//}
 
 #pragma mark - Getters
 

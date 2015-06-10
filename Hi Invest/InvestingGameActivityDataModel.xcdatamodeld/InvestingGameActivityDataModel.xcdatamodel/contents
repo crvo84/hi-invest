@@ -10,6 +10,7 @@
         <attribute name="numberOfDays" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="scenarioFilename" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="scenarioName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uniqueId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="historicalValues" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="HistoricalValue" inverseName="gameInfo" inverseEntity="HistoricalValue" syncable="YES"/>
         <relationship name="tickers" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Ticker" inverseName="gameInfo" inverseEntity="Ticker" syncable="YES"/>
@@ -40,7 +41,7 @@
         <relationship name="gameInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GameInfo" inverseName="transactions" inverseEntity="GameInfo" syncable="YES"/>
     </entity>
     <elements>
-        <element name="GameInfo" positionX="-4095" positionY="-3169" width="128" height="238"/>
+        <element name="GameInfo" positionX="-4095" positionY="-3169" width="128" height="253"/>
         <element name="HistoricalValue" positionX="-4086" positionY="-3339" width="128" height="103"/>
         <element name="Ticker" positionX="-4104" positionY="-2887" width="128" height="133"/>
         <element name="Transaction" positionX="-3888" positionY="-3121" width="128" height="163"/>

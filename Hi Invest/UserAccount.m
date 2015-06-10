@@ -22,6 +22,7 @@
 @property (strong, nonatomic, readwrite) NSArray *availableScenarios; // of ScenarioPurchaseInfo
 @property (strong, nonatomic) NSManagedObjectContext *gameInfoContext;
 
+
 @end
 
 // 7 cannot change because it was the inital number of Quiz Type. (to maintain user level continuity)
@@ -29,6 +30,9 @@
 #define UserAccountSuccessfulQuizzesPerUserLevel 7
 
 @implementation UserAccount
+
+#define UserAccountSelectedScenarioKey @"selectedScenarioFilename"
+@synthesize selectedScenarioFilename = _selectedScenarioFilename;
 
 - (instancetype)init
 {
@@ -38,8 +42,6 @@
         // TODO: Should be loaded from user account
         self.simulatorInitialCash = 1000000.0;
         self.disguiseCompanies = NO;
-        
-        self.selectedScenarioFilename = @"DEMO_001A";
     }
     
     return self;
@@ -106,9 +108,15 @@
 
 - (void)newInvestingGame
 {
-    // TODO: Edit ManagedObjectContextCreator to get a context with a given scenario id
-    // using self.selectedScenarioId
-    NSManagedObjectContext *scenarioContext = [ManagedObjectContextCreator createMainQueueManagedObjectContextWithScenarioFilename:self.selectedScenarioFilename];
+    [self loadInvestingGameWithGameInfo:nil];
+}
+
+// Load an investing game. If given GameInfo managed object is nil, then create a completely new GameInfo.
+- (void)loadInvestingGameWithGameInfo:(GameInfo *)gameInfo
+{
+    NSString *scenarioFilename = gameInfo ? gameInfo.scenarioFilename : self.selectedScenarioFilename;
+    
+    NSManagedObjectContext *scenarioContext = [ManagedObjectContextCreator createMainQueueManagedObjectContextWithScenarioFilename:scenarioFilename];
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Scenario"];
     NSError *error;
@@ -126,13 +134,17 @@
         
         Scenario *scenario = [matches firstObject];
         
-        GameInfo *gameInfo = [GameInfo gameInfoWithUserId:self.userId scenarioFilename:self.selectedScenarioFilename scenarioName:scenario.name initialCash:self.simulatorInitialCash currentDate:scenario.initialScenarioDate disguisingCompanies:self.disguiseCompanies intoManagedObjectContext:self.gameInfoContext];
-
+        if (!gameInfo) {
+            
+            gameInfo = [GameInfo gameInfoWithUserId:self.userId scenarioFilename:scenarioFilename scenarioName:scenario.name initialCash:self.simulatorInitialCash currentDate:scenario.initialScenarioDate disguisingCompanies:self.disguiseCompanies intoManagedObjectContext:self.gameInfoContext];
+        }
+        
         if (gameInfo) {
             self.currentInvestingGame = [[InvestingGame alloc] initInvestingGameWithGameInfo:gameInfo withScenario:scenario];
         }
     }
 }
+
 
 // Set the current investing game to nil
 - (void)exitCurrentInvestingGame
@@ -172,6 +184,13 @@
     }
     
     return _userId;
+}
+
+- (NSString *)selectedScenarioFilename
+{
+    NSString *scenarioFilename = [[NSUserDefaults standardUserDefaults] objectForKey:UserAccountSelectedScenarioKey];
+    // TODO: check if user has no access to scenarioFile saved in User defaults, set to DEMO
+    return scenarioFilename ? scenarioFilename : @"DEMO_001A";
 }
 
 - (NSManagedObjectContext *)gameInfoContext
@@ -248,8 +267,9 @@
 - (void)setSelectedScenarioFilename:(NSString *)selectedScenarioFilename
 {
     if (![selectedScenarioFilename isEqualToString:_selectedScenarioFilename]) {
-        self.currentInvestingGame = nil;
+        [self exitCurrentInvestingGame];
         _selectedScenarioFilename = selectedScenarioFilename;
+        [[NSUserDefaults standardUserDefaults] setObject:selectedScenarioFilename forKey:UserAccountSelectedScenarioKey];
     }
 }
 

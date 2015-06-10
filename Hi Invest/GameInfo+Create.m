@@ -48,6 +48,9 @@
         gameInfo.currentDay = @(1);
         gameInfo.currentReturn = @(0.0);
         
+        // Create an NSUUID object and get its string representation
+        gameInfo.uniqueId = [[[NSUUID alloc] init] UUIDString];
+        
         NSError *saveError;
         if (![context save:&saveError]) {
             NSLog(@"%@", [saveError localizedDescription]);
