@@ -64,6 +64,8 @@
     self.userLevelLabel.text = [NSString stringWithFormat:@"Ninja Level %ld", (long)currentUserLevel + 1];;
     
     [self.userLevelProgressView setProgress:([self.userAccount progressForNextUserLevel])];
+    
+    [self.tableView reloadData];
 }
 
 

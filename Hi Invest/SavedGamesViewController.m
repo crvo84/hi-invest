@@ -52,8 +52,27 @@
         [self.tableView setEditing:YES animated:YES];
     }
     
+    [self checkForCoreDataMemoryleak]; // FOR DEBUGGING
 }
 
+// For debugging
+- (void)checkForCoreDataMemoryleak
+{
+    NSManagedObjectContext *context = self.gameInfoManagedObjectsContext;
+    
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"HistoricalValue"];
+    NSArray *matches = [context executeFetchRequest:request error:nil];
+    
+    NSFetchRequest *request2 = [NSFetchRequest fetchRequestWithEntityName:@"Transaction"];
+    NSArray *matches2 = [context executeFetchRequest:request2 error:nil];
+    
+    NSFetchRequest *request3 = [NSFetchRequest fetchRequestWithEntityName:@"Ticker"];
+    NSArray *matches3 = [context executeFetchRequest:request3 error:nil];
+    
+    NSLog(@"%ld HistoricalValues left", [matches count]);
+    NSLog(@"%ld Transactions left", [matches2 count]);
+    NSLog(@"%ld Tickers left", [matches3 count]);
+}
 
 
 #pragma mark - UITableView Data Source
@@ -87,7 +106,7 @@
     
     [attributedStr appendAttributedString:[DefaultColors attributedStringForReturn:[gameInfo.currentReturn doubleValue] forDarkBackground:NO]];
     
-    NSString *disguisedStr = [gameInfo.disguiseCompanies boolValue] ? @"  |  Disguised" : @"";
+    NSString *disguisedStr = [gameInfo.disguiseCompanies boolValue] ? @" | Disguised" : @"";
     [attributedStr appendAttributedString:[[NSAttributedString alloc] initWithString:disguisedStr]];
     
     gameCell.subtitleLabel.attributedText = attributedStr;
@@ -98,10 +117,10 @@
     BOOL isCurrentGameInfo = [gameInfo.uniqueId isEqualToString:currentGameInfo.uniqueId];
 
     gameCell.currentGameLabel.hidden = !isCurrentGameInfo;
-    gameCell.loadButton.hidden = isCurrentGameInfo;
+//    gameCell.loadButton.hidden = isCurrentGameInfo;
     
     // LOAD BUTTON TAG
-    gameCell.loadButton.tag = indexPath.section;
+//    gameCell.loadButton.tag = indexPath.section;
     
     return gameCell;
 }
@@ -145,17 +164,17 @@
 
 #pragma mark - Loading Games
 
-- (IBAction)loadGameButtonPressed:(UIButton *)sender
-{
-    GameInfo *gameInfo = self.gameInfoManagedObjects[sender.tag];
-    
-    self.userAccount.selectedScenarioFilename = gameInfo.scenarioFilename;
-    
-    [self.userAccount loadInvestingGameWithGameInfo:gameInfo];
-    
-    [self.tableView reloadData];
-    [self updateUI];
-}
+//- (IBAction)loadGameButtonPressed:(UIButton *)sender
+//{
+//    GameInfo *gameInfo = self.gameInfoManagedObjects[sender.tag];
+//    
+//    self.userAccount.selectedScenarioFilename = gameInfo.scenarioFilename;
+//    
+//    [self.userAccount loadInvestingGameWithGameInfo:gameInfo];
+//    
+//    [self.tableView reloadData];
+//    [self updateUI];
+//}
 
 #pragma mark - Getters
 

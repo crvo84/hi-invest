@@ -2603,22 +2603,12 @@
                                                     <color key="textColor" red="0.23529411764705882" green="0.23529411764705882" blue="0.23529411764705882" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ann. Return: 5.27%  |  Disguised: NO" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hTB-yW-R56">
-                                                    <rect key="frame" x="8" y="37" width="519" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ann. Return: 5.27%  |  Disguised: NO" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.80000000000000027" translatesAutoresizingMaskIntoConstraints="NO" id="hTB-yW-R56">
+                                                    <rect key="frame" x="8" y="38" width="519" height="20"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8KW-6X-O1J">
-                                                    <rect key="frame" x="551" y="17" width="41" height="34"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                    <state key="normal" title="Load">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="loadGameButtonPressed:" destination="1VN-Vz-ANT" eventType="touchUpInside" id="23m-bU-VCS"/>
-                                                    </connections>
-                                                </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current game" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oZb-FV-w92">
                                                     <rect key="frame" x="543" y="17" width="49" height="34"/>
                                                     <constraints>
@@ -2632,10 +2622,8 @@
                                             <constraints>
                                                 <constraint firstAttribute="centerY" secondItem="oZb-FV-w92" secondAttribute="centerY" id="6MO-gW-QQy"/>
                                                 <constraint firstItem="nQV-Z5-Chl" firstAttribute="top" secondItem="GUt-YF-fXe" secondAttribute="topMargin" constant="2" id="RDD-rr-n8K"/>
-                                                <constraint firstAttribute="centerY" secondItem="8KW-6X-O1J" secondAttribute="centerY" id="VSk-u8-8oJ"/>
                                                 <constraint firstItem="nQV-Z5-Chl" firstAttribute="leading" secondItem="GUt-YF-fXe" secondAttribute="leadingMargin" id="VjP-ee-HTd"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="hTB-yW-R56" secondAttribute="bottom" constant="2" id="Wca-Rk-Bp1"/>
-                                                <constraint firstItem="8KW-6X-O1J" firstAttribute="trailing" secondItem="GUt-YF-fXe" secondAttribute="trailingMargin" id="YbU-Qy-a20"/>
                                                 <constraint firstItem="oZb-FV-w92" firstAttribute="leading" secondItem="nQV-Z5-Chl" secondAttribute="trailing" constant="16" id="aPg-Qx-Qro"/>
                                                 <constraint firstItem="hTB-yW-R56" firstAttribute="leading" secondItem="GUt-YF-fXe" secondAttribute="leadingMargin" id="bY0-tL-UgQ"/>
                                                 <constraint firstItem="oZb-FV-w92" firstAttribute="trailing" secondItem="GUt-YF-fXe" secondAttribute="trailingMargin" id="gwd-bs-sXj"/>
@@ -2644,7 +2632,6 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="currentGameLabel" destination="oZb-FV-w92" id="rlN-mJ-YTi"/>
-                                            <outlet property="loadButton" destination="8KW-6X-O1J" id="7Ag-St-77D"/>
                                             <outlet property="subtitleLabel" destination="hTB-yW-R56" id="DAL-FT-edc"/>
                                             <outlet property="titleLabel" destination="nQV-Z5-Chl" id="M9Y-iM-1rF"/>
                                         </connections>

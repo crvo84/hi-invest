@@ -22,17 +22,16 @@
 @property (strong, nonatomic, readwrite) NSArray *availableScenarios; // of ScenarioPurchaseInfo
 @property (strong, nonatomic) NSManagedObjectContext *gameInfoContext;
 
-
 @end
+
+
+@implementation UserAccount
 
 // 7 cannot change because it was the inital number of Quiz Type. (to maintain user level continuity)
 // Cannot change even in future versions of the application
 #define UserAccountSuccessfulQuizzesPerUserLevel 7
 
-@implementation UserAccount
-
 #define UserAccountSelectedScenarioKey @"selectedScenarioFilename"
-@synthesize selectedScenarioFilename = _selectedScenarioFilename;
 
 - (instancetype)init
 {
@@ -266,9 +265,8 @@
 
 - (void)setSelectedScenarioFilename:(NSString *)selectedScenarioFilename
 {
-    if (![selectedScenarioFilename isEqualToString:_selectedScenarioFilename]) {
+    if (![selectedScenarioFilename isEqualToString:self.selectedScenarioFilename]) {
         [self exitCurrentInvestingGame];
-        _selectedScenarioFilename = selectedScenarioFilename;
         [[NSUserDefaults standardUserDefaults] setObject:selectedScenarioFilename forKey:UserAccountSelectedScenarioKey];
     }
 }
