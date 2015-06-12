@@ -35,6 +35,8 @@
 @property (strong, nonatomic) NSLocale *locale;
 @property (nonatomic, readonly) BOOL finishedSuccessfully;
 
+@property (nonatomic) BOOL finalResultsAlreadyRecorded;
+
 // Designated Initializer
 - (instancetype)initInvestingGameWithGameInfo:(GameInfo *)gameInfo
                                  withScenario:(Scenario *)scenario;;

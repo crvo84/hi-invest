@@ -125,6 +125,9 @@
     
     UIAlertAction *dayAction = [UIAlertAction actionWithTitle:@"Day" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         if ([game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:0 andDays:1]) {
+            
+            [self updateUserSimulatorInfoFromInvestingGame:game];
+            
             NSInteger newDay = [game currentDay];
             [self performSegueWithIdentifier:@"Time Simulation" sender:@(newDay - initialDay)];
         }
@@ -132,6 +135,9 @@
     
     UIAlertAction *weekAction = [UIAlertAction actionWithTitle:@"Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         if ([game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:0 andDays:7]) {
+            
+            [self updateUserSimulatorInfoFromInvestingGame:game];
+            
             NSInteger newDay = [game currentDay];
             [self performSegueWithIdentifier:@"Time Simulation" sender:@(newDay - initialDay)];
         }
@@ -139,6 +145,9 @@
     
     UIAlertAction *monthAction = [UIAlertAction actionWithTitle:@"Month" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         if ([game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:1 andDays:0]) {
+            
+            [self updateUserSimulatorInfoFromInvestingGame:game];
+            
             NSInteger newDay = [game currentDay];
             [self performSegueWithIdentifier:@"Time Simulation" sender:@(newDay - initialDay)];
         }
@@ -146,6 +155,9 @@
     
     UIAlertAction *sixMonthsAction = [UIAlertAction actionWithTitle:@"Six Months" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         if ([game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:6 andDays:0]) {
+            
+            [self updateUserSimulatorInfoFromInvestingGame:game];
+            
             NSInteger newDay = [game currentDay];
             [self performSegueWithIdentifier:@"Time Simulation" sender:@(newDay - initialDay)];
         }
@@ -153,6 +165,9 @@
     
     UIAlertAction *yearAction = [UIAlertAction actionWithTitle:@"Year" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         if ([game changeCurrentDateToDateWithTimeDifferenceInYears:1 months:0 andDays:0]) {
+            
+            [self updateUserSimulatorInfoFromInvestingGame:game];
+            
             NSInteger newDay = [game currentDay];
             [self performSegueWithIdentifier:@"Time Simulation" sender:@(newDay - initialDay)];
         }
@@ -161,6 +176,9 @@
     // FOR DEBUGGING
     UIAlertAction *tenYearsAction = [UIAlertAction actionWithTitle:@"10 Years" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         if ([game changeCurrentDateToDateWithTimeDifferenceInYears:10 months:0 andDays:0]) {
+            
+            [self updateUserSimulatorInfoFromInvestingGame:game];
+            
             NSInteger newDay = [game currentDay];
             [self performSegueWithIdentifier:@"Time Simulation" sender:@(newDay - initialDay)];
         }
@@ -178,6 +196,15 @@
     
     [self presentViewController:alert animated:YES completion:nil];
 }
+
+- (void)updateUserSimulatorInfoFromInvestingGame:(InvestingGame *)game
+{
+    if ([game daysLeft] == 0 && !game.finalResultsAlreadyRecorded) {
+        [self.userAccount updateUserSimulatorInfoWithFinishedGameInfo:game.gameInfo];
+        game.finalResultsAlreadyRecorded = YES;
+    }
+}
+
 
 #pragma mark - Unwind Segues
 
@@ -200,8 +227,8 @@
     
     // UNWIND FROM TimeSimulationViewController
     if ([unwindSegue.sourceViewController isKindOfClass:[TimeSimulationViewController class]]) {
-
-            [self presentDayUpdateAfterNumberOfSeconds:0.1];
+        
+        [self presentDayUpdateAfterNumberOfSeconds:0.1];
     }
     
     // UNWIND FROM SimulatorGameOverViewController

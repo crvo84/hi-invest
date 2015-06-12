@@ -10,13 +10,15 @@
 #import "UserAccount.h"
 #import "InvestingGame.h"
 
+#import <Parse/Parse.h>
+
 @interface SettingsTableViewController ()
 
 @property (weak, nonatomic) IBOutlet UILabel *initialCashLabel;
 @property (weak, nonatomic) IBOutlet UIStepper *initialCashStepper;
 @property (weak, nonatomic) IBOutlet UISwitch *disguiseCompaniesSwitch;
+
 @property (strong, nonatomic) NSNumberFormatter *numberFormatter;
-//@property (weak, nonatomic) IBOutlet UIButton *resetSimulatorButton;
 @property (nonatomic) BOOL onlyForNewGamesAlertPresented;
 
 @end
@@ -30,7 +32,12 @@
     self.initialCashStepper.stepValue = 50000;
     self.initialCashStepper.minimumValue = 50000;
     self.initialCashStepper.maximumValue = 1000000000;
+    self.initialCashStepper.value = self.userAccount.simulatorInitialCash;
+    
+    self.disguiseCompaniesSwitch.on = self.userAccount.disguiseCompanies;
+
     self.onlyForNewGamesAlertPresented = NO;
+
     
     [self updateUI];
 }
@@ -40,15 +47,11 @@
 {
     // Initial cash
     self.numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
-    self.initialCashLabel.text = [self.numberFormatter stringFromNumber:@(self.userAccount.simulatorInitialCash)];
-    self.initialCashStepper.value = self.userAccount.simulatorInitialCash;
-    
-    // Disguise companies
-    [self.disguiseCompaniesSwitch setOn:self.userAccount.disguiseCompanies animated:NO];
-    
-//    // Reset simulator button
-//    self.resetSimulatorButton.enabled = self.userAccount.currentInvestingGame != nil;
+    self.initialCashLabel.text = [self.numberFormatter stringFromNumber:@(self.initialCashStepper.value)];
+
+    // TODO: add log in with facebook to link guest user with facebook account
 }
+
 
 - (IBAction)initialCashStepperValueChanged:(UIStepper *)sender
 {
@@ -56,9 +59,12 @@
         [self presentOnlyForNewGamesAlert];
         self.onlyForNewGamesAlertPresented = YES;
     }
+    
     self.userAccount.simulatorInitialCash = self.initialCashStepper.value;
+
     [self updateUI];
 }
+
 
 - (IBAction)disguiseCompaniesSwitchValueChanged:(UISwitch *)sender
 {
@@ -66,7 +72,10 @@
         [self presentOnlyForNewGamesAlert];
         self.onlyForNewGamesAlertPresented = YES;
     }
-    self.userAccount.disguiseCompanies = self.disguiseCompaniesSwitch.on;
+    
+    self.userAccount.disguiseCompanies = self.disguiseCompaniesSwitch.isOn;
+    
+    [self updateUI];
 }
 
 - (void)presentOnlyForNewGamesAlert
@@ -81,26 +90,27 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-//- (IBAction)resetSimulatorButtonPressed:(UIButton *)sender
-//{
-//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Reset all scenarios?"
-//                                                                   message:nil
-//                                                            preferredStyle:UIAlertControllerStyleAlert];
-//    UIAlertAction *continueAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-//        
-//        [self.userAccount deleteAllInvestingGames];
-//        self.resetSimulatorButton.enabled = NO;
-//        
-//    }];
-//    
-//    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
-//    
-//    [alert addAction:cancelAction];
-//    [alert addAction:continueAction];
-//    
-//    [self presentViewController:alert animated:YES completion:nil];
-//
-//}
+- (IBAction)logout:(id)sender
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Log Out"
+                                                                   message:@"Are you sure you want to log out?"
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *continueAction = [UIAlertAction actionWithTitle:@"Log Out" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        
+        [PFUser logOut];
+        [self performSegueWithIdentifier:@"logout" sender:self];
+        
+    }];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+    
+    [alert addAction:cancelAction];
+    [alert addAction:continueAction];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+
+}
+
 
 #pragma mark - Getters
 

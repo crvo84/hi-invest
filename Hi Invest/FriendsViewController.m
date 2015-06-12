@@ -58,7 +58,7 @@
     
     cell.userLevelBackgroundView.backgroundColor = [DefaultColors userLevelColorForLevel:indexPath.row];
     cell.userNameLabel.text = FriendsProvisionalNamesArray[indexPath.row];
-    cell.userLevelLabel.text = [NSString stringWithFormat:@"Ninja Level %ld", indexPath.row + 1];
+    cell.userLevelLabel.text = [NSString stringWithFormat:@"Ninja Level %ld", (long)indexPath.row + 1];
     
     return cell;
 }

@@ -22,6 +22,7 @@
 #import "Dividend.h"
 #import "Transaction+Create.h"
 #import "HistoricalValue+Create.h"
+#import "UserAccount.h"
 
 
 @interface InvestingGame ()
@@ -136,9 +137,11 @@
     self.currentPrices = nil; // reset prices to get the new date prices
     
     if ([self currentDay] >= [self dayNumberFromDate:self.endDate]) {
+        
         self.finishedSuccessfully = YES;
     }
     
+    // Saves GameInfo current state to core data
     [self saveInvestingGameCurrentState];
     
     return YES;

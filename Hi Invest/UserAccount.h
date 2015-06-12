@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 #import "Quiz.h"
 
 @class InvestingGame;
@@ -16,6 +17,8 @@
 
 @property (copy, nonatomic, readonly) NSString *userId;
 @property (copy, nonatomic) NSLocale *localeDefault; // Default NSLocale (Others: QuizGenerator, each scenario)
+@property (strong, nonatomic) NSManagedObjectContext *gameInfoContext;
+
 // Investing Game
 @property (strong, nonatomic, readonly) InvestingGame *currentInvestingGame;
 @property (copy, nonatomic) NSString *selectedScenarioFilename;
@@ -24,6 +27,8 @@
 // Settings
 @property (nonatomic) double simulatorInitialCash;
 @property (nonatomic) BOOL disguiseCompanies;
+
+- (void)updateUserSimulatorInfoWithFinishedGameInfo:(GameInfo *)gameInfo;
 
 - (void)increaseSuccessfulQuizzesForQuizType:(QuizType)quizType;
 
@@ -45,9 +50,9 @@
 // Remove current investing game, if there is one.
 - (void)deleteCurrentInvestingGame;
 // Remove all investing games of the current user.
-- (void)deleteAllInvestingGames;
-
+- (void)deleteAllUserSavedGames;
 
 - (NSString *)userName;
+
 
 @end

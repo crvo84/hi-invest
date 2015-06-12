@@ -13,16 +13,22 @@
 #import "GlossarySelectionViewController.h"
 #import "QuizSelectionViewController.h"
 #import "SettingsTableViewController.h"
+#import "UserDefaultsKeys.h"
 #import "UserAccount.h"
 #import "InvestingGame.h"
 #import "DefaultColors.h"
 #import "Scenario.h"
+
+#import <Parse/Parse.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 
 @interface LeftMenuViewController () <UITableViewDataSource, UITableViewDelegate, RESideMenuDelegate>
 
 @property (weak, nonatomic) IBOutlet UIView *backgroundColorSubview;
 @property (weak, nonatomic) IBOutlet UIView *userImageBackgroundView;
 @property (weak, nonatomic) IBOutlet UIButton *userImageButton;
+@property (weak, nonatomic) IBOutlet UIImageView *guestUserImageView;
 @property (weak, nonatomic) IBOutlet UIButton *userNameButton;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSInteger selectedRowIndex;
@@ -44,6 +50,16 @@
     // User level brackground view setup
     self.userImageBackgroundView.layer.cornerRadius = 5;
     self.userImageBackgroundView.layer.masksToBounds = YES;
+    
+    NSData *pictureData = [[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsProfilePictureKey];
+    if (pictureData) {
+        UIImageView *pictureImageView = [[UIImageView alloc] initWithFrame:self.userImageBackgroundView.bounds];
+        pictureImageView.image = [UIImage imageWithData:pictureData];
+        [self.userImageBackgroundView addSubview:pictureImageView];
+        self.guestUserImageView.alpha = 0.0;
+    } else {
+        self.guestUserImageView.alpha = 1.0;
+    }
 
     // User name button setup
     self.userNameButton.titleLabel.numberOfLines = 2;

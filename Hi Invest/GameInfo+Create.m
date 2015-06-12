@@ -60,6 +60,29 @@
     return gameInfo;
 }
 
++ (GameInfo *)existingGameInfoWithScenarioFilename:(NSString *)scenarioFilename withUserId:(NSString *)userId intoManagedObjectContext:(NSManagedObjectContext *)context
+{
+    GameInfo *gameInfo = nil;
+    
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"GameInfo"];
+    request.predicate = [NSPredicate predicateWithFormat:@"(scenarioFilename = %@) AND (userId = %@)", scenarioFilename, userId];
+    
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    
+    if (!matches || error) {
+        NSLog(@"Error trying to fetch GameInfo from database. %@", [error localizedDescription]);
+        
+    } else if ([matches count] > 1) {
+        NSLog(@"More than one GameInfo Managed Object with same scenarioFilename");
+        
+    } else if ([matches count] == 1) {
+        gameInfo = [matches firstObject];
+    }
+    
+    return gameInfo;
+}
+
 
 // Remove the GameInfo managed object with the given scenario filename, with the given userId.
 // If scenarioFilename is given as nil, remove GameInfo managed objects for that userId
@@ -99,6 +122,35 @@
         GameInfo *gameInfo = [matches firstObject];
         // Delete Rule Cascade selected will delete also Transaction, Ticker and HistoricalValue related managed objects
         [context deleteObject:gameInfo];
+    }
+    
+    NSError *saveError;
+    if (![context save:&saveError]) {
+        NSLog(@"%@", [saveError localizedDescription]);
+    }
+}
+
+// Remove all existing GameInfo managed objects which userId is not equal to the given string.
+// If userId is nil, then remove all existing GameInfo managed objects
++ (void)removeAllExistingGameInfoExceptFromUserId:(NSString *)userId intoManagedObjectContext:(NSManagedObjectContext *)context
+{
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"GameInfo"];
+    
+    if (userId) {
+        request.predicate = [NSPredicate predicateWithFormat:@"userId != %@", userId];
+    }
+    
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    
+    if (!matches || error) {
+        NSLog(@"Error trying to fetch GameInfo from database. %@", [error localizedDescription]);
+        
+    } else {
+        for (GameInfo *gameInfo in matches) {
+            // Delete Rule Cascade selected will delete also Transaction, Ticker and HistoricalValue related managed objects
+            [context deleteObject:gameInfo];
+        }
     }
     
     NSError *saveError;

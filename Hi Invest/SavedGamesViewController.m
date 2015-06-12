@@ -69,9 +69,9 @@
     NSFetchRequest *request3 = [NSFetchRequest fetchRequestWithEntityName:@"Ticker"];
     NSArray *matches3 = [context executeFetchRequest:request3 error:nil];
     
-    NSLog(@"%ld HistoricalValues left", [matches count]);
-    NSLog(@"%ld Transactions left", [matches2 count]);
-    NSLog(@"%ld Tickers left", [matches3 count]);
+    NSLog(@"%ld HistoricalValues left", (unsigned long)[matches count]);
+    NSLog(@"%ld Transactions left", (unsigned long)[matches2 count]);
+    NSLog(@"%ld Tickers left", (unsigned long)[matches3 count]);
 }
 
 
