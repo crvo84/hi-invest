@@ -14,6 +14,5 @@
 @property (weak, nonatomic) IBOutlet UIButton *purchaseButton;
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
-@property (weak, nonatomic) IBOutlet UILabel *subtitleLabel;
 
 @end

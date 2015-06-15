@@ -24,11 +24,11 @@
 @property (strong, nonatomic, readwrite) InvestingGame *currentInvestingGame;
 @property (strong, nonatomic, readwrite) NSArray *availableScenarios; // of ScenarioPurchaseInfo
 // PFUser info:
-@property (strong, nonatomic) NSMutableDictionary *successfulQuizzesCount; // @{ @"QuizType" : @(Current Level) }
-@property (strong, nonatomic) NSMutableDictionary *finishedScenariosCount; // @{ scenarioFilename : @(finished) }
-@property (strong, nonatomic) NSMutableDictionary *averageReturns; // @{ scenarioFilename : @(averageReturn) }
-@property (strong, nonatomic) NSMutableDictionary *lowestReturns; // @{ scenarioFilename : @(lowestReturn) }
-@property (strong, nonatomic) NSMutableDictionary *highestReturns; // @{ scenarioFilename : @(highestReturn) }
+@property (strong, nonatomic, readwrite) NSMutableDictionary *successfulQuizzesCount; // @{ @"QuizType" : @(Current Level) }
+@property (strong, nonatomic, readwrite) NSMutableDictionary *finishedScenariosCount; // @{ scenarioFilename : @(finished) }
+@property (strong, nonatomic, readwrite) NSMutableDictionary *averageReturns; // @{ scenarioFilename : @(averageReturn) }
+@property (strong, nonatomic, readwrite) NSMutableDictionary *lowestReturns; // @{ scenarioFilename : @(lowestReturn) }
+@property (strong, nonatomic, readwrite) NSMutableDictionary *highestReturns; // @{ scenarioFilename : @(highestReturn) }
 
 @end
 

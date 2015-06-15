@@ -9,6 +9,9 @@
 #import "ScenarioInfoViewController.h"
 #import "ScenarioPurchaseInfo.h"
 #import "DefaultColors.h"
+#import "ParseUserKeys.h"
+#import <Parse/Parse.h>
+#import "UserAccount.h"
 
 @interface ScenarioInfoViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -18,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UILabel *noInfoLabel;
+@property (strong, nonatomic) NSArray *yourInfoNumbers; // @[Finished games, avg return, highest, lowest]
 
 @end
 
@@ -72,7 +76,7 @@
         return self.isFileInBundle ? 3 : 4;
         
     } else {
-        return 0;
+        return 4;
         
     }
     
@@ -115,16 +119,63 @@
         }
     } else {
         
+        NSString *filename = self.scenarioPurchaseInfo.filename;
         
+        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+        numberFormatter.locale = self.userAccount.localeDefault;
+        numberFormatter.numberStyle = NSNumberFormatterPercentStyle;
+        numberFormatter.maximumFractionDigits = 2;
         
-        
-        
+        if (indexPath.row == 0) {
+            
+            NSNumber *gamesNumber = self.userAccount.finishedScenariosCount[filename];
+            numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+            cell.textLabel.text = @"Games finished";
+            cell.detailTextLabel.text = gamesNumber ? [numberFormatter stringFromNumber:gamesNumber] : @"0";
+            
+        } else if (indexPath.row == 1) {
+            
+            NSNumber *avgReturnNumber = self.userAccount.averageReturns[filename];
+            cell.textLabel.text = @"Average";
+            
+            if (avgReturnNumber) {
+                cell.detailTextLabel.attributedText = [DefaultColors attributedStringForReturn:[avgReturnNumber doubleValue]
+                                                                             forDarkBackground:NO];
+            } else {
+                cell.detailTextLabel.text = @"--";
+            }
+            
+            
+        } else if (indexPath.row == 2) {
+            
+            NSNumber *highestReturnNumber = self.userAccount.highestReturns[filename];
+            cell.textLabel.text = @"Highest";
+            
+            if (highestReturnNumber) {
+                cell.detailTextLabel.attributedText = [DefaultColors attributedStringForReturn:[highestReturnNumber doubleValue]
+                                                                             forDarkBackground:NO];
+            } else {
+                cell.detailTextLabel.text = @"--";
+            }
+            
+        } else if (indexPath.row == 3) {
+            
+            NSNumber *lowestReturnNumber = self.userAccount.lowestReturns[filename];
+            cell.textLabel.text = @"Lowest";
+            
+            if (lowestReturnNumber) {
+                cell.detailTextLabel.attributedText = [DefaultColors attributedStringForReturn:[lowestReturnNumber doubleValue]
+                                                                             forDarkBackground:NO];
+            } else {
+                cell.detailTextLabel.text = @"--";
+            }
+        }
     }
-    
 
-    
     return cell;
 }
+
+#pragma mark - UITableView Delegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
@@ -143,6 +194,11 @@
         [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
     }
 }
+
+
+
+
+
 
 
 

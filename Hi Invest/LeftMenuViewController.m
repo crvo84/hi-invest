@@ -50,16 +50,6 @@
     // User level brackground view setup
     self.userImageBackgroundView.layer.cornerRadius = 5;
     self.userImageBackgroundView.layer.masksToBounds = YES;
-    
-    NSData *pictureData = [[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsProfilePictureKey];
-    if (pictureData) {
-        UIImageView *pictureImageView = [[UIImageView alloc] initWithFrame:self.userImageBackgroundView.bounds];
-        pictureImageView.image = [UIImage imageWithData:pictureData];
-        [self.userImageBackgroundView addSubview:pictureImageView];
-        self.guestUserImageView.alpha = 0.0;
-    } else {
-        self.guestUserImageView.alpha = 1.0;
-    }
 
     // User name button setup
     self.userNameButton.titleLabel.numberOfLines = 2;
@@ -71,6 +61,16 @@
 - (void)updateUI
 {
     // If facebook user image available set is as user image. If not, user ninjaImage;
+    NSData *pictureData = [[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsProfilePictureKey];
+    if (pictureData) {
+        UIImageView *pictureImageView = [[UIImageView alloc] initWithFrame:self.userImageBackgroundView.bounds];
+        pictureImageView.image = [UIImage imageWithData:pictureData];
+        [self.userImageBackgroundView addSubview:pictureImageView];
+        self.guestUserImageView.alpha = 0.0;
+    } else {
+        self.guestUserImageView.alpha = 1.0;
+    }
+    
     // Provisional: only ninja for the moment
     [self.userImageButton setImage:[UIImage imageNamed:@"ninjaIconClear64x54"] forState:UIControlStateNormal];
     

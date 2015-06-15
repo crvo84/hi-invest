@@ -15,6 +15,7 @@
 #import "ScenarioPurchaseInfo.h"
 #import "ScenarioInfoViewController.h"
 #import "UserDefaultsKeys.h"
+#import "UserInfoViewController.h"
 
 #import <Parse/Parse.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
@@ -24,7 +25,6 @@
 
 @property (weak, nonatomic) IBOutlet UIView *backgroundUserView;
 @property (weak, nonatomic) IBOutlet UIImageView *userImageView;
-@property (weak, nonatomic) IBOutlet UIProgressView *userLevelProgressView;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
@@ -41,9 +41,6 @@
     self.backgroundUserView.layer.cornerRadius = 8;
     self.backgroundUserView.layer.masksToBounds = YES;
     self.backgroundUserView.backgroundColor = [DefaultColors userLevelColorForLevel:[self.userAccount userLevel]];
-    
-    // Progress view
-    [self.userLevelProgressView setProgress:([self.userAccount progressForNextUserLevel])];
 
     // Background User View and User Image View Setup
     NSData *pictureData = [[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsProfilePictureKey];
@@ -53,7 +50,7 @@
         pictureImageView.image = [UIImage imageWithData:pictureData];
         [self.backgroundUserView addSubview:pictureImageView];
         
-        self.userImageView.alpha = 0.0;
+        self.userImageView.hidden = YES;
         
     } else {
         
@@ -63,7 +60,7 @@
             self.backgroundUserView.layer.borderWidth = 1;
         }
         
-        self.userImageView.alpha = 1.0;
+        self.userImageView.hidden = NO;
     }
     
     // Name Label Setup
@@ -103,6 +100,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+
     ScenarioTableViewCell *scenarioCell = [self.tableView dequeueReusableCellWithIdentifier:@"Scenario Cell"];
     
     ScenarioPurchaseInfo *scenarioPurchaseInfo = self.userAccount.availableScenarios[indexPath.row];
@@ -161,14 +159,12 @@
         scenarioCell.titleLabel.textColor = [UIColor lightGrayColor];
     }
     
-//    scenarioCell.titleLabel.hidden = !gameExistsAlready;
     scenarioCell.deleteButton.hidden = !gameExistsAlready;
-    
     
     scenarioCell.nameButton.tag = indexPath.row;
     scenarioCell.purchaseButton.tag = indexPath.row;
     scenarioCell.deleteButton.tag = indexPath.row;
-
+    
     return scenarioCell;
 }
 
@@ -251,18 +247,27 @@
             NSInteger tag = ((UIButton *)sender).tag;
             ScenarioPurchaseInfo *scenarioPurchaseInfo = self.userAccount.availableScenarios[tag];
             BOOL isFileAtBundle = [ManagedObjectContextCreator databaseExistsAtBundleWithFilename:scenarioPurchaseInfo.filename];
-            [self prepareScenarioInfoViewController:segue.destinationViewController withScenarioPurchaseInfo:scenarioPurchaseInfo locale:self.userAccount.localeDefault isFileInBundle:isFileAtBundle];
+            [self prepareScenarioInfoViewController:segue.destinationViewController withUserAccount:self.userAccount scenarioPurchaseInfo:scenarioPurchaseInfo locale:self.userAccount.localeDefault isFileInBundle:isFileAtBundle];
         }
+    }
+    
+    if ([segue.destinationViewController isKindOfClass:[UserInfoViewController class]]) {
+        [self prepareUserInfoViewController:segue.destinationViewController withUserAccount:self.userAccount];
     }
 }
 
-- (void)prepareScenarioInfoViewController:(ScenarioInfoViewController *)scenarioInfoViewController withScenarioPurchaseInfo:(ScenarioPurchaseInfo *)scenarioPurchaseInfo locale:(NSLocale *)locale isFileInBundle:(BOOL)isFileInBundle
+- (void)prepareScenarioInfoViewController:(ScenarioInfoViewController *)scenarioInfoViewController withUserAccount:(UserAccount *)userAccount scenarioPurchaseInfo:(ScenarioPurchaseInfo *)scenarioPurchaseInfo locale:(NSLocale *)locale isFileInBundle:(BOOL)isFileInBundle
 {
+    scenarioInfoViewController.userAccount = userAccount;
     scenarioInfoViewController.scenarioPurchaseInfo = scenarioPurchaseInfo;
     scenarioInfoViewController.locale = locale;
     scenarioInfoViewController.isFileInBundle = isFileInBundle;
 }
 
+- (void)prepareUserInfoViewController:(UserInfoViewController *)userInfoViewController withUserAccount:(UserAccount *)userAccount
+{
+    userInfoViewController.userAccount = userAccount;
+}
 
 
 

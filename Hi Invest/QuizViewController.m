@@ -53,7 +53,8 @@
     // INITIAL SUBVIEW SETUP
     self.initialSubview.hidden = NO;
     self.initialSubview.alpha = 1.0;
-    self.initialSubview.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.90];
+    self.initialSubview.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]];
+    
     self.initialInfoLabel.text = [NSString stringWithFormat:@"%lu questions", (unsigned long)[self.quiz.quizQuestions count]];
     self.initialCountdownLabel.text = @"";
     if (self.quizAlreadyDone) {
@@ -65,9 +66,7 @@
     }
 
     // QUIZ SETUP
-    
     self.succesfulQuiz = NO;
-    
     // Mistake count
     self.mistakeCount = 0;
     // Image will take UIImageView tint color. Set on interface builder
@@ -75,7 +74,10 @@
         
         [imageView setImage:[[UIImage imageNamed:@"ninjaEmoticon22x22"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
     }
+    
     [self updateMistakesLeft];
+    
+    [self hideMistakeAndQuestionCountingUI:YES];
     
     // Answer Buttons
     for (UIButton *answerButton in self.answerButtons) {
@@ -95,7 +97,7 @@
     self.questionLabel.alpha = 0.0;
     
     // FINAL SUBVIEW SETUP
-    self.initialSubview.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.90];
+    self.initialSubview.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]];
     self.finalSubview.hidden = YES;
     self.finalSubview.alpha = 0.0;
     
@@ -120,6 +122,15 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
     
     [super viewWillDisappear:animated];
+}
+
+- (void)hideMistakeAndQuestionCountingUI:(BOOL)hide
+{
+    for (UIImageView *imageView in self.mistakeLeftImageViews) {
+        imageView.hidden = hide;
+    }
+    
+    self.questionCounterLabel.hidden = hide;
 }
 
 - (void)handleEnteredBackground
@@ -147,6 +158,7 @@
                 self.initialSubview.alpha = 0.0;
             } completion:^(BOOL finished) {
                 self.initialSubview.hidden = YES;
+                [self hideMistakeAndQuestionCountingUI:NO];
                 [self setupUIForQuizQuestion:[self.quiz getNewQuizQuestion]];
             }];
         }
@@ -302,6 +314,8 @@
 {
     self.cancelQuizBarButtonItem.enabled = NO;
     
+    [self hideMistakeAndQuestionCountingUI:YES];
+    
     self.finalSubview.hidden = NO;
     
     // Final Label
@@ -322,6 +336,7 @@
     
     [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionTransitionNone animations:^{
         self.finalSubview.alpha = 1.0;
+        self.finalSubview.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]];
         
     } completion:nil];
     

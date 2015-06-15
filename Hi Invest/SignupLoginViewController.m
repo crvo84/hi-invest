@@ -24,6 +24,8 @@
 
 @interface SignupLoginViewController ()
 
+@property (strong, nonatomic) UIActivityIndicatorView *activityIndicator;
+
 @end
 
 @implementation SignupLoginViewController
@@ -34,22 +36,29 @@
     [super viewDidAppear:animated];
     
     if ([PFUser currentUser]) {
-        [self performSegueWithIdentifier:@"Login" sender:nil];
+        [self performSegueWithIdentifier:@"Login" sender:self];
     }
 }
 
 
 - (IBAction)facebookLogin:(id)sender
 {
+    [self pauseUI];
+    
     NSArray *permissions = @[@"public_profile", @"email", @"user_friends"];
     
     [PFFacebookUtils logInInBackgroundWithReadPermissions:permissions block:^(PFUser *user, NSError *error) {
+        
+        [self unpauseUI];
+        
         if (!user) {
             NSLog(@"Uh oh. The user cancelled the Facebook login.");
+            [self presentFacebookConnectionAlertWithSuccess:NO];
             
         } else if (user.isNew) {
             NSLog(@"User signed up and logged in through Facebook!");
             
+            // Remove saved simulator games which are not the user's
             [self resetSimulatorGamesExceptFromUserId:user.objectId];
             [self resetSettings];
             [self loadFacebookUserInfo];
@@ -57,16 +66,68 @@
         } else {
             NSLog(@"User logged in through Facebook!");
             
+            // Remove saved simulator games which are not the user's
             [self resetSimulatorGamesExceptFromUserId:user.objectId];
             [self resetSettings];
             [self loadFacebookUserInfo];
         }
         
+        
+        
     }];
+}
+
+- (IBAction)anonymousLogin:(id)sender
+{
+    [self pauseUI];
+    
+    [PFAnonymousUtils logInWithBlock:^(PFUser *user, NSError *error) {
+        
+        [self unpauseUI];
+        
+        if (error) {
+            NSLog(@"Anonymous login failed.");
+            // TODO: present alert that connection failed, try again
+        } else {
+            NSLog(@"Anonymous user logged in.");
+            
+            // Reset Settings only, simulator games only deleted when logged through facebook
+            [self resetSettings];
+            [self performSegueWithIdentifier:@"Login" sender:self];
+        }
+    }];
+}
+
+- (void)presentFacebookConnectionAlertWithSuccess:(BOOL)success
+{
+    NSString *title = success ? @"Facebook connection successful" : @"Could not connect to Facebook";
+    NSString *subtitle = success ? nil : @"Please try again";
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                   message:subtitle
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *continueAction = [UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleDefault handler:nil];
+    
+    [alert addAction:continueAction];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)pauseUI
+{
+    [self.activityIndicator startAnimating];
+    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+}
+
+- (void)unpauseUI
+{
+    [self.activityIndicator stopAnimating];
+    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
 }
 
 #pragma mark - Fetch user info from Facebook
 
+// IF ANY CHANGE MADE HERE, DO IT ALSO IN THE SAME METHOD AT SETTINGS VIEW CONTROLLER!!
 - (void)loadFacebookUserInfo
 {
     PFUser *currentUser = [PFUser currentUser];
@@ -91,7 +152,7 @@
                 NSData *pictureData = [NSData dataWithContentsOfURL:pictureURL];
                 [[NSUserDefaults standardUserDefaults] setObject:pictureData forKey:UserDefaultsProfilePictureKey];
                 
-                [self performSegueWithIdentifier:@"Login" sender:nil];
+                [self performSegueWithIdentifier:@"Login" sender:self];
             }
         }];
     }
@@ -115,6 +176,19 @@
     [userDefaults removeObjectForKey:UserDefaultsSimulatorInitialCashKey];
     [userDefaults removeObjectForKey:UserDefaultsSimulatorDisguiseCompaniesKey];
     [userDefaults removeObjectForKey:UserDefaultsProfilePictureKey];
+}
+
+- (UIActivityIndicatorView *)activityIndicator
+{
+    if (!_activityIndicator) {
+        _activityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+        _activityIndicator.center = self.view.center;
+        _activityIndicator.hidesWhenStopped = YES;
+        _activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
+        [self.view addSubview:_activityIndicator];
+    }
+    
+    return _activityIndicator;
 }
 
 #pragma mark - Navigation

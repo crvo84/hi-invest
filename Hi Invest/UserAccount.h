@@ -28,6 +28,13 @@
 @property (nonatomic) double simulatorInitialCash;
 @property (nonatomic) BOOL disguiseCompanies;
 
+// Parse User connected properties
+@property (strong, nonatomic, readonly) NSMutableDictionary *successfulQuizzesCount; // @{ @"QuizType" : @(Current Level) }
+@property (strong, nonatomic, readonly) NSMutableDictionary *finishedScenariosCount; // @{ scenarioFilename : @(finished scenarios) }
+@property (strong, nonatomic, readonly) NSMutableDictionary *averageReturns; // @{ scenarioFilename : @(average Return) }
+@property (strong, nonatomic, readonly) NSMutableDictionary *lowestReturns; // @{ scenarioFilename : @(lowest Return) }
+@property (strong, nonatomic, readonly) NSMutableDictionary *highestReturns; // @{ scenarioFilename : @(highest Return) }
+
 - (void)updateUserSimulatorInfoWithFinishedGameInfo:(GameInfo *)gameInfo;
 
 - (void)increaseSuccessfulQuizzesForQuizType:(QuizType)quizType;
@@ -38,6 +45,8 @@
 
 // Return the user ninja level (0 is the lowest) depending on answered quizzes
 - (NSInteger)userLevel;
+
+- (NSString *)userName;
 
 // Return the quiz progress [0,1) to get to the next user level
 - (double)progressForNextUserLevel;
@@ -51,8 +60,6 @@
 - (void)deleteCurrentInvestingGame;
 // Remove all investing games of the current user.
 - (void)deleteAllUserSavedGames;
-
-- (NSString *)userName;
 
 
 @end

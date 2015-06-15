@@ -9,9 +9,11 @@
 #import <UIKit/UIKit.h>
 
 @class ScenarioPurchaseInfo;
+@class UserAccount;
 
 @interface ScenarioInfoViewController : UIViewController
 
+@property (strong, nonatomic) UserAccount *userAccount;
 @property (strong, nonatomic) ScenarioPurchaseInfo *scenarioPurchaseInfo;
 @property (strong, nonatomic) NSLocale *locale;
 @property (nonatomic) BOOL isFileInBundle;

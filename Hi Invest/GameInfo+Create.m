@@ -159,4 +159,23 @@
     }
 }
 
++ (NSArray *)allExistingGameInfoFromManagedObjectContext:(NSManagedObjectContext *)context
+{
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"GameInfo"];
+    
+    NSError *error;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    
+    if (!matches || error) {
+        NSLog(@"Error fetching GameInfo managed objects. %@", [error localizedDescription]);
+    }
+    
+    return matches;
+}
+
+
+
+
+
+
 @end

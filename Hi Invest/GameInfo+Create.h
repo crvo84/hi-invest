@@ -34,4 +34,6 @@
 // If userId is nil, then remove all existing GameInfo managed objects
 + (void)removeAllExistingGameInfoExceptFromUserId:(NSString *)userId intoManagedObjectContext:(NSManagedObjectContext *)context;
 
++ (NSArray *)allExistingGameInfoFromManagedObjectContext:(NSManagedObjectContext *)context;
+
 @end

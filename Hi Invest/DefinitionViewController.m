@@ -12,11 +12,13 @@
 
 @interface DefinitionViewController ()
 
-@property (weak, nonatomic) IBOutlet UIView *definitionSubview; // For the standard app bubble color
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
-@property (weak, nonatomic) IBOutlet UITextView *textView;
+@property (weak, nonatomic) IBOutlet UIView *definitionSubview; // For background white color
+@property (weak, nonatomic) IBOutlet UIView *definitionSubsubview; // For the standard app bubble color
+@property (weak, nonatomic) IBOutlet UIView *formulaSubview; // For background white color
+@property (weak, nonatomic) IBOutlet UIView *formulaSubsubview; // For the standard app bubble color
 @property (weak, nonatomic) IBOutlet UIImageView *formulaImageView;
-@property (weak, nonatomic) IBOutlet UIView *formulaSubview;
+@property (weak, nonatomic) IBOutlet UITextView *textView;
 @property (weak, nonatomic) IBOutlet UIButton *sourceButton;
 @property (weak, nonatomic) IBOutlet UILabel *sourceLabel;
 
@@ -36,15 +38,19 @@
     // Definition Subview
     self.definitionSubview.layer.cornerRadius = 8; // Magic number
     self.definitionSubview.layer.masksToBounds = YES;
-    self.definitionSubview.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]];
-
-    // Text View
-    [self.textView scrollRangeToVisible:NSMakeRange(0, 0)]; // To avoid initial offset
+    
+    // Definition Subsubview
+    self.definitionSubsubview.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]];
     
     // Formula Subview
     self.formulaSubview.layer.cornerRadius = 8; // Magic number
     self.formulaSubview.layer.masksToBounds = YES;
-    self.formulaSubview.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]];
+    
+    // Formula Subsubview
+    self.formulaSubsubview.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]];
+    
+    // Text View
+    [self.textView scrollRangeToVisible:NSMakeRange(0, 0)]; // To avoid initial offset
     
     // Source Label and Button
     self.sourceButton.hidden = self.source == nil;

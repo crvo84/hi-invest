@@ -39,8 +39,6 @@
     /* SUBVIEW */
     self.subview.layer.cornerRadius = 8;
     self.subview.layer.masksToBounds = YES;
-    self.subview.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    self.subview.layer.borderWidth = 2;
     
     /* SUBSUBVIEW */
     self.subsubview.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]];
