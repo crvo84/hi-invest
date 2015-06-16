@@ -10,10 +10,10 @@
 #define Hi_Invest_ParseUserKeys_h
 
 #define ParseUserGuestUserId @"Guest"
-#define ParseUserGuestAutomaticLogin @"guestAutomaticLogin"
-#define ParseUserInfoSavedInParseUser @"infoSavedInParseUser"
 
 #define ParseUserFirstName @"firstName"
+#define ParseUserFacebookId @"facebookId"
+
 #define ParseUserSuccessfulQuizzesCount @"successfulQuizzesCount"
 #define ParseUserFinishedScenariosCount @"finishedScenariosCount"
 #define ParseUserAverageReturns @"averageReturns"

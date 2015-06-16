@@ -9,6 +9,11 @@
 #import "FriendsViewController.h"
 #import "FriendTableViewCell.h"
 #import "DefaultColors.h"
+#import "ParseUserKeys.h"
+
+#import <Parse/Parse.h>
+#import <ParseFacebookUtilsV4/PFFacebookUtils.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 @interface FriendsViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -22,7 +27,65 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    
 }
+
+- (void)getFriends
+{
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
+                                  initWithGraphPath:@"/{friend-list-id}"
+                                  parameters:nil
+                                  HTTPMethod:@"GET"];
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection,
+                                          id result,
+                                          NSError *error) {
+        
+        // Handle the result
+        if (!error) {
+            // result will contain an array with your user's friends in the "data" key
+            NSArray *friendObjects = [result objectForKey:@"data"];
+            NSMutableArray *friendIds = [NSMutableArray arrayWithCapacity:friendObjects.count];
+            // Create a list of friends' Facebook IDs
+            for (NSDictionary *friendObject in friendObjects) {
+                [friendIds addObject:[friendObject objectForKey:@"id"]];
+            }
+            
+            // Construct a PFUser query that will find friends whose facebook ids
+            // are contained in the current user's friend list.
+            PFQuery *friendQuery = [PFUser query];
+            [friendQuery whereKey:ParseUserFacebookId containedIn:friendIds];
+    
+            // findObjects will return a list of PFUsers that are friends
+            // with the current user
+            NSArray *friendUsers = [friendQuery findObjects];
+            
+        }
+    }];
+}
+
+
+//// Issue a Facebook Graph API request to get your user's friend list
+//[FBRequestConnection startForMyFriendsWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+//    if (!error) {
+//        // result will contain an array with your user's friends in the "data" key
+//        NSArray *friendObjects = [result objectForKey:@"data"];
+//        NSMutableArray *friendIds = [NSMutableArray arrayWithCapacity:friendObjects.count];
+//        // Create a list of friends' Facebook IDs
+//        for (NSDictionary *friendObject in friendObjects) {
+//            [friendIds addObject:[friendObject objectForKey:@"id"]];
+//        }
+//        
+//        // Construct a PFUser query that will find friends whose facebook ids
+//        // are contained in the current user's friend list.
+//        PFQuery *friendQuery = [PFUser query];
+//        [friendQuery whereKey:@"fbId" containedIn:friendIds];
+//        
+//        // findObjects will return a list of PFUsers that are friends
+//        // with the current user
+//        NSArray *friendUsers = [friendQuery findObjects];
+//    }
+//}];
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -40,7 +103,7 @@
 
 #pragma mark - UITableView Data Source
 
-#define FriendsProvisionalNamesArray @[@"Carlos Rogelio", @"Malala", @"Lucas Villanueva", @"Flash Guerrero Brizuela", @"crvo84", @"Tyrion Lannister", @"Eddard Stark", @"Daenerys Targaryen"]
+#define FriendsProvisionalNamesArray @[@"Carlos Rogelio", @"Malala", @"Lucas", @"Flash", @"crvo84", @"Tyrion Lannister", @"Eddard Stark", @"Daenerys Targaryen"]
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {

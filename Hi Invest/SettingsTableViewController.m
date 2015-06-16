@@ -18,6 +18,8 @@
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import "SideMenuRootViewController.h"
+
 
 @interface SettingsTableViewController ()
 
@@ -27,7 +29,6 @@
 
 @property (strong, nonatomic) NSNumberFormatter *numberFormatter;
 @property (strong, nonatomic) UIActivityIndicatorView *activityIndicator;
-@property (nonatomic) BOOL onlyForNewGamesAlertPresented;
 @property (nonatomic) BOOL isAnonymousUser;
 
 @end
@@ -45,8 +46,6 @@
     
     self.disguiseCompaniesSwitch.on = self.userAccount.disguiseCompanies;
 
-    self.onlyForNewGamesAlertPresented = NO;
-    
     self.isAnonymousUser = [PFAnonymousUtils isLinkedWithUser:[PFUser currentUser]];
     
     [self updateUI];
@@ -65,11 +64,6 @@
 
 - (IBAction)initialCashStepperValueChanged:(UIStepper *)sender
 {
-    if (!self.onlyForNewGamesAlertPresented) {
-        [self presentOnlyForNewGamesAlert];
-        self.onlyForNewGamesAlertPresented = YES;
-    }
-    
     self.userAccount.simulatorInitialCash = self.initialCashStepper.value;
 
     [self updateUI];
@@ -78,9 +72,8 @@
 
 - (IBAction)disguiseCompaniesSwitchValueChanged:(UISwitch *)sender
 {
-    if (!self.onlyForNewGamesAlertPresented) {
-        [self presentOnlyForNewGamesAlert];
-        self.onlyForNewGamesAlertPresented = YES;
+    if (!sender.isOn) {
+        [self presentAlertViewWithTitle:@"Disguise disabled" withMessage:@"Simulator results will not be recorded." withActionTitle:@"Dismiss"];
     }
     
     self.userAccount.disguiseCompanies = self.disguiseCompaniesSwitch.isOn;
@@ -88,17 +81,6 @@
     [self updateUI];
 }
 
-- (void)presentOnlyForNewGamesAlert
-{
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Changes will apply for new games only."
-                                                                   message:nil
-                                                            preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *continueAction = [UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleDefault handler:nil];
-    
-    [alert addAction:continueAction];
-    
-    [self presentViewController:alert animated:YES completion:nil];
-}
 
 #pragma mark - User Login/Logout
 
@@ -120,9 +102,8 @@
                 [self performSegueWithIdentifier:@"logout" sender:self];
                 
             } else {
-                NSLog(@"Could not logout from user account. %@", error.description);
-                // TODO: alert view
-            
+
+                [self presentAlertViewWithTitle:@"Could not Log Out" withMessage:[error localizedDescription] withActionTitle:@"Dismiss"];
             }
             
         }];
@@ -153,7 +134,9 @@
                 [self linkParseUserWithFacebookAccount];
                 
             }  else {
-                // TODO: Alert. PFUser without objectId. cannot connect to facebook then
+
+                NSString *message = error ? [error localizedDescription] : @"Please try again";
+                [self presentAlertViewWithTitle:@"Could not connect to Facebook" withMessage:message withActionTitle:@"Dismiss"];
             }
             
             [self unpauseUI];
@@ -161,15 +144,12 @@
         
     } else { // Parse user already in the cloud
         
-        if (![[[NSUserDefaults standardUserDefaults] objectForKey:ParseUserInfoSavedInParseUser] boolValue]) {
+        if (![[[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsInfoSavedInParseUser] boolValue]) {
             [self.userAccount migrateUserInfoToParseUser];
         }
         
         [self linkParseUserWithFacebookAccount];
     }
-    
-    
-
 }
 
 - (void)linkParseUserWithFacebookAccount
@@ -187,7 +167,8 @@
                 
                 self.isAnonymousUser = NO;
                 
-                [self loadFacebookUserInfo];
+                SideMenuRootViewController *sideMenuRootViewController = (SideMenuRootViewController *)self.sideMenuViewController;
+                [sideMenuRootViewController loadFacebookUserInfo];
                 
             }
             
@@ -195,7 +176,9 @@
             
             [self unpauseUI];
             
-            [self presentFacebookConnectionAlertWithSuccess:succeeded withErrorMessage:[error localizedDescription]];
+            NSString *title = succeeded ? @"Facebook connection successful!" : @"Could not connect to Facebook";
+            NSString *message = succeeded ? nil : [error localizedDescription];
+            [self presentAlertViewWithTitle:title withMessage:message withActionTitle:@"Dismiss"];
             
         }];
         
@@ -204,45 +187,12 @@
     }
 }
 
-// IF ANY CHANGE MADE HERE, DO IT ALSO IN THE SAME METHOD AT SIGNUP VIEW CONTROLLER!!
-- (void)loadFacebookUserInfo
+- (void)presentAlertViewWithTitle:(NSString *)title withMessage:(NSString *)message withActionTitle:(NSString *)actionTitle
 {
-    PFUser *currentUser = [PFUser currentUser];
-    if ([PFFacebookUtils isLinkedWithUser:currentUser]) {
-        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
-        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-            
-            if (!error) {
-                // result is a dictionary with the user's Facebook data
-                NSDictionary *userData = (NSDictionary *)result;
-                
-                // Get first name and email from userData and set them to current facebook user
-                NSString *firstName = userData[@"first_name"];
-                NSString *email = userData[@"email"];
-                currentUser[ParseUserFirstName] = firstName;
-                currentUser.email = email;
-                [currentUser saveEventually];
-                
-                // Downloading facebook profile picture (in jpg, aprox 10kb) and save it in user defaults
-                NSString *facebookId = userData[@"id"];
-                NSURL *pictureURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large&return_ssl_res", facebookId]];
-                NSData *pictureData = [NSData dataWithContentsOfURL:pictureURL];
-                [[NSUserDefaults standardUserDefaults] setObject:pictureData forKey:UserDefaultsProfilePictureKey];
-                
-            }
-        }];
-    }
-}
-
-- (void)presentFacebookConnectionAlertWithSuccess:(BOOL)success withErrorMessage:(NSString *)errorMessage
-{
-    NSString *title = success ? @"Facebook connection successful" : @"Could not connect to Facebook";
-    NSString *subtitle = success ? nil : errorMessage;
-    
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
-                                                                   message:subtitle
+                                                                   message:message
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *continueAction = [UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleDefault handler:nil];
+    UIAlertAction *continueAction = [UIAlertAction actionWithTitle:actionTitle style:UIAlertActionStyleDefault handler:nil];
     
     [alert addAction:continueAction];
     

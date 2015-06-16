@@ -19,7 +19,6 @@
 
 #import <Parse/Parse.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 
 @interface SignupLoginViewController ()
@@ -44,14 +43,14 @@
 
     PFUser *user = [PFUser currentUser];
     
-    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:ParseUserInfoSavedInParseUser] boolValue];
+    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsInfoSavedInParseUser] boolValue];
     
     if ([PFFacebookUtils isLinkedWithUser:user] || (user.objectId  && infoSavedInParseUser)) {
         // If current user is linked to facebook, or guest is already saved in the cloud
         
         [self performSegueWithIdentifier:@"Login" sender:self];
         
-    } else if ([[[NSUserDefaults standardUserDefaults] objectForKey:ParseUserGuestAutomaticLogin] boolValue]) {
+    } else if ([[[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsGuestAutomaticLogin] boolValue]) {
         
         [self pauseUI];
         
@@ -61,10 +60,6 @@
                 // The user has been saved in the cloud
                 
                 [self.userAccount migrateUserInfoToParseUser];
-                
-            } else {
-                // Could not save user. Maybe no internet connection
-                
             }
             
             [self unpauseUI];
@@ -91,30 +86,22 @@
             
             [self unpauseUI];
             
-            [self presentFacebookConnectionAlertWithSuccess:NO withErrorMessage:error.description];
-            
-        } else if (user.isNew) {
-            NSLog(@"User signed up and logged in through Facebook!");
-            
-            [self.userAccount deleteAllGameInfoManagedObjects];
-            
-            [self.userAccount deleteAllUserDefaults];
-            
-            [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:ParseUserInfoSavedInParseUser];
-            
-            [self loadFacebookUserInfo];
+            [self presentFacebookConnectionAlertWithSuccess:NO withErrorMessage:@"Please try again."];
             
         } else {
+            
             NSLog(@"User logged in through Facebook!");
             
             [self.userAccount deleteAllGameInfoManagedObjects];
             
             [self.userAccount deleteAllUserDefaults];
             
-            [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:ParseUserInfoSavedInParseUser];
+            [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:UserDefaultsInfoSavedInParseUser];
             
-            [self loadFacebookUserInfo];
+            [self unpauseUI];
             
+            [self performSegueWithIdentifier:@"Login" sender:self];
+
         }
         
     }];
@@ -132,14 +119,14 @@
             // User Info will be saved locally
             NSLog(@"Anonymous login failed.");
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            [defaults setObject:@(YES) forKey:ParseUserGuestAutomaticLogin];
-            [defaults setObject:@(NO) forKey:ParseUserInfoSavedInParseUser];
+            [defaults setObject:@(YES) forKey:UserDefaultsGuestAutomaticLogin];
+            [defaults setObject:@(NO) forKey:UserDefaultsInfoSavedInParseUser];
             
         } else {
             // Anonymous user saved in the cloud
             // User Info will be saved in ParseUser
             NSLog(@"Anonymous user logged in.");
-//            [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:ParseUserInfoSavedInParseUser];
+
             [self.userAccount migrateUserInfoToParseUser];
             
         }
@@ -198,46 +185,6 @@
         [UIView animateWithDuration:duration animations:^{
             subview.alpha = showAllSubviews ? 1.0 : 0.0;
         }];
-    }
-}
-
-#pragma mark - Fetch user info from Facebook
-
-// IF ANY CHANGE MADE HERE, DO IT ALSO IN THE SAME METHOD AT SETTINGS VIEW CONTROLLER!!
-- (void)loadFacebookUserInfo
-{
-    PFUser *currentUser = [PFUser currentUser];
-    if ([PFFacebookUtils isLinkedWithUser:currentUser]) {
-        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
-        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-            
-            if (!error) {
-                // result is a dictionary with the user's Facebook data
-                NSDictionary *userData = (NSDictionary *)result;
-                
-                // Get first name and email from userData and set them to current facebook user
-                NSString *firstName = userData[@"first_name"];
-                NSString *email = userData[@"email"];
-                currentUser[ParseUserFirstName] = firstName;
-                currentUser.email = email;
-                [currentUser saveEventually];
-                
-                // Downloading facebook profile picture (in jpg, aprox 10kb) and save it in user defaults
-                NSString *facebookId = userData[@"id"];
-                NSURL *pictureURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large&return_ssl_res", facebookId]];
-                NSData *pictureData = [NSData dataWithContentsOfURL:pictureURL];
-                [[NSUserDefaults standardUserDefaults] setObject:pictureData forKey:UserDefaultsProfilePictureKey];
-                
-            }
-            
-            [self unpauseUI];
-            
-            [self performSegueWithIdentifier:@"Login" sender:self];
-        }];
-    } else {
-        NSLog(@"Error. Parse User not linked to Facebook, cannot load Facebook User Info");
-        
-        [self unpauseUI];
     }
 }
 

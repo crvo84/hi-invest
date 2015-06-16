@@ -16,6 +16,12 @@
 #import "LeftMenuViewController.h"
 #import "TimeSimulationViewController.h"
 #import "SimulatorInfoViewController.h"
+#import "UserDefaultsKeys.h"
+#import "ParseUserKeys.h"
+
+#import <Parse/Parse.h>
+#import <ParseFacebookUtilsV4/PFFacebookUtils.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 @interface SideMenuRootViewController ()
 
@@ -43,6 +49,117 @@
     self.delegate = self;
 }
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    [self loadFacebookUserInfo];
+}
+
+#pragma mark - Fetch user info from Facebook
+
+// If needed load facebook user Info and 
+- (void)loadFacebookUserInfo
+{
+    PFUser *currentUser = [PFUser currentUser];
+    
+    BOOL needUserName = currentUser[ParseUserFirstName] == nil;
+    BOOL needFacebookId = currentUser[ParseUserFacebookId] == nil;
+    
+    if ([PFFacebookUtils isLinkedWithUser:currentUser] && (needUserName || needFacebookId)) { // need to get facebook info
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
+        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+            
+            if (!error) {
+                // result is a dictionary with the user's Facebook data
+                NSDictionary *userData = (NSDictionary *)result;
+                
+                // Get first name and email from userData and set them to current facebook user
+                NSString *firstName = userData[@"first_name"];
+                NSString *facebookId = userData[@"id"];
+                NSString *email = userData[@"email"];
+                currentUser[ParseUserFirstName] = firstName;
+                currentUser[ParseUserFacebookId] = facebookId;
+                currentUser.email = email;
+                [currentUser saveEventually];
+                
+                [self downloadFacebookProfilePicture];
+                
+            } else {
+                NSLog(@"Facebook Graph request error: %@", [error localizedDescription]);
+                [PFUser logOutInBackgroundWithBlock:^(NSError *error) {
+                    if (!error) {
+                        [self performSegueWithIdentifier:@"logout" sender:self];
+                    }
+                }];
+            }
+        }];
+
+    } else { // No need to load facebook info again
+        
+        [self downloadFacebookProfilePicture];
+    }
+}
+
+// If needed, download the profile picture from facebook
+- (void)downloadFacebookProfilePicture
+{
+    PFUser *user = [PFUser currentUser];
+    NSString *facebookId = user[ParseUserFacebookId];
+    
+    BOOL needProfilePicture = [[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsProfilePictureKey] == nil;
+    
+    if (facebookId && needProfilePicture) {
+        
+        // Downloading facebook profile picture (in jpg, aprox 10kb) and save it in user defaults
+        NSURL *pictureURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large&return_ssl_res", facebookId]];
+        
+        NSURLRequest *urlRequest = [NSURLRequest requestWithURL:pictureURL];
+        
+        // Run network request asynchronously
+        [NSURLConnection sendAsynchronousRequest:urlRequest
+                                           queue:[NSOperationQueue mainQueue]
+                               completionHandler:
+         ^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+             if (connectionError == nil && data != nil) {
+                 [[NSUserDefaults standardUserDefaults] setObject:data forKey:UserDefaultsProfilePictureKey];
+                 [self updateUI];
+             }
+         }];
+    }
+}
+
+
+- (void)updateUI
+{
+    /* UPDATES CONTENT VIEW CONTROLLER */
+    //---------------------------------/
+    UIViewController *contentViewController = self.contentViewController;
+    
+    // GET THE VISIBLE VIEW CONTROLLER
+    if ([contentViewController isKindOfClass:[UITabBarController class]]) {
+        // if its a UITabBarController, get the selected tab
+        contentViewController = ((UITabBarController *)contentViewController).selectedViewController;
+    }
+    if ([contentViewController isKindOfClass:[UINavigationController class]]) {
+        // if its a UINavigationController
+        UINavigationController *navigationController = (UINavigationController *)contentViewController;
+        
+        // Get the visible view controller from the UINavigation Controller
+        contentViewController = navigationController.topViewController;
+    }
+    
+    if ([contentViewController respondsToSelector:@selector(updateUI)]) {
+        [contentViewController performSelector:@selector(updateUI)];
+    }
+    
+    /* UPDATES LEFT MENU */
+    //-------------------/
+    LeftMenuViewController *leftMenuViewController = (LeftMenuViewController *)self.leftMenuViewController;
+    if ([leftMenuViewController respondsToSelector:@selector(updateUI)]) {
+        [leftMenuViewController performSelector:@selector(updateUI)];
+    }
+}
 
 #pragma mark - Content View Controllers Initialization
 

@@ -15,4 +15,6 @@
 
 @property (strong, nonatomic) UserAccount *userAccount;
 
+- (void)loadFacebookUserInfo;
+
 @end

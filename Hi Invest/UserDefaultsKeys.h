@@ -14,4 +14,7 @@
 #define UserDefaultsSimulatorInitialCashKey @"simulatorInitialCash"
 #define UserDefaultsSimulatorDisguiseCompaniesKey @"disguiseCompanies"
 
+#define UserDefaultsGuestAutomaticLogin @"guestAutomaticLogin"
+#define UserDefaultsInfoSavedInParseUser @"infoSavedInParseUser"
+
 #endif

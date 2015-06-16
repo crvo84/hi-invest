@@ -445,15 +445,14 @@
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cjh-wW-p7b" userLabel="Restart Button">
-                                                <rect key="frame" x="269" y="100" width="30" height="30"/>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cjh-wW-p7b" userLabel="Restart Button">
+                                                <rect key="frame" x="273" y="104" width="22" height="22"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="30" id="JD1-1o-hUd"/>
-                                                    <constraint firstAttribute="height" constant="30" id="g2s-fI-ttI"/>
+                                                    <constraint firstAttribute="width" constant="22" id="JD1-1o-hUd"/>
+                                                    <constraint firstAttribute="height" constant="22" id="g2s-fI-ttI"/>
                                                 </constraints>
-                                                <state key="normal" image="restart30x30">
-                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                </state>
+                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                <state key="normal" title="Start again" image="restart30x30"/>
                                                 <connections>
                                                     <action selector="startAgainButtonPressed" destination="umr-LE-OZQ" eventType="touchUpInside" id="0Oj-xX-AqN"/>
                                                 </connections>
@@ -464,8 +463,8 @@
                                             <constraint firstAttribute="trailing" secondItem="Oig-2d-AW2" secondAttribute="trailing" constant="8" id="4IG-JI-ugG"/>
                                             <constraint firstItem="rKd-zU-yNH" firstAttribute="leading" secondItem="ZmR-ME-xKF" secondAttribute="leading" id="83o-PF-bFn"/>
                                             <constraint firstItem="Oig-2d-AW2" firstAttribute="top" secondItem="ZmR-ME-xKF" secondAttribute="top" constant="12" id="ARJ-fr-NWl"/>
-                                            <constraint firstItem="Cjh-wW-p7b" firstAttribute="top" secondItem="q7a-nn-prk" secondAttribute="bottom" constant="8" id="FfP-eB-ADv"/>
-                                            <constraint firstItem="rKd-zU-yNH" firstAttribute="top" secondItem="Cjh-wW-p7b" secondAttribute="bottom" constant="8" id="Ha7-V5-Yef"/>
+                                            <constraint firstItem="Cjh-wW-p7b" firstAttribute="top" secondItem="q7a-nn-prk" secondAttribute="bottom" constant="12" id="FfP-eB-ADv"/>
+                                            <constraint firstItem="rKd-zU-yNH" firstAttribute="top" secondItem="Cjh-wW-p7b" secondAttribute="bottom" constant="12" id="Ha7-V5-Yef"/>
                                             <constraint firstAttribute="centerX" secondItem="Cjh-wW-p7b" secondAttribute="centerX" id="fAt-Xm-B8l"/>
                                             <constraint firstAttribute="trailing" secondItem="rKd-zU-yNH" secondAttribute="trailing" id="gCS-B9-TqK"/>
                                             <constraint firstAttribute="bottom" secondItem="rKd-zU-yNH" secondAttribute="bottom" id="m0j-vI-ZeY"/>
@@ -903,9 +902,11 @@
                     <connections>
                         <segue destination="4Hv-My-QCw" kind="presentation" identifier="Time Simulation" modalPresentationStyle="overFullScreen" modalTransitionStyle="crossDissolve" id="nXq-7p-kT8"/>
                         <segue destination="umr-LE-OZQ" kind="presentation" identifier="Simulator Info" modalPresentationStyle="overFullScreen" modalTransitionStyle="crossDissolve" id="BS4-ap-2lD"/>
+                        <segue destination="fap-d2-YOb" kind="unwind" identifier="logout" unwindAction="unwindToSignupViewController:" id="ojQ-v0-QVZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0d6-Sv-fqw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="fap-d2-YOb" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-8785" y="-3397"/>
         </scene>
@@ -2991,7 +2992,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <sections>
-                            <tableViewSection headerTitle="Initial Cash" id="8S7-uj-azb">
+                            <tableViewSection headerTitle="Initial Cash" footerTitle="Changes will apply for new games only." id="8S7-uj-azb">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="44" id="2jp-58-3R1">
                                         <autoresizingMask key="autoresizingMask"/>

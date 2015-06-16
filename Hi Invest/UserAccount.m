@@ -16,6 +16,8 @@
 #import "ParseUserKeys.h"
 #import "UserDefaultsKeys.h"
 #import <Parse/Parse.h>
+#import <ParseFacebookUtilsV4/PFFacebookUtils.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 
 @interface UserAccount ()
@@ -165,7 +167,7 @@
 {
     PFUser *user = [PFUser currentUser];
     
-    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:ParseUserInfoSavedInParseUser] boolValue];
+    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsInfoSavedInParseUser] boolValue];
     
     /* Only if the ParseUser has already been saved in the cloud and got an ObjectId.
        and only if the user info has been copied from NSUserDefaults to the Parse User, 
@@ -181,13 +183,13 @@
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    if (![[defaults objectForKey:ParseUserInfoSavedInParseUser] boolValue]) {
+    if (![[defaults objectForKey:UserDefaultsInfoSavedInParseUser] boolValue]) {
         
         [self copyUserDefaultsToParseUser];
         [self deleteUserDefaultsAlreadyInParseUser];
         [self updateGuestSavedGameInfoManagedObjectsWithNewParseObjectId];
         
-        [defaults setObject:@(YES) forKey:ParseUserInfoSavedInParseUser];
+        [defaults setObject:@(YES) forKey:UserDefaultsInfoSavedInParseUser];
     }
 }
 
@@ -253,6 +255,7 @@
 {
     [GameInfo removeExistingGameInfoWithScenarioFilename:nil withUserId:nil intoManagedObjectContext:self.gameInfoContext];
 }
+
 
 #pragma mark - Quizzes
 
@@ -391,7 +394,7 @@
 {
     PFUser *user = [PFUser currentUser];
     
-    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:ParseUserInfoSavedInParseUser] boolValue];
+    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsInfoSavedInParseUser] boolValue];
     
     NSDictionary *succesfulQuizzesCount;
     
@@ -411,7 +414,7 @@
 {
     PFUser *user = [PFUser currentUser];
     
-    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:ParseUserInfoSavedInParseUser] boolValue];
+    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsInfoSavedInParseUser] boolValue];
     
     NSDictionary *finishedScenariosCount;
     
@@ -431,7 +434,7 @@
 {
     PFUser *user = [PFUser currentUser];
     
-    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:ParseUserInfoSavedInParseUser] boolValue];
+    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsInfoSavedInParseUser] boolValue];
     
     NSDictionary *averageReturns;
     
@@ -451,7 +454,7 @@
 {
     PFUser *user = [PFUser currentUser];
     
-    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:ParseUserInfoSavedInParseUser] boolValue];
+    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsInfoSavedInParseUser] boolValue];
     
     NSDictionary *lowestReturns;
     
@@ -471,7 +474,7 @@
 {
     PFUser *user = [PFUser currentUser];
     
-    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:ParseUserInfoSavedInParseUser] boolValue];
+    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsInfoSavedInParseUser] boolValue];
     
     NSDictionary *highestReturns;
     

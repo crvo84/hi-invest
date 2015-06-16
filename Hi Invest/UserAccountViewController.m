@@ -41,7 +41,17 @@
     self.backgroundUserView.layer.cornerRadius = 8;
     self.backgroundUserView.layer.masksToBounds = YES;
     self.backgroundUserView.backgroundColor = [DefaultColors userLevelColorForLevel:[self.userAccount userLevel]];
+}
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self updateUI];
+}
+
+- (void)updateUI
+{
     // Background User View and User Image View Setup
     NSData *pictureData = [[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsProfilePictureKey];
     if (pictureData) {
@@ -51,6 +61,7 @@
         [self.backgroundUserView addSubview:pictureImageView];
         
         self.userImageView.hidden = YES;
+        self.backgroundUserView.layer.borderWidth = 0.0;
         
     } else {
         
@@ -65,17 +76,7 @@
     
     // Name Label Setup
     self.userNameLabel.text = [self.userAccount userName];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
     
-    [self updateUI];
-}
-
-- (void)updateUI
-{
     [self.tableView reloadData];
 }
 
