@@ -15,42 +15,54 @@
 
 @interface UserAccount : NSObject
 
-@property (copy, nonatomic, readonly) NSString *userId;
 @property (copy, nonatomic) NSLocale *localeDefault; // Default NSLocale (Others: QuizGenerator, each scenario)
-@property (strong, nonatomic) NSManagedObjectContext *gameInfoContext;
 
 // Investing Game
 @property (strong, nonatomic, readonly) InvestingGame *currentInvestingGame;
-@property (copy, nonatomic) NSString *selectedScenarioFilename;
 @property (strong, nonatomic, readonly) NSArray *availableScenarios; // of ScenarioPurchaseInfo
+@property (strong, nonatomic) NSManagedObjectContext *gameInfoContext; // Managed Object for GameInfo fetching
 
-// Settings
+// User Settings
+@property (copy, nonatomic) NSString *selectedScenarioFilename;
 @property (nonatomic) double simulatorInitialCash;
 @property (nonatomic) BOOL disguiseCompanies;
 
-// Parse User connected properties
+// User Results
 @property (strong, nonatomic, readonly) NSMutableDictionary *successfulQuizzesCount; // @{ @"QuizType" : @(Current Level) }
 @property (strong, nonatomic, readonly) NSMutableDictionary *finishedScenariosCount; // @{ scenarioFilename : @(finished scenarios) }
 @property (strong, nonatomic, readonly) NSMutableDictionary *averageReturns; // @{ scenarioFilename : @(average Return) }
 @property (strong, nonatomic, readonly) NSMutableDictionary *lowestReturns; // @{ scenarioFilename : @(lowest Return) }
 @property (strong, nonatomic, readonly) NSMutableDictionary *highestReturns; // @{ scenarioFilename : @(highest Return) }
 
+
+#pragma mark - User Info
+// Return the current user objectId, if the user is not saved on the cloud, objectId will be nil, so return @"Guest"
+- (NSString *)userId;
+// Return the user ninja level (0 is the lowest) depending on answered quizzes
+- (NSInteger)userLevel;
+// Return the userName. If user is logged as Guest, return @"Guest", if not return Facebook first name
+- (NSString *)userName;
+
+#pragma mark - User Info management
+// When a InvestingGame is finished, user its GameInfo to update user simulator Results. (only for disguised investingGames)
 - (void)updateUserSimulatorInfoWithFinishedGameInfo:(GameInfo *)gameInfo;
+// Copy the corresponding user info from NSUserDefaults to Parse User. Removes the info from NSUserDefaults. Updates GameInfo managed objects with parseUser objectId as userId
+- (void)migrateUserInfoToParseUser;
+// Reset NSUserDefaults
+- (void)deleteAllUserDefaults;
+// Delete all GameInfo managed objects existing in database
+- (void)deleteAllGameInfoManagedObjects;
 
+#pragma mark - Quizzes
+// Increase the number of successful quizzes finished for the given quizType and save it to the user info
 - (void)increaseSuccessfulQuizzesForQuizType:(QuizType)quizType;
-
 // Return the current number of successful quizzes for the given quiz type
 // Return 0 (initial level) if there is no record for the given quiz type
 - (NSInteger)successfulQuizzesForQuizType:(QuizType)quizType;
-
-// Return the user ninja level (0 is the lowest) depending on answered quizzes
-- (NSInteger)userLevel;
-
-- (NSString *)userName;
-
 // Return the quiz progress [0,1) to get to the next user level
 - (double)progressForNextUserLevel;
 
+#pragma mark - Investing Games
 - (void)newInvestingGame;
 // Load an investing game. If given GameInfo managed object is nil, then create a completely new GameInfo.
 - (void)loadInvestingGameWithGameInfo:(GameInfo *)gameInfo;
@@ -58,8 +70,6 @@
 - (void)exitCurrentInvestingGame;
 // Remove current investing game, if there is one.
 - (void)deleteCurrentInvestingGame;
-// Remove all investing games of the current user.
-- (void)deleteAllUserSavedGames;
 
 
 @end

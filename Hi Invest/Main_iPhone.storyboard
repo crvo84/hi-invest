@@ -714,6 +714,9 @@
                                                 <state key="normal">
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
+                                                <connections>
+                                                    <action selector="userButtonPressed" destination="hoV-hg-T7G" eventType="touchUpInside" id="ElL-VS-5Yf"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" red="0.88235294119999996" green="0.88235294119999996" blue="0.88235294119999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1218,7 +1221,7 @@
                                             <textView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uZA-18-nCd">
                                                 <rect key="frame" x="8" y="58" width="552" height="352"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <mutableString key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</mutableString>
+                                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -3056,7 +3059,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z6h-fC-Xv4">
-                                                    <rect key="frame" x="269" y="5" width="62" height="33"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <state key="normal" title="Log Out">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -3067,8 +3070,10 @@
                                                 </button>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="centerX" secondItem="z6h-fC-Xv4" secondAttribute="centerX" id="1w4-dK-sn2"/>
-                                                <constraint firstAttribute="centerY" secondItem="z6h-fC-Xv4" secondAttribute="centerY" id="7Gz-jF-Nj6"/>
+                                                <constraint firstItem="z6h-fC-Xv4" firstAttribute="top" secondItem="DAb-ES-U28" secondAttribute="topMargin" constant="-8" id="B0S-t0-8Wh"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="z6h-fC-Xv4" secondAttribute="bottom" constant="-8" id="SBB-No-Bq9"/>
+                                                <constraint firstItem="z6h-fC-Xv4" firstAttribute="leading" secondItem="DAb-ES-U28" secondAttribute="leadingMargin" constant="-8" id="TTC-uK-qyd"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="z6h-fC-Xv4" secondAttribute="trailing" constant="-8" id="gPp-xX-A6D"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -3082,7 +3087,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9qX-3h-7xW">
-                                                    <rect key="frame" x="209" y="5" width="183" height="33"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <state key="normal" title="Connect with Facebook">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -3093,8 +3098,10 @@
                                                 </button>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="centerX" secondItem="9qX-3h-7xW" secondAttribute="centerX" id="UHq-9t-Nmn"/>
-                                                <constraint firstAttribute="centerY" secondItem="9qX-3h-7xW" secondAttribute="centerY" id="bEA-d4-eiC"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="9qX-3h-7xW" secondAttribute="trailing" constant="-8" id="QSf-ty-7Za"/>
+                                                <constraint firstItem="9qX-3h-7xW" firstAttribute="top" secondItem="ZBa-k2-QG8" secondAttribute="topMargin" constant="-8" id="cAO-BX-cPJ"/>
+                                                <constraint firstItem="9qX-3h-7xW" firstAttribute="leading" secondItem="ZBa-k2-QG8" secondAttribute="leadingMargin" constant="-8" id="ebE-E3-xK1"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="9qX-3h-7xW" secondAttribute="bottom" constant="-8" id="pBw-nx-0es"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>

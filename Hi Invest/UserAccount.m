@@ -20,7 +20,6 @@
 
 @interface UserAccount ()
 
-@property (copy, nonatomic, readwrite) NSString *userId;
 @property (strong, nonatomic, readwrite) InvestingGame *currentInvestingGame;
 @property (strong, nonatomic, readwrite) NSArray *availableScenarios; // of ScenarioPurchaseInfo
 // PFUser info:
@@ -41,12 +40,20 @@
 
 #pragma mark - User Info
 
+// Return the current user objectId, if the user is not saved on the cloud, objectId will be nil, so return @"Guest"
+- (NSString *)userId
+{
+    NSString *userId = [PFUser currentUser].objectId;
+    
+    return userId ? userId : ParseUserGuestUserId;
+}
+
+
 - (NSString *)userName
 {
-    // TODO: Get UserName from facebook, if not available then:
     NSString *facebookFirstName = [PFUser currentUser][ParseUserFirstName];
     
-    return facebookFirstName ? facebookFirstName : @"Guest";
+    return facebookFirstName ? facebookFirstName : ParseUserGuestUserId;
 }
 
 // Return the user level (0 is the lowest) depending on answered quizzes
@@ -57,8 +64,11 @@
 
 - (void)updateUserSimulatorInfoWithFinishedGameInfo:(GameInfo *)gameInfo
 {
-    PFUser *user = [PFUser currentUser];
-
+    if (![gameInfo.disguiseCompanies boolValue]) {
+        // ONLY SCORES FROM GAMES WITH DISGUISED INFO ARE SAVED
+        return;
+    }
+    
     NSString *filename = gameInfo.scenarioFilename;
     
     double newReturn = [gameInfo.currentReturn doubleValue];
@@ -80,7 +90,8 @@
         newFinishedCountNumber = @(1);
     }
     allFinishedCount[filename] = newFinishedCountNumber;
-    user[ParseUserFinishedScenariosCount] = allFinishedCount;
+    
+    self.finishedScenariosCount = allFinishedCount;
     
     
       // --------------- //
@@ -102,7 +113,8 @@
         newAverageReturnNumber = @(newReturn);
     }
     allAverageReturns[filename] = newAverageReturnNumber;
-    user[ParseUserAverageReturns] = allAverageReturns;
+    
+    self.averageReturns = allAverageReturns;
     
     
       // --------------- //
@@ -122,7 +134,8 @@
         newLowestReturnNumber = @(newReturn);
     }
     allLowestReturns[filename] = newLowestReturnNumber;
-    user[ParseUserLowestReturns] = allLowestReturns;
+    
+    self.lowestReturns = allLowestReturns;
     
     
       // --------------- //
@@ -142,14 +155,103 @@
         newHighestReturnNumber = @(newReturn);
     }
     allHighestReturns[filename] = newHighestReturnNumber;
-    user[ParseUserHighestReturns] = allHighestReturns;
+    
+    self.highestReturns = allHighestReturns;
     
     [self saveParseUserInfo];
 }
 
 - (void)saveParseUserInfo
 {
-    [[PFUser currentUser] saveEventually];
+    PFUser *user = [PFUser currentUser];
+    
+    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:ParseUserInfoSavedInParseUser] boolValue];
+    
+    /* Only if the ParseUser has already been saved in the cloud and got an ObjectId.
+       and only if the user info has been copied from NSUserDefaults to the Parse User, 
+       which happens only in SignupViewController at login, or in SettingsViewController at facebook linking
+     */
+    if (user.objectId && infoSavedInParseUser) {
+        
+        [user saveEventually];
+    }
+}
+
+- (void)migrateUserInfoToParseUser
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    if (![[defaults objectForKey:ParseUserInfoSavedInParseUser] boolValue]) {
+        
+        [self copyUserDefaultsToParseUser];
+        [self deleteUserDefaultsAlreadyInParseUser];
+        [self updateGuestSavedGameInfoManagedObjectsWithNewParseObjectId];
+        
+        [defaults setObject:@(YES) forKey:ParseUserInfoSavedInParseUser];
+    }
+}
+
+// Copies the guest user simulator results info to the new parse user
+- (void)copyUserDefaultsToParseUser
+{
+    NSString *objectId = [PFUser currentUser].objectId;
+    
+    if (objectId) { // If objectId is not nil, then PFUser is saved in the cloud
+
+        // Getters: (objectId && ParseUserInfoSavedInParseUser) ? get from PFUser : get from NSUserDefaults
+        // Setters: (objectId) ? set to PFUser : set to NSUserDefaults
+        // Get NSMutableDictionary. Must Set NSMutableDictionary
+        
+        self.successfulQuizzesCount = [self.successfulQuizzesCount copy];
+        self.finishedScenariosCount = [self.finishedScenariosCount copy];
+        self.averageReturns = [self.averageReturns copy];
+        self.lowestReturns = [self.lowestReturns copy];
+        self.highestReturns = [self.highestReturns copy];
+    }
+}
+
+- (void)deleteUserDefaultsAlreadyInParseUser
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    [defaults removeObjectForKey:ParseUserSuccessfulQuizzesCount];
+    [defaults removeObjectForKey:ParseUserFinishedScenariosCount];
+    [defaults removeObjectForKey:ParseUserAverageReturns];
+    [defaults removeObjectForKey:ParseUserLowestReturns];
+    [defaults removeObjectForKey:ParseUserHighestReturns];
+}
+
+// Update the GameInfo saved games userId from Guest, to new parse user objectId
+- (void)updateGuestSavedGameInfoManagedObjectsWithNewParseObjectId
+{
+    NSManagedObjectContext *context = [ManagedObjectContextCreator createPrivateQueueGameActivityManagedObjectContext];
+    
+    NSArray *userGameInfos = [GameInfo existingGameInfoManagedObjectsWithUserId:ParseUserGuestUserId fromManagedObjectContext:context];
+    
+    NSString *newUserObjectId = [PFUser currentUser].objectId;
+    
+    
+    if (newUserObjectId) {
+        for (GameInfo *gameInfo in userGameInfos) {
+            gameInfo.userId = newUserObjectId;
+        }
+    }
+    
+    NSError *saveError;
+    if (![context save:&saveError]) {
+        NSLog(@"%@", [saveError localizedDescription]);
+    }
+}
+
+- (void)deleteAllUserDefaults
+{
+    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
+    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+}
+
+- (void)deleteAllGameInfoManagedObjects
+{
+    [GameInfo removeExistingGameInfoWithScenarioFilename:nil withUserId:nil intoManagedObjectContext:self.gameInfoContext];
 }
 
 #pragma mark - Quizzes
@@ -206,6 +308,8 @@
     return [NSString stringWithFormat:@"%ld", (long)quizType];
 }
 
+#pragma mark - Investing Games
+
 - (void)newInvestingGame
 {
     [self loadInvestingGameWithGameInfo:nil];
@@ -236,7 +340,7 @@
         
         if (!gameInfo) {
             
-            gameInfo = [GameInfo gameInfoWithUserId:self.userId scenarioFilename:scenarioFilename scenarioName:scenario.name initialCash:self.simulatorInitialCash currentDate:scenario.initialScenarioDate disguisingCompanies:self.disguiseCompanies intoManagedObjectContext:self.gameInfoContext];
+            gameInfo = [GameInfo gameInfoWithUserId:[self userId] scenarioFilename:scenarioFilename scenarioName:scenario.name initialCash:self.simulatorInitialCash currentDate:scenario.initialScenarioDate disguisingCompanies:self.disguiseCompanies intoManagedObjectContext:self.gameInfoContext];
         }
         
         if (gameInfo) {
@@ -255,33 +359,12 @@
 // Remove current investing game, if there is one.
 - (void)deleteCurrentInvestingGame
 {
-    [GameInfo removeExistingGameInfoWithScenarioFilename:self.selectedScenarioFilename withUserId:self.userId intoManagedObjectContext:self.currentInvestingGame.gameInfoContext];
+    [GameInfo removeExistingGameInfoWithScenarioFilename:self.selectedScenarioFilename withUserId:[self userId] intoManagedObjectContext:self.currentInvestingGame.gameInfoContext];
     
     [self exitCurrentInvestingGame];
 }
 
-// Remove all investing games of the current user.
-- (void)deleteAllUserSavedGames
-{
-    NSManagedObjectContext *context = self.currentInvestingGame.gameInfoContext;
-
-    if (!context) {
-        context = [ManagedObjectContextCreator createMainQueueGameActivityManagedObjectContext];
-    }
-    
-    [GameInfo removeExistingGameInfoWithScenarioFilename:nil withUserId:self.userId intoManagedObjectContext:context];
-    
-    self.currentInvestingGame = nil;
-}
-
 #pragma mark - Getters
-
-- (NSString *)userId
-{
-    NSString *currentUserObjectId = [PFUser currentUser].objectId;
-    
-    return currentUserObjectId;
-}
 
 - (NSString *)selectedScenarioFilename //No guardar en parse user
 {
@@ -301,40 +384,105 @@
 {
     NSNumber *disguiseCompaniesNumber = [[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsSimulatorDisguiseCompaniesKey];
     
-    return disguiseCompaniesNumber ? [disguiseCompaniesNumber boolValue] : NO;
+    return disguiseCompaniesNumber ? [disguiseCompaniesNumber boolValue] : YES;
 }
 
 - (NSMutableDictionary *)successfulQuizzesCount
 {
-    NSDictionary *succesfulQuizzesCount = [PFUser currentUser][ParseUserSuccessfulQuizzesCount];
+    PFUser *user = [PFUser currentUser];
+    
+    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:ParseUserInfoSavedInParseUser] boolValue];
+    
+    NSDictionary *succesfulQuizzesCount;
+    
+    if (user.objectId && infoSavedInParseUser) {
+        
+        succesfulQuizzesCount = user[ParseUserSuccessfulQuizzesCount];
+        
+    } else {
+        
+        succesfulQuizzesCount = [[NSUserDefaults standardUserDefaults] objectForKey:ParseUserSuccessfulQuizzesCount];
+    }
     
     return succesfulQuizzesCount ? [succesfulQuizzesCount mutableCopy] : [[NSMutableDictionary alloc] init];
 }
 
 - (NSMutableDictionary *)finishedScenariosCount
 {
-    NSDictionary *finishedScenariosCount = [PFUser currentUser][ParseUserFinishedScenariosCount];
+    PFUser *user = [PFUser currentUser];
+    
+    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:ParseUserInfoSavedInParseUser] boolValue];
+    
+    NSDictionary *finishedScenariosCount;
+    
+    if (user.objectId && infoSavedInParseUser) {
+        
+        finishedScenariosCount = user[ParseUserFinishedScenariosCount];
+        
+    } else {
+        
+        finishedScenariosCount = [[NSUserDefaults standardUserDefaults] objectForKey:ParseUserFinishedScenariosCount];
+    }
     
     return finishedScenariosCount ? [finishedScenariosCount mutableCopy] : [[NSMutableDictionary alloc] init];
 }
 
 - (NSMutableDictionary *)averageReturns
 {
-    NSDictionary *averageReturns = [PFUser currentUser][ParseUserAverageReturns];
+    PFUser *user = [PFUser currentUser];
+    
+    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:ParseUserInfoSavedInParseUser] boolValue];
+    
+    NSDictionary *averageReturns;
+    
+    if (user.objectId && infoSavedInParseUser) {
+        
+        averageReturns = user[ParseUserAverageReturns];
+        
+    } else {
+        
+        averageReturns = [[NSUserDefaults standardUserDefaults] objectForKey:ParseUserAverageReturns];
+    }
     
     return averageReturns ? [averageReturns mutableCopy] : [[NSMutableDictionary alloc] init];
 }
 
 - (NSMutableDictionary *)lowestReturns
 {
-    NSDictionary *lowestReturns = [PFUser currentUser][ParseUserLowestReturns];
+    PFUser *user = [PFUser currentUser];
+    
+    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:ParseUserInfoSavedInParseUser] boolValue];
+    
+    NSDictionary *lowestReturns;
+    
+    if (user.objectId && infoSavedInParseUser) {
+        
+       lowestReturns = user[ParseUserLowestReturns];
+        
+    } else {
+        
+        lowestReturns = [[NSUserDefaults standardUserDefaults] objectForKey:ParseUserLowestReturns];
+    }
     
     return lowestReturns ? [lowestReturns mutableCopy] : [[NSMutableDictionary alloc] init];
 }
 
 - (NSMutableDictionary *)highestReturns
 {
-    NSDictionary *highestReturns = [PFUser currentUser][ParseUserHighestReturns];
+    PFUser *user = [PFUser currentUser];
+    
+    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:ParseUserInfoSavedInParseUser] boolValue];
+    
+    NSDictionary *highestReturns;
+    
+    if (user.objectId && infoSavedInParseUser) {
+        
+        highestReturns = user[ParseUserHighestReturns];
+        
+    } else {
+        
+        highestReturns = [[NSUserDefaults standardUserDefaults] objectForKey:ParseUserHighestReturns];
+    }
     
     return highestReturns ? [highestReturns mutableCopy] : [[NSMutableDictionary alloc] init];
 }
@@ -418,27 +566,72 @@
 
 - (void)setSuccessfulQuizzesCount:(NSMutableDictionary *)successfulQuizzesCount
 {
-    [PFUser currentUser][ParseUserSuccessfulQuizzesCount] = successfulQuizzesCount;
+    PFUser *user = [PFUser currentUser];
+    
+    if (user.objectId) {
+        
+        user[ParseUserSuccessfulQuizzesCount] = successfulQuizzesCount;
+        
+    } else {
+        
+        [[NSUserDefaults standardUserDefaults] setObject:successfulQuizzesCount forKey:ParseUserSuccessfulQuizzesCount];
+    }
 }
 
 - (void)setFinishedScenariosCount:(NSMutableDictionary *)finishedScenariosCount
 {
-    [PFUser currentUser][ParseUserFinishedScenariosCount] = finishedScenariosCount;
+    PFUser *user = [PFUser currentUser];
+    
+    if (user.objectId) {
+        
+        user[ParseUserFinishedScenariosCount] = finishedScenariosCount;
+    
+    } else {
+        
+        [[NSUserDefaults standardUserDefaults] setObject:finishedScenariosCount forKey:ParseUserFinishedScenariosCount];
+    }
 }
 
 - (void)setAverageReturns:(NSMutableDictionary *)averageReturns
 {
-    [PFUser currentUser][ParseUserAverageReturns] = averageReturns;
+    PFUser *user = [PFUser currentUser];
+    
+    if (user.objectId) {
+        
+        user[ParseUserAverageReturns] = averageReturns;
+        
+    } else {
+        
+        [[NSUserDefaults standardUserDefaults] setObject:averageReturns forKey:ParseUserAverageReturns];
+    }
 }
 
 - (void)setLowestReturns:(NSMutableDictionary *)lowestReturns
 {
-    [PFUser currentUser][ParseUserLowestReturns] = lowestReturns;
+    PFUser *user = [PFUser currentUser];
+    
+    if (user.objectId) {
+        
+        user[ParseUserLowestReturns] = lowestReturns;
+        
+    } else {
+        
+        [[NSUserDefaults standardUserDefaults] setObject:lowestReturns forKey:ParseUserLowestReturns];
+    }
 }
 
 - (void)setHighestReturns:(NSMutableDictionary *)highestReturns
 {
-    [PFUser currentUser][ParseUserHighestReturns] = highestReturns;
+    PFUser *user = [PFUser currentUser];
+    
+    if (user.objectId) {
+        
+        user[ParseUserHighestReturns] = highestReturns;
+        
+    } else {
+        
+        [[NSUserDefaults standardUserDefaults] setObject:highestReturns forKey:ParseUserHighestReturns];
+    }
 }
    
    

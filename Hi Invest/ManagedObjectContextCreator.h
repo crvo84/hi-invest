@@ -32,6 +32,7 @@
 #define InvestingGameActivityDataModelFilename @"InvestingGameActivityDataModel"
 
 + (NSManagedObjectContext *)createMainQueueGameActivityManagedObjectContext;
++ (NSManagedObjectContext *)createPrivateQueueGameActivityManagedObjectContext;
 
 + (BOOL)investingGameActivityDatabaseExistsAtBundleOrDocumentDirectory;
 

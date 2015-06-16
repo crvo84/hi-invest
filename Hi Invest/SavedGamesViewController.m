@@ -182,7 +182,7 @@
 {
     if (!_gameInfoManagedObjects) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"GameInfo"];
-        request.predicate = [NSPredicate predicateWithFormat:@"userId = %@", self.userAccount.userId];
+        request.predicate = [NSPredicate predicateWithFormat:@"userId = %@", [self.userAccount userId]];
         request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"scenarioName" ascending:YES]];
         
         _gameInfoManagedObjects = [self.gameInfoManagedObjectsContext executeFetchRequest:request error:nil];

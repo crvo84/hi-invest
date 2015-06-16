@@ -25,19 +25,56 @@
 @interface SignupLoginViewController ()
 
 @property (strong, nonatomic) UIActivityIndicatorView *activityIndicator;
+@property (strong, nonatomic) UserAccount *userAccount;
 
 @end
 
 @implementation SignupLoginViewController
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self showAllSubviews:NO animated:NO];
+}
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+
+    PFUser *user = [PFUser currentUser];
     
-    if ([PFUser currentUser]) {
+    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:ParseUserInfoSavedInParseUser] boolValue];
+    
+    if ([PFFacebookUtils isLinkedWithUser:user] || (user.objectId  && infoSavedInParseUser)) {
+        // If current user is linked to facebook, or guest is already saved in the cloud
+        
         [self performSegueWithIdentifier:@"Login" sender:self];
+        
+    } else if ([[[NSUserDefaults standardUserDefaults] objectForKey:ParseUserGuestAutomaticLogin] boolValue]) {
+        
+        [self pauseUI];
+        
+        [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            
+            if (succeeded) {
+                // The user has been saved in the cloud
+                
+                [self.userAccount migrateUserInfoToParseUser];
+                
+            } else {
+                // Could not save user. Maybe no internet connection
+                
+            }
+            
+            [self unpauseUI];
+            
+            [self performSegueWithIdentifier:@"Login" sender:self];
+            
+        }];
     }
+    
+    [self showAllSubviews:YES animated:YES];
 }
 
 
@@ -49,59 +86,75 @@
     
     [PFFacebookUtils logInInBackgroundWithReadPermissions:permissions block:^(PFUser *user, NSError *error) {
         
-        [self unpauseUI];
-        
         if (!user) {
             NSLog(@"Uh oh. The user cancelled the Facebook login.");
-            [self presentFacebookConnectionAlertWithSuccess:NO];
+            
+            [self unpauseUI];
+            
+            [self presentFacebookConnectionAlertWithSuccess:NO withErrorMessage:error.description];
             
         } else if (user.isNew) {
             NSLog(@"User signed up and logged in through Facebook!");
             
-            // Remove saved simulator games which are not the user's
-            [self resetSimulatorGamesExceptFromUserId:user.objectId];
-            [self resetSettings];
+            [self.userAccount deleteAllGameInfoManagedObjects];
+            
+            [self.userAccount deleteAllUserDefaults];
+            
+            [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:ParseUserInfoSavedInParseUser];
+            
             [self loadFacebookUserInfo];
             
         } else {
             NSLog(@"User logged in through Facebook!");
             
-            // Remove saved simulator games which are not the user's
-            [self resetSimulatorGamesExceptFromUserId:user.objectId];
-            [self resetSettings];
+            [self.userAccount deleteAllGameInfoManagedObjects];
+            
+            [self.userAccount deleteAllUserDefaults];
+            
+            [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:ParseUserInfoSavedInParseUser];
+            
             [self loadFacebookUserInfo];
+            
         }
-        
-        
         
     }];
 }
+
 
 - (IBAction)anonymousLogin:(id)sender
 {
     [self pauseUI];
     
+    // Try to save in the cloud
     [PFAnonymousUtils logInWithBlock:^(PFUser *user, NSError *error) {
-        
+        if (error) {
+            // If failed to log in, maybe no internet connection
+            // User Info will be saved locally
+            NSLog(@"Anonymous login failed.");
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            [defaults setObject:@(YES) forKey:ParseUserGuestAutomaticLogin];
+            [defaults setObject:@(NO) forKey:ParseUserInfoSavedInParseUser];
+            
+        } else {
+            // Anonymous user saved in the cloud
+            // User Info will be saved in ParseUser
+            NSLog(@"Anonymous user logged in.");
+//            [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:ParseUserInfoSavedInParseUser];
+            [self.userAccount migrateUserInfoToParseUser];
+            
+        }
+             
         [self unpauseUI];
         
-        if (error) {
-            NSLog(@"Anonymous login failed.");
-            // TODO: present alert that connection failed, try again
-        } else {
-            NSLog(@"Anonymous user logged in.");
-            
-            // Reset Settings only, simulator games only deleted when logged through facebook
-            [self resetSettings];
-            [self performSegueWithIdentifier:@"Login" sender:self];
-        }
+        [self performSegueWithIdentifier:@"Login" sender:self];
     }];
+    
 }
 
-- (void)presentFacebookConnectionAlertWithSuccess:(BOOL)success
+- (void)presentFacebookConnectionAlertWithSuccess:(BOOL)success withErrorMessage:(NSString *)errorMessage
 {
     NSString *title = success ? @"Facebook connection successful" : @"Could not connect to Facebook";
-    NSString *subtitle = success ? nil : @"Please try again";
+    NSString *subtitle = success ? nil : errorMessage;
     
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
                                                                    message:subtitle
@@ -115,14 +168,37 @@
 
 - (void)pauseUI
 {
-    [self.activityIndicator startAnimating];
-    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+    if (![self.activityIndicator isAnimating]) {
+        [self.activityIndicator startAnimating];
+    }
+    
+    UIApplication *app = [UIApplication sharedApplication];
+    if (![app isIgnoringInteractionEvents]) {
+        [app beginIgnoringInteractionEvents];
+    }
 }
 
 - (void)unpauseUI
 {
-    [self.activityIndicator stopAnimating];
-    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+    if ([self.activityIndicator isAnimating]) {
+        [self.activityIndicator stopAnimating];
+    }
+    
+    UIApplication *app = [UIApplication sharedApplication];
+    if ([app isIgnoringInteractionEvents]) {
+        [app endIgnoringInteractionEvents];
+    }
+}
+
+- (void)showAllSubviews:(BOOL)showAllSubviews animated:(BOOL)animated
+{
+    double duration = animated ? 0.3 : 0.0;
+    
+    for (UIView *subview in [self.view subviews]) {
+        [UIView animateWithDuration:duration animations:^{
+            subview.alpha = showAllSubviews ? 1.0 : 0.0;
+        }];
+    }
 }
 
 #pragma mark - Fetch user info from Facebook
@@ -152,30 +228,30 @@
                 NSData *pictureData = [NSData dataWithContentsOfURL:pictureURL];
                 [[NSUserDefaults standardUserDefaults] setObject:pictureData forKey:UserDefaultsProfilePictureKey];
                 
-                [self performSegueWithIdentifier:@"Login" sender:self];
             }
+            
+            [self unpauseUI];
+            
+            [self performSegueWithIdentifier:@"Login" sender:self];
         }];
+    } else {
+        NSLog(@"Error. Parse User not linked to Facebook, cannot load Facebook User Info");
+        
+        [self unpauseUI];
     }
 }
 
-#pragma mark - Reset Simulator and settings
 
-- (void)resetSimulatorGamesExceptFromUserId:(NSString *)userId
-{
-    NSManagedObjectContext *context = [ManagedObjectContextCreator createMainQueueGameActivityManagedObjectContext];
-    
-    [GameInfo removeAllExistingGameInfoExceptFromUserId:userId
-                               intoManagedObjectContext:context];
-}
+#pragma mark - Getters
 
-- (void)resetSettings
+- (UserAccount *)userAccount
 {
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    if (!_userAccount) {
+        
+        _userAccount = [[UserAccount alloc] init];
+    }
     
-    [userDefaults removeObjectForKey:UserDefaultsSelectedScenarioFilenameKey];
-    [userDefaults removeObjectForKey:UserDefaultsSimulatorInitialCashKey];
-    [userDefaults removeObjectForKey:UserDefaultsSimulatorDisguiseCompaniesKey];
-    [userDefaults removeObjectForKey:UserDefaultsProfilePictureKey];
+    return _userAccount;
 }
 
 - (UIActivityIndicatorView *)activityIndicator
@@ -198,16 +274,18 @@
     if ([segue.destinationViewController isKindOfClass:[SideMenuRootViewController class]]) {
         SideMenuRootViewController *sideMenuRootViewController = (SideMenuRootViewController *)segue.destinationViewController;
         
-        // TODO: do user account loading here!
-        sideMenuRootViewController.userAccount = [[UserAccount alloc] init];
+        sideMenuRootViewController.userAccount = self.userAccount;
     }
 }
 
 #pragma mark - Unwind Segues
+
 // Use it when login out the user account
 - (IBAction)unwindToSignupViewController:(UIStoryboardSegue *)unwindSegue
 {
-    
+    [self.userAccount deleteAllUserDefaults];
+    [self.userAccount deleteAllGameInfoManagedObjects];
+    self.userAccount = nil;
 }
 
 @end

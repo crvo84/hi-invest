@@ -134,7 +134,7 @@
     numberFormatter.locale = self.userAccount.localeDefault;
     numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
     
-    GameInfo *gameInfo = [GameInfo existingGameInfoWithScenarioFilename:scenarioPurchaseInfo.filename withUserId:self.userAccount.userId intoManagedObjectContext:self.userAccount.gameInfoContext];
+    GameInfo *gameInfo = [GameInfo existingGameInfoWithScenarioFilename:scenarioPurchaseInfo.filename withUserId:[self.userAccount userId] intoManagedObjectContext:self.userAccount.gameInfoContext];
     
     BOOL gameExistsAlready = gameInfo != nil;
     
@@ -218,7 +218,7 @@
                                                             preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *continueAction = [UIAlertAction actionWithTitle:@"Reset" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         
-        [GameInfo removeExistingGameInfoWithScenarioFilename:scenarioInfo.filename withUserId:self.userAccount.userId  intoManagedObjectContext:self.userAccount.gameInfoContext];
+        [GameInfo removeExistingGameInfoWithScenarioFilename:scenarioInfo.filename withUserId:[self.userAccount userId]  intoManagedObjectContext:self.userAccount.gameInfoContext];
         
         if (self.userAccount.currentInvestingGame) {
             if ([self.userAccount.selectedScenarioFilename isEqualToString:scenarioInfo.filename]) {

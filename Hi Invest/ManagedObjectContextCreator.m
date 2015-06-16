@@ -92,6 +92,22 @@
     return managedObjectContext;
 }
 
+// Returns the managed object context for the application.
+// If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
++ (NSManagedObjectContext *)createPrivateQueueGameActivityManagedObjectContext
+{
+    NSManagedObjectContext *managedObjectContext = nil;
+    
+    NSPersistentStoreCoordinator *coordinator = [self createPersistentStoreCoordinatorWithInvestingGameActivityFilename:InvestingGameActivityDatabaseFilename withDataModelFilename:InvestingGameActivityDataModelFilename];
+    
+    if (coordinator != nil) {
+        managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+        [managedObjectContext setPersistentStoreCoordinator:coordinator];
+    }
+    
+    return managedObjectContext;
+}
+
 
 // Returns the persistent store coordinator for the application.
 // If the coordinator doesn't already exist, it is created and the application's store added to it.

@@ -110,23 +110,21 @@
     UIAlertAction *continueAction = [UIAlertAction actionWithTitle:@"Log Out" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         
         [self pauseUI];
-        
-        NSString *userIdToReset = [self.userAccount.userId copy];
+    
         [PFUser logOutInBackgroundWithBlock:^(NSError *error) {
             
             [self unpauseUI];
             
             if (!error) {
                 
-                if (self.isAnonymousUser && userIdToReset) {
-                    [self resetSimulatorGamesFromUserId:userIdToReset];
-                }
-
                 [self performSegueWithIdentifier:@"logout" sender:self];
                 
             } else {
-                NSLog(@"Could not logout from user account. %@", [error localizedDescription]);
+                NSLog(@"Could not logout from user account. %@", error.description);
+                // TODO: alert view
+            
             }
+            
         }];
     }];
     
@@ -143,12 +141,46 @@
     [self pauseUI];
     
     PFUser *user = [PFUser currentUser];
+
+    if (!user.objectId) {
+        
+        [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            
+            if (succeeded) {
+                // The object has been saved.
+                [self.userAccount migrateUserInfoToParseUser];
+                
+                [self linkParseUserWithFacebookAccount];
+                
+            }  else {
+                // TODO: Alert. PFUser without objectId. cannot connect to facebook then
+            }
+            
+            [self unpauseUI];
+        }];
+        
+    } else { // Parse user already in the cloud
+        
+        if (![[[NSUserDefaults standardUserDefaults] objectForKey:ParseUserInfoSavedInParseUser] boolValue]) {
+            [self.userAccount migrateUserInfoToParseUser];
+        }
+        
+        [self linkParseUserWithFacebookAccount];
+    }
+    
+    
+
+}
+
+- (void)linkParseUserWithFacebookAccount
+{
+    PFUser *user = [PFUser currentUser];
+    
     NSArray *permissions = @[@"public_profile", @"email", @"user_friends"];
     
     if (![PFFacebookUtils isLinkedWithUser:user]) {
+        
         [PFFacebookUtils linkUserInBackground:user withReadPermissions:permissions block:^(BOOL succeeded, NSError *error) {
-            
-            [self unpauseUI];
             
             if (succeeded) {
                 NSLog(@"Woohoo, user is linked with Facebook!");
@@ -157,25 +189,19 @@
                 
                 [self loadFacebookUserInfo];
                 
-                [self updateUI];
-                
-            } else {
-                if (error) NSLog(@"Could not connect to Facebook. %@", [error localizedDescription]);
             }
             
-            [self presentFacebookConnectionAlertWithSuccess:succeeded];
+            [self updateUI];
+            
+            [self unpauseUI];
+            
+            [self presentFacebookConnectionAlertWithSuccess:succeeded withErrorMessage:[error localizedDescription]];
             
         }];
+        
+    } else {
+        [self unpauseUI];
     }
-}
-
-- (void)resetSimulatorGamesFromUserId:(NSString *)userId
-{
-    NSManagedObjectContext *context = [ManagedObjectContextCreator createMainQueueGameActivityManagedObjectContext];
-    
-    [GameInfo removeExistingGameInfoWithScenarioFilename:nil
-                                              withUserId:userId
-                                intoManagedObjectContext:context];
 }
 
 // IF ANY CHANGE MADE HERE, DO IT ALSO IN THE SAME METHOD AT SIGNUP VIEW CONTROLLER!!
@@ -208,10 +234,10 @@
     }
 }
 
-- (void)presentFacebookConnectionAlertWithSuccess:(BOOL)success
+- (void)presentFacebookConnectionAlertWithSuccess:(BOOL)success withErrorMessage:(NSString *)errorMessage
 {
     NSString *title = success ? @"Facebook connection successful" : @"Could not connect to Facebook";
-    NSString *subtitle = success ? nil : @"Another user is linked to this facebook account";
+    NSString *subtitle = success ? nil : errorMessage;
     
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
                                                                    message:subtitle
@@ -225,14 +251,26 @@
 
 - (void)pauseUI
 {
-    [self.activityIndicator startAnimating];
-    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+    if (![self.activityIndicator isAnimating]) {
+        [self.activityIndicator startAnimating];
+    }
+    
+    UIApplication *app = [UIApplication sharedApplication];
+    if (![app isIgnoringInteractionEvents]) {
+        [app beginIgnoringInteractionEvents];
+    }
 }
 
 - (void)unpauseUI
 {
-    [self.activityIndicator stopAnimating];
-    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+    if ([self.activityIndicator isAnimating]) {
+        [self.activityIndicator stopAnimating];
+    }
+    
+    UIApplication *app = [UIApplication sharedApplication];
+    if ([app isIgnoringInteractionEvents]) {
+        [app endIgnoringInteractionEvents];
+    }
 }
 
 #pragma mark - UITableView Data Source

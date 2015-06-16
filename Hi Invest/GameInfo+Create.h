@@ -22,6 +22,8 @@
 // Return an existing GameInfo with the given scenarioFilename and userId. nil if it does not exist
 + (GameInfo *)existingGameInfoWithScenarioFilename:(NSString *)scenarioFilename withUserId:(NSString *)userId intoManagedObjectContext:(NSManagedObjectContext *)context;
 
++ (NSArray *)existingGameInfoManagedObjectsWithUserId:(NSString *)userId fromManagedObjectContext:(NSManagedObjectContext *)context;
+
 // Remove the GameInfo managed object with the given scenario filename, with the given userId.
 // If scenarioFilename is given as nil, remove GameInfo managed objects for that userId
 // If userId is given as nil, remove all GameInfo managed objects for that scenarioFilename
@@ -29,11 +31,5 @@
 + (void)removeExistingGameInfoWithScenarioFilename:(NSString *)scenarioFilename
                                         withUserId:(NSString *)userId
                           intoManagedObjectContext:(NSManagedObjectContext *)context;
-
-// Remove all existing GameInfo managed objects which userId is not equal to the given string.
-// If userId is nil, then remove all existing GameInfo managed objects
-+ (void)removeAllExistingGameInfoExceptFromUserId:(NSString *)userId intoManagedObjectContext:(NSManagedObjectContext *)context;
-
-+ (NSArray *)allExistingGameInfoFromManagedObjectContext:(NSManagedObjectContext *)context;
 
 @end
