@@ -65,6 +65,7 @@
     if (pictureData) {
         UIImageView *pictureImageView = [[UIImageView alloc] initWithFrame:self.userImageBackgroundView.bounds];
         pictureImageView.image = [UIImage imageWithData:pictureData];
+        pictureImageView.contentMode = UIViewContentModeScaleAspectFill;
         [self.userImageBackgroundView addSubview:pictureImageView];
         self.guestUserImageView.alpha = 0.0;
     } else {

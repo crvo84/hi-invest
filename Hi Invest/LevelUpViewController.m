@@ -1,27 +1,25 @@
 //
-//  UserInfoViewController.m
+//  LevelUpViewController.m
 //  Hi Invest
 //
-//  Created by Carlos Rogelio Villanueva Ousset on 6/8/15.
+//  Created by Carlos Rogelio Villanueva Ousset on 6/18/15.
 //  Copyright (c) 2015 Villou. All rights reserved.
 //
 
-#import "UserInfoViewController.h"
+#import "LevelUpViewController.h"
 #import "DefaultColors.h"
-#import "UserAccount.h"
 
-@interface UserInfoViewController ()
+@interface LevelUpViewController ()
 
 @property (weak, nonatomic) IBOutlet UIView *subview; // for white background color
 @property (weak, nonatomic) IBOutlet UIView *subsubview;
 @property (weak, nonatomic) IBOutlet UIView *userBackgroundView;
-@property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *userLevelLabel;
-@property (weak, nonatomic) IBOutlet UIProgressView *progressView;
+
 
 @end
 
-@implementation UserInfoViewController
+@implementation LevelUpViewController
 
 - (void)viewDidLoad
 {
@@ -38,40 +36,19 @@
     // Subsubview setup
     self.subsubview.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]];
     
-    NSInteger userLevel = [self.userAccount userLevel];
-    
     // User Background View Setup
     self.userBackgroundView.layer.cornerRadius = 8;
     self.userBackgroundView.layer.masksToBounds = YES;
-    self.userBackgroundView.backgroundColor = [DefaultColors userLevelColorForLevel:userLevel];
-    if (userLevel == 7) {
+    self.userBackgroundView.backgroundColor = [DefaultColors userLevelColorForLevel:self.newLevel];
+    if (self.newLevel == 7) {
         self.userBackgroundView.layer.borderColor = [UIColor lightGrayColor].CGColor;
         self.userBackgroundView.layer.borderWidth = 1;
     }
-    
-    NSString *userName = [self.userAccount userName];
-    
-    // User Name Label
-    self.userNameLabel.text = userName;
-    
+
     // User Level Label
-    // userLevel + 1 because it is zero based
-    self.userLevelLabel.text = [NSString stringWithFormat:@"Ninja Level %ld", (long)userLevel + 1];
-    
-    // Progress view
-    [self.progressView setProgress:0.0];
-    
+    // User Level + 1 because it is zero based
+    self.userLevelLabel.text = [NSString stringWithFormat:@"Ninja Level %ld", (long)self.newLevel + 1];
 }
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-    // SuccessfulQuizzesCount is given as nil to get the current user info
-    [self.progressView setProgress:[self.userAccount progressForNextUserLevel] animated:YES];
-}
-
-
 
 #pragma mark - Dismissing
 

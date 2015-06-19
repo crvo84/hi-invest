@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class UserAccount;
+
 @interface FriendsViewController : UIViewController
+
+@property (strong, nonatomic) UserAccount *userAccount;
 
 @end

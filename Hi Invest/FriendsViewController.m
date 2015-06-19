@@ -9,7 +9,11 @@
 #import "FriendsViewController.h"
 #import "FriendTableViewCell.h"
 #import "DefaultColors.h"
+#import "UserAccount.h"
 #import "ParseUserKeys.h"
+#import "UserDefaultsKeys.h"
+#import "Friend.h"
+#import "FriendStore.h"
 
 #import <Parse/Parse.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
@@ -19,6 +23,7 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UILabel *noFriendsLabel;
+@property (strong, nonatomic) NSArray *friends;
 
 @end
 
@@ -28,21 +33,37 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    
+    [self refreshFriendsInfo];
 }
 
-- (void)getFriends
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+}
+
+- (void)updateUI
+{
+    self.friends = nil;
+
+    self.noFriendsLabel.hidden = YES; // TODO: manage no friends info
+    
+    [self.tableView reloadData];
+}
+
+#pragma mark - Fetching Friends Info
+
+- (void)refreshFriendsInfo
 {
     FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
-                                  initWithGraphPath:@"/{friend-list-id}"
-                                  parameters:nil
-                                  HTTPMethod:@"GET"];
+                                  initWithGraphPath:@"/me/friends"
+                                  parameters:nil];
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection,
                                           id result,
                                           NSError *error) {
-        
         // Handle the result
         if (!error) {
+            
             // result will contain an array with your user's friends in the "data" key
             NSArray *friendObjects = [result objectForKey:@"data"];
             NSMutableArray *friendIds = [NSMutableArray arrayWithCapacity:friendObjects.count];
@@ -51,59 +72,45 @@
                 [friendIds addObject:[friendObject objectForKey:@"id"]];
             }
             
-            // Construct a PFUser query that will find friends whose facebook ids
-            // are contained in the current user's friend list.
-            PFQuery *friendQuery = [PFUser query];
-            [friendQuery whereKey:ParseUserFacebookId containedIn:friendIds];
-    
-            // findObjects will return a list of PFUsers that are friends
-            // with the current user
-            NSArray *friendUsers = [friendQuery findObjects];
+            [[NSUserDefaults standardUserDefaults] setObject:friendIds forKey:UserDefaultsFriendsFacebookIds];
             
+            [self fetchFriendsParseUsers];
+            
+        } else {
+            // TODO: alert could not update friends info. Maybe no internet connection. From error.
+            NSLog(@"Facebook Graph Friends Request. Error: %@", [error localizedDescription]);
+        }
+        
+    }];
+}
+
+- (void)fetchFriendsParseUsers
+{
+    NSArray *friendsFacebookIds = [[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsFriendsFacebookIds];
+    
+    if (!friendsFacebookIds) return;
+    
+    // Construct a PFUser query that will find friends whose facebook ids
+    // are contained in the current user's friend list.
+    PFQuery *friendQuery = [PFUser query];
+    [friendQuery whereKey:ParseUserFacebookId containedIn:friendsFacebookIds];
+    
+    // findObjects will return a list of PFUsers that are friends
+    // with the current user
+    [friendQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        
+        if (!error) {
+            [[FriendStore sharedStore] updateFriendsWithParseUsers:objects];
+            [self updateUI];
+        } else {
+            // TODO: alert could not update friends info. Maybe no internet connection. From error.
+            NSLog(@"Friends parse users fetch. Error: %@", [error localizedDescription]);
         }
     }];
 }
 
 
-//// Issue a Facebook Graph API request to get your user's friend list
-//[FBRequestConnection startForMyFriendsWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-//    if (!error) {
-//        // result will contain an array with your user's friends in the "data" key
-//        NSArray *friendObjects = [result objectForKey:@"data"];
-//        NSMutableArray *friendIds = [NSMutableArray arrayWithCapacity:friendObjects.count];
-//        // Create a list of friends' Facebook IDs
-//        for (NSDictionary *friendObject in friendObjects) {
-//            [friendIds addObject:[friendObject objectForKey:@"id"]];
-//        }
-//        
-//        // Construct a PFUser query that will find friends whose facebook ids
-//        // are contained in the current user's friend list.
-//        PFQuery *friendQuery = [PFUser query];
-//        [friendQuery whereKey:@"fbId" containedIn:friendIds];
-//        
-//        // findObjects will return a list of PFUsers that are friends
-//        // with the current user
-//        NSArray *friendUsers = [friendQuery findObjects];
-//    }
-//}];
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    [self updateUI];
-}
-
-- (void)updateUI
-{
-    self.noFriendsLabel.hidden = YES; // TODO: If no friends, unhide label
-    
-    // Maybe not reloading table view each time, to avoid to many internet calls
-}
-
 #pragma mark - UITableView Data Source
-
-#define FriendsProvisionalNamesArray @[@"Carlos Rogelio", @"Malala", @"Lucas", @"Flash", @"crvo84", @"Tyrion Lannister", @"Eddard Stark", @"Daenerys Targaryen"]
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -112,16 +119,45 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [FriendsProvisionalNamesArray count];
+    return [self.friends count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     FriendTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"Friend Cell"];
     
-    cell.userLevelBackgroundView.backgroundColor = [DefaultColors userLevelColorForLevel:indexPath.row];
-    cell.userNameLabel.text = FriendsProvisionalNamesArray[indexPath.row];
-    cell.userLevelLabel.text = [NSString stringWithFormat:@"Ninja Level %ld", (long)indexPath.row + 1];
+    Friend *friend = self.friends[indexPath.row];
+    NSInteger level = friend.level;
+    
+    cell.userLevelBackgroundView.backgroundColor = [DefaultColors userLevelColorForLevel:level];
+    cell.userNameLabel.text = friend.name;
+    cell.userLevelLabel.text = [NSString stringWithFormat:@"Ninja Level %ld", (long)level + 1];
+    
+    // Profile picture
+    NSData *pictureData = friend.picture;
+    if (pictureData) {
+        cell.userProfileImageView.image = [UIImage imageWithData:pictureData];
+    } else {
+        // TODO: Add unknown image
+        cell.userProfileImageView.image = nil;
+        
+        // Downloading facebook profile picture (in jpg)
+        // type must be one of the following values: small (50x50 2kb), normal (100x100 4kb), album (50x50 2kb), large (200x200 10kb), square (50x50 2kb)
+        NSURL *pictureURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=normal&return_ssl_res", friend.facebookId]];
+    
+        NSURLRequest *urlRequest = [NSURLRequest requestWithURL:pictureURL];
+    
+        // Run network request asynchronously
+        [NSURLConnection sendAsynchronousRequest:urlRequest
+                                           queue:[NSOperationQueue mainQueue]
+                               completionHandler:
+         ^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+             if (connectionError == nil && data != nil) {
+                 [[FriendStore sharedStore] setPicture:data forFriendWithFacebookId:friend.facebookId];
+                 [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+             }
+         }];
+    }
     
     return cell;
 }
@@ -129,12 +165,26 @@
 
 #pragma mark - UITableView Delegate
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 76;
+}
 
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 0.1;
+}
 
+#pragma mark - Getters
 
-
-
-
+- (NSArray *)friends
+{
+    if (!_friends) {
+        _friends = [[FriendStore sharedStore] friendsOrderedByLevel];
+    }
+    
+    return _friends;
+}
 
 
 

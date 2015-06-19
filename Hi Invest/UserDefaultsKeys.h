@@ -9,11 +9,14 @@
 #ifndef Hi_Invest_UserDefaultsKeys_h
 #define Hi_Invest_UserDefaultsKeys_h
 
+// User
 #define UserDefaultsProfilePictureKey @"profilePicture"
 #define UserDefaultsSelectedScenarioFilenameKey @"selectedScenarioFilename"
 #define UserDefaultsSimulatorInitialCashKey @"simulatorInitialCash"
 #define UserDefaultsSimulatorDisguiseCompaniesKey @"disguiseCompanies"
+#define UserDefaultsFriendsFacebookIds @"friendsFacebookIds"
 
+// Login process
 #define UserDefaultsGuestAutomaticLogin @"guestAutomaticLogin"
 #define UserDefaultsInfoSavedInParseUser @"infoSavedInParseUser"
 

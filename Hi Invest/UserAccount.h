@@ -12,10 +12,12 @@
 
 @class InvestingGame;
 @class GameInfo;
+@class PFUser;
 
 @interface UserAccount : NSObject
 
 @property (copy, nonatomic) NSLocale *localeDefault; // Default NSLocale (Others: QuizGenerator, each scenario)
+@property (strong, nonatomic) NSArray *friends; // of Friend
 
 // Investing Game
 @property (strong, nonatomic, readonly) InvestingGame *currentInvestingGame;
@@ -34,6 +36,10 @@
 @property (strong, nonatomic, readonly) NSMutableDictionary *lowestReturns; // @{ scenarioFilename : @(lowest Return) }
 @property (strong, nonatomic, readonly) NSMutableDictionary *highestReturns; // @{ scenarioFilename : @(highest Return) }
 
+#pragma mark - Class Methods
+
+// Return the user ninja level (0 is the lowest) depending on answered quizzes from the given dictionary
++ (NSInteger)userLevelFromSuccessfulQuizzesCount:(NSDictionary *)successfulQuizzesCount;
 
 #pragma mark - User Info
 // Return the current user objectId, if the user is not saved on the cloud, objectId will be nil, so return @"Guest"
@@ -59,7 +65,7 @@
 // Return the current number of successful quizzes for the given quiz type
 // Return 0 (initial level) if there is no record for the given quiz type
 - (NSInteger)successfulQuizzesForQuizType:(QuizType)quizType;
-// Return the quiz progress [0,1) to get to the next user level
+// Return the quiz progress [0,1) to get to the next user level.
 - (double)progressForNextUserLevel;
 
 #pragma mark - Investing Games

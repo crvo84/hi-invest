@@ -10,6 +10,7 @@
 #import "QuizViewController.h"
 #import "QuizTableViewCell.h"
 #import "QuizGenerator.h"
+#import "LevelUpViewController.h"
 #import "UserAccount.h"
 #import "DefaultColors.h"
 #import "Quiz.h"
@@ -31,28 +32,7 @@
 
 - (void)updateUI
 {
-    for (int quizType = 0; quizType < QuizTypeCount; quizType++) { // Because QuizTypeCount is an enum at Quiz.h
-        
-        QuizGenerator *quizGenerator = [[QuizGenerator alloc] init];
-        NSInteger quizTypeSuccessfulQuizzes = [self.userAccount successfulQuizzesForQuizType:quizType];
-        NSInteger maxQuizTypeDifficultyLevel = [quizGenerator maximumDifficultyLevelForQuizType:quizType];
-        
-        QuizTableViewCell *quizCell = (QuizTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:quizType inSection:0]];
-        
-        if (quizTypeSuccessfulQuizzes <= maxQuizTypeDifficultyLevel) {
-            
-            quizCell.accessoryType = UITableViewCellAccessoryNone;
-            quizCell.progressView.hidden = NO;
-            
-            // maxQuizTypeDifficultyLevel + 1 because it has zero based index
-            [quizCell.progressView setProgress:((CGFloat)quizTypeSuccessfulQuizzes) / (maxQuizTypeDifficultyLevel + 1) animated:YES];
-            
-        } else {
-            
-            quizCell.accessoryType = UITableViewCellAccessoryCheckmark;
-            quizCell.progressView.hidden = YES;
-        }
-    }
+    [self.tableView reloadData];
 }
 
 #pragma mark - UITableView Data Source
@@ -79,6 +59,23 @@
     
     UIColor *progressColor = [[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:[DefaultColors UIElementsBackgroundAlpha]];
     [quizCell.progressView setProgressTintColor:progressColor];
+
+    NSInteger quizTypeSuccessfulQuizzes = [self.userAccount successfulQuizzesForQuizType:quizType];
+    NSInteger maxQuizTypeDifficultyLevel = [quizGenerator maximumDifficultyLevelForQuizType:quizType];
+    
+    if (quizTypeSuccessfulQuizzes <= maxQuizTypeDifficultyLevel) {
+        
+        quizCell.accessoryType = UITableViewCellAccessoryNone;
+        quizCell.progressView.hidden = NO;
+        
+        // maxQuizTypeDifficultyLevel + 1 because it has zero based index
+        [quizCell.progressView setProgress:((CGFloat)quizTypeSuccessfulQuizzes) / (maxQuizTypeDifficultyLevel + 1) animated:NO];
+        
+    } else {
+        
+        quizCell.accessoryType = UITableViewCellAccessoryCheckmark;
+        quizCell.progressView.hidden = YES;
+    }
     
     return quizCell;
 }
@@ -135,6 +132,44 @@
             [self prepareQuizViewController:(QuizViewController *)viewController withQuiz:quiz quizType:quizType quizAlreadyDone:quizAlreadyDone];
         }
     }
+    
+    if ([viewController isKindOfClass:[LevelUpViewController class]]) {
+        [self prepareLevelUpViewController:(LevelUpViewController *)viewController withNewLevel:[self.userAccount userLevel]];
+    }
+}
+
+// Used only when quiz was completed successfully
+- (IBAction)unwindToQuizSelectionViewController:(UIStoryboardSegue *)unwindSegue
+{
+    if ([unwindSegue.sourceViewController isKindOfClass:[QuizViewController class]]) {
+        UIViewController *viewController = ((QuizViewController *)unwindSegue.sourceViewController);
+        
+        if ([viewController isKindOfClass:[QuizViewController class]]) {
+            QuizViewController *quizViewController = (QuizViewController *)viewController;
+            
+            if (quizViewController.succesfulQuiz && !quizViewController.quizAlreadyDone) {
+                
+                NSInteger previousLevel = [self.userAccount userLevel];
+                
+                [self.userAccount increaseSuccessfulQuizzesForQuizType:quizViewController.quizType];
+                
+                NSInteger newLevel = [self.userAccount userLevel];
+                
+                if (previousLevel < newLevel) {
+                    [self presentLevelUpAfterNumberOfSeconds:0.2];
+                }
+            }
+        }
+    }
+}
+
+- (void)presentLevelUpAfterNumberOfSeconds:(double)seconds
+{
+    // Wait some time to let QuizViewController dismiss completely
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, seconds * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void){
+        //code to be executed on the main queue after delay
+        [self performSegueWithIdentifier:@"Level Up" sender:self];
+    });
 }
 
 - (void)prepareQuizViewController:(QuizViewController *)quizViewController withQuiz:(Quiz *)quiz
@@ -146,18 +181,9 @@
     quizViewController.title = [NSString stringWithFormat:@"QUIZ  |  %@", quiz.title];
 }
 
-// Used only when quiz was completed successfully
-- (IBAction)unwindToQuizSelectionViewController:(UIStoryboardSegue *)unwindSegue
+- (void)prepareLevelUpViewController:(LevelUpViewController *)levelUpViewController withNewLevel:(NSInteger)newLevel
 {
-    if ([unwindSegue.sourceViewController isKindOfClass:[QuizViewController class]]) {
-        UIViewController *viewController = ((QuizViewController *)unwindSegue.sourceViewController);
-        if ([viewController isKindOfClass:[QuizViewController class]]) {
-            QuizViewController *quizViewController = (QuizViewController *)viewController;
-            if (quizViewController.succesfulQuiz && !quizViewController.quizAlreadyDone) {
-                [self.userAccount increaseSuccessfulQuizzesForQuizType:quizViewController.quizType];
-            }
-        }
-    }
+    levelUpViewController.newLevel = newLevel;
 }
 
 #pragma mark - Getters

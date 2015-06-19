@@ -285,6 +285,7 @@
 - (NSUInteger)numberOfQuestionsForQuizType:(QuizType)quizType forDifficultyLevel:(NSInteger)difficultyLevel
 {
     NSUInteger num = 0;
+    
     switch (difficultyLevel) {
         case 0:
             num = 5;

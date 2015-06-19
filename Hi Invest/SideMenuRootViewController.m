@@ -16,6 +16,7 @@
 #import "LeftMenuViewController.h"
 #import "TimeSimulationViewController.h"
 #import "SimulatorInfoViewController.h"
+#import "FriendStore.h"
 #import "UserDefaultsKeys.h"
 #import "ParseUserKeys.h"
 
@@ -53,7 +54,8 @@
 {
     [super viewDidLoad];
     
-    [self loadFacebookUserInfo];
+    [self loadFacebookUserInfo]; // Done only once at signing in
+//    [[FriendStore sharedStore] fetchFriendsFacebookIds];
 }
 
 #pragma mark - Fetch user info from Facebook
@@ -86,6 +88,7 @@
                 [self downloadFacebookProfilePicture];
                 
             } else {
+                
                 NSLog(@"Facebook Graph request error: %@", [error localizedDescription]);
                 [PFUser logOutInBackgroundWithBlock:^(NSError *error) {
                     if (!error) {
@@ -101,6 +104,7 @@
     }
 }
 
+
 // If needed, download the profile picture from facebook
 - (void)downloadFacebookProfilePicture
 {
@@ -111,7 +115,8 @@
     
     if (facebookId && needProfilePicture) {
         
-        // Downloading facebook profile picture (in jpg, aprox 10kb) and save it in user defaults
+        // Downloading facebook profile picture (in jpg) and save it in user defaults
+        // type must be one of the following values: small (50x50 2kb), normal (100x100 4kb), album (50x50 2kb), large (200x200 10kb), square (50x50 2kb)
         NSURL *pictureURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large&return_ssl_res", facebookId]];
         
         NSURLRequest *urlRequest = [NSURLRequest requestWithURL:pictureURL];
@@ -230,7 +235,7 @@
     NSInteger daysLeft = [game daysLeft];
     
     if (daysLeft == 0) {
-        [self presentDayUpdateAfterNumberOfSeconds:0.1];
+        [self presentDayUpdateAfterNumberOfSeconds:0.2];
         return;
     }
     
@@ -345,7 +350,7 @@
     // UNWIND FROM TimeSimulationViewController
     if ([unwindSegue.sourceViewController isKindOfClass:[TimeSimulationViewController class]]) {
         
-        [self presentDayUpdateAfterNumberOfSeconds:0.1];
+        [self presentDayUpdateAfterNumberOfSeconds:0.2];
     }
     
     // UNWIND FROM SimulatorGameOverViewController
@@ -357,7 +362,7 @@
                 ((SimulatorTabBarController *)self.contentViewController).userAccount = self.userAccount;
                 
             }
-            [self presentDayUpdateAfterNumberOfSeconds:0.1];
+            [self presentDayUpdateAfterNumberOfSeconds:0.2];
         }
     }
     

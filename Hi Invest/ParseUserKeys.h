@@ -9,7 +9,7 @@
 #ifndef Hi_Invest_ParseUserKeys_h
 #define Hi_Invest_ParseUserKeys_h
 
-#define ParseUserGuestUserId @"Guest"
+#define ParseUserGuestUserId @"Investor"
 
 #define ParseUserFirstName @"firstName"
 #define ParseUserFacebookId @"facebookId"

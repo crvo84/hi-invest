@@ -14,6 +14,8 @@
 @interface GlossaryViewController () <UITableViewDataSource, UITabBarDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (nonatomic) NSInteger selectedSection;
+@property (nonatomic) NSInteger selectedRow;
 
 @end
 
@@ -133,15 +135,16 @@
 {
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    UITableViewCell *selectedCell = [self.tableView cellForRowAtIndexPath:indexPath];
+    self.selectedSection = indexPath.section;
+    self.selectedRow = indexPath.row;
     
     if ([self.glossaryId isEqualToString:GlossaryTypeFinancialRatios]) {
         
-        [self performSegueWithIdentifier:@"Definition With Formula" sender:selectedCell];
+        [self performSegueWithIdentifier:@"Definition With Formula" sender:self];
         
     } else {
         
-        [self performSegueWithIdentifier:@"Definition" sender:selectedCell];
+        [self performSegueWithIdentifier:@"Definition" sender:self];
     }
 }
 
@@ -177,68 +180,67 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.destinationViewController isKindOfClass:[DefinitionViewController class]]) {
-        if ([sender isKindOfClass:[UITableViewCell class]]) {
             
-            NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
-            
-            NSString *definitionId = nil;
-            NSString *definition = nil;
-            NSString *formulaImageFilename = nil;
-            NSString *source = nil;
-            
-            if ([self.glossaryId isEqualToString:GlossaryTypeFinancialRatios]) {
-                if (indexPath.section == 0) {
-                    definitionId = FinancialRatioCategoryLiquidityIdentifiersArray[indexPath.row];
-                }
-                if (indexPath.section == 1) {
-                    definitionId = FinancialRatioCategoryProfitabilyIdentifiersArray[indexPath.row];
-                }
-                if (indexPath.section == 2) {
-                    definitionId = FinancialRatioCategoryDebtIdentifiersArray[indexPath.row];
-                }
-                if (indexPath.section == 3) {
-                    definitionId = FinancialRatioCategoryInvestmentValuationIdentifiersArray[indexPath.row];
-                }
-                if (indexPath.section == 4) {
-                    definitionId = FinancialRatioCategoryCashFlowIdentifiersArray[indexPath.row];
-                }
-                
-                definition = FinancialRatiosDefinitionsDictionary[definitionId];
-                formulaImageFilename = FinancialRatiosImageFilenamesDictionary[definitionId];
+        NSInteger section = self.selectedSection;
+        NSInteger row = self.selectedRow;
+        
+        NSString *definitionId = nil;
+        NSString *definition = nil;
+        NSString *formulaImageFilename = nil;
+        NSString *source = nil;
+        
+        if ([self.glossaryId isEqualToString:GlossaryTypeFinancialRatios]) {
+            if (section == 0) {
+                definitionId = FinancialRatioCategoryLiquidityIdentifiersArray[row];
+            }
+            if (section == 1) {
+                definitionId = FinancialRatioCategoryProfitabilyIdentifiersArray[row];
+            }
+            if (section == 2) {
+                definitionId = FinancialRatioCategoryDebtIdentifiersArray[row];
+            }
+            if (section == 3) {
+                definitionId = FinancialRatioCategoryInvestmentValuationIdentifiersArray[row];
+            }
+            if (section == 4) {
+                definitionId = FinancialRatioCategoryCashFlowIdentifiersArray[row];
             }
             
-            if ([self.glossaryId isEqualToString:GlossaryTypeFinancialStatementTerms]) {
-                if (indexPath.section == 0) {
-                    definitionId = FinancialStatementGeneralTermsArray[indexPath.row];
-                }
-                if (indexPath.section == 1) {
-                    definitionId = FinancialStatementBalanceSheetTermsArray[indexPath.row];
-                }
-                if (indexPath.section == 2) {
-                    definitionId = FinancialStatementIncomeStatementTermsArray[indexPath.row];
-                }
-                if (indexPath.section == 3) {
-                    definitionId = FinancialStatementCashFlowTermsArray[indexPath.row];
-                }
-                
-                definition = FinancialStatementTermDefinitionsDictionary[definitionId];
-            }
-            
-            if ([self.glossaryId isEqualToString:GlossaryTypeStockMarketTerms]) {
-                NSArray *stockMarketTermIdentifiers = [[StockMarketTermDefinitionsDictionary allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-                definitionId = stockMarketTermIdentifiers[indexPath.row];
-                definition = StockMarketTermDefinitionsDictionary[definitionId];
-            }
-            
-            // Source availability
-            if ([FinancialDefinitionSourceNASDAQTermsArray containsObject:definition]) {
-                source = @"Nasdaq.com";
-            } else if ([FinancialDefinitionSourceNYSSCPATermsArray containsObject:definition]) {
-                source = @"NY Society of Certified Public Accountants";
-            }
-            
-            [self prepareDefinitionViewController:segue.destinationViewController withDefinitionId:definitionId withDefinition:definition withFormulaImageFilename:formulaImageFilename withSource:source];
+            definition = FinancialRatiosDefinitionsDictionary[definitionId];
+            formulaImageFilename = FinancialRatiosImageFilenamesDictionary[definitionId];
         }
+        
+        if ([self.glossaryId isEqualToString:GlossaryTypeFinancialStatementTerms]) {
+            if (section == 0) {
+                definitionId = FinancialStatementGeneralTermsArray[row];
+            }
+            if (section == 1) {
+                definitionId = FinancialStatementBalanceSheetTermsArray[row];
+            }
+            if (section == 2) {
+                definitionId = FinancialStatementIncomeStatementTermsArray[row];
+            }
+            if (section == 3) {
+                definitionId = FinancialStatementCashFlowTermsArray[row];
+            }
+            
+            definition = FinancialStatementTermDefinitionsDictionary[definitionId];
+        }
+        
+        if ([self.glossaryId isEqualToString:GlossaryTypeStockMarketTerms]) {
+            NSArray *stockMarketTermIdentifiers = [[StockMarketTermDefinitionsDictionary allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+            definitionId = stockMarketTermIdentifiers[row];
+            definition = StockMarketTermDefinitionsDictionary[definitionId];
+        }
+        
+        // Source availability
+        if ([FinancialDefinitionSourceNASDAQTermsArray containsObject:definition]) {
+            source = @"Nasdaq.com";
+        } else if ([FinancialDefinitionSourceNYSSCPATermsArray containsObject:definition]) {
+            source = @"NY Society of Certified Public Accountants";
+        }
+        
+        [self prepareDefinitionViewController:segue.destinationViewController withDefinitionId:definitionId withDefinition:definition withFormulaImageFilename:formulaImageFilename withSource:source];
     }
 }
 

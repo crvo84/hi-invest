@@ -3,17 +3,17 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "logoSkinny122x165.png"
+      "filename" : "logoFit80x110.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "logoSkinny244x330.png"
+      "filename" : "logoFit160x220.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "logoSkinny366x495.png"
+      "filename" : "logoFit240x331.png"
     }
   ],
   "info" : {

@@ -58,6 +58,7 @@
         
         UIImageView *pictureImageView = [[UIImageView alloc] initWithFrame:self.backgroundUserView.bounds];
         pictureImageView.image = [UIImage imageWithData:pictureData];
+        pictureImageView.contentMode = UIViewContentModeScaleAspectFill;
         [self.backgroundUserView addSubview:pictureImageView];
         
         self.userImageView.hidden = YES;

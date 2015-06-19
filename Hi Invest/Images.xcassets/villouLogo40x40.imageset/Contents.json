@@ -3,17 +3,17 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "facebookLogo40x40.png"
+      "filename" : "villouLogo40x40.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "facebookLogo80x80.png"
+      "filename" : "villouLogo80x80.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "facebookLogo120x120.png"
+      "filename" : "villouLogo120x120.png"
     }
   ],
   "info" : {

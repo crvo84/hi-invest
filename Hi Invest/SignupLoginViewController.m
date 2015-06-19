@@ -14,6 +14,7 @@
 #import "SideMenuRootViewController.h"
 #import "Scenario.h"
 #import "GameInfo+Create.h"
+#import "FriendStore.h"
 #import "UserDefaultsKeys.h"
 #import "ParseUserKeys.h"
 
@@ -23,6 +24,10 @@
 
 @interface SignupLoginViewController ()
 
+@property (strong, nonatomic) IBOutlet UIImageView *logoImageView;
+@property (strong, nonatomic) IBOutlet UIView *facebookBackgroundView;
+@property (strong, nonatomic) IBOutlet UIButton *facebookLoginButton;
+@property (strong, nonatomic) IBOutlet UIButton *skipLoginButton;
 @property (strong, nonatomic) UIActivityIndicatorView *activityIndicator;
 @property (strong, nonatomic) UserAccount *userAccount;
 
@@ -30,12 +35,26 @@
 
 @implementation SignupLoginViewController
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    self.logoImageView.image = [[UIImage imageNamed:@"logoFit80x110"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    self.logoImageView.tintColor = [UIColor whiteColor];
+    
+    self.facebookBackgroundView.layer.cornerRadius = self.facebookBackgroundView.frame.size.height / 2;
+    self.facebookBackgroundView.layer.masksToBounds = YES;
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    [self showAllSubviews:NO animated:NO];
+
+    self.facebookBackgroundView.alpha = 0.0;
+    self.facebookLoginButton.alpha = 0.0;
+    self.skipLoginButton.alpha = 0.0;
 }
+
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -67,10 +86,41 @@
             [self performSegueWithIdentifier:@"Login" sender:self];
             
         }];
+        
+    } else {
+        [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+            self.facebookBackgroundView.alpha = 1.0;
+            self.facebookLoginButton.alpha = 1.0;
+            self.skipLoginButton.alpha = 1.0;
+        } completion:^(BOOL finished) {
+
+        }];
     }
-    
-    [self showAllSubviews:YES animated:YES];
+
 }
+
+
+//- (void)moveLogoToFinalPosition
+//{
+//    CGPoint finalLogoCenter = self.logoImageView.center;
+//    
+//    // Starting Logo Center
+//    CGPoint startingLogoCenter = self.view.center;
+//
+//    self.logoImageView.center = startingLogoCenter;
+//    self.logoImageView.alpha = 1.0;
+//
+//    [UIView animateWithDuration:1.0 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+//        self.logoImageView.center = finalLogoCenter;
+//    } completion:^(BOOL finished) {
+//        [UIView animateWithDuration:0.5 delay:1.0 options:UIViewAnimationOptionTransitionNone animations:^{
+//            self.facebookLoginButton.alpha = 1.0;
+//            self.skipLoginButton.alpha = 1.0;
+//        } completion:^(BOOL finished) {
+//
+//        }];
+//    }];
+//}
 
 
 - (IBAction)facebookLogin:(id)sender
@@ -91,6 +141,8 @@
         } else {
             
             NSLog(@"User logged in through Facebook!");
+            
+            [[FriendStore sharedStore] removeAllFriends];
             
             [self.userAccount deleteAllGameInfoManagedObjects];
             
@@ -177,17 +229,6 @@
     }
 }
 
-- (void)showAllSubviews:(BOOL)showAllSubviews animated:(BOOL)animated
-{
-    double duration = animated ? 0.3 : 0.0;
-    
-    for (UIView *subview in [self.view subviews]) {
-        [UIView animateWithDuration:duration animations:^{
-            subview.alpha = showAllSubviews ? 1.0 : 0.0;
-        }];
-    }
-}
-
 
 #pragma mark - Getters
 
@@ -230,8 +271,10 @@
 // Use it when login out the user account
 - (IBAction)unwindToSignupViewController:(UIStoryboardSegue *)unwindSegue
 {
-    [self.userAccount deleteAllUserDefaults];
+    
+    [[FriendStore sharedStore] removeAllFriends];
     [self.userAccount deleteAllGameInfoManagedObjects];
+    [self.userAccount deleteAllUserDefaults];
     self.userAccount = nil;
 }
 

@@ -18,6 +18,8 @@
     
     self.userLevelBackgroundView.layer.cornerRadius = 5;
     self.userLevelBackgroundView.layer.masksToBounds = YES;
+    
+    self.userProfileImageView.contentMode = UIViewContentModeScaleAspectFill;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

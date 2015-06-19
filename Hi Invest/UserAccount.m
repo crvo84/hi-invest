@@ -64,6 +64,11 @@
     return [self totalSuccessfulQuizzesCount] / UserAccountSuccessfulQuizzesPerUserLevel;
 }
 
++ (NSInteger)userLevelFromSuccessfulQuizzesCount:(NSDictionary *)successfulQuizzesCount
+{
+    return [self totalSuccessfulQuizzesCountFromSuccessfulQuizzesCount:successfulQuizzesCount] / UserAccountSuccessfulQuizzesPerUserLevel;
+}
+
 - (void)updateUserSimulatorInfoWithFinishedGameInfo:(GameInfo *)gameInfo
 {
     if (![gameInfo.disguiseCompanies boolValue]) {
@@ -247,8 +252,16 @@
 
 - (void)deleteAllUserDefaults
 {
-    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
-    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    [defaults removeObjectForKey:UserDefaultsProfilePictureKey];
+    [defaults removeObjectForKey:UserDefaultsSelectedScenarioFilenameKey];
+    [defaults removeObjectForKey:UserDefaultsSimulatorDisguiseCompaniesKey];
+    [defaults removeObjectForKey:UserDefaultsSimulatorInitialCashKey];
+    [defaults removeObjectForKey:UserDefaultsGuestAutomaticLogin];
+    [defaults removeObjectForKey:UserDefaultsInfoSavedInParseUser];
+    [defaults removeObjectForKey:UserDefaultsFriendsFacebookIds];
+    
 }
 
 - (void)deleteAllGameInfoManagedObjects
@@ -259,7 +272,7 @@
 
 #pragma mark - Quizzes
 
-// Return the quiz progress [0,1) to get to the next user level
+// Return the quiz progress [0,1) to get to the next user level.
 - (double)progressForNextUserLevel
 {
     return ([self totalSuccessfulQuizzesCount] % UserAccountSuccessfulQuizzesPerUserLevel) / (double)UserAccountSuccessfulQuizzesPerUserLevel;
@@ -267,9 +280,9 @@
 
 - (NSInteger)totalSuccessfulQuizzesCount
 {
-    NSDictionary *successfulQuizzesCount = self.successfulQuizzesCount;
-    
     NSInteger totalSuccessfulQuizzesCount = 0;
+    
+    NSDictionary *successfulQuizzesCount = self.successfulQuizzesCount;
     
     for (NSString *key in successfulQuizzesCount) {
         
@@ -278,6 +291,20 @@
     }
 
     return totalSuccessfulQuizzesCount;
+}
+
++ (NSInteger)totalSuccessfulQuizzesCountFromSuccessfulQuizzesCount:(NSDictionary *)successfulQuizzesCount
+{
+    NSInteger totalSuccessfulQuizzesCount = 0;
+    
+    for (NSString *key in successfulQuizzesCount) {
+        
+        NSNumber *quizCount = successfulQuizzesCount[key];
+        totalSuccessfulQuizzesCount += [quizCount integerValue];
+    }
+    
+    return totalSuccessfulQuizzesCount;
+    
 }
 
 - (void)increaseSuccessfulQuizzesForQuizType:(QuizType)quizType

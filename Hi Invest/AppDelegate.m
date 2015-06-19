@@ -28,7 +28,7 @@
     [self setDefaultUIColors];
     
     // [Optional] Power your app with Local Datastore.
-    [Parse enableLocalDatastore];
+//    [Parse enableLocalDatastore];
     
     // Initialize Parse.
     [Parse setApplicationId:@"VfZRAhhGl9MJKKv00RUflxktEF239YU0L6o8YZOv"
