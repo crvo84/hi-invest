@@ -15,6 +15,7 @@
 #import "GameInfo+Create.h"
 #import "ParseUserKeys.h"
 #import "UserDefaultsKeys.h"
+#import "ScenariosKeys.h"
 #import <Parse/Parse.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
@@ -172,7 +173,7 @@
 {
     PFUser *user = [PFUser currentUser];
     
-    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsInfoSavedInParseUser] boolValue];
+    BOOL infoSavedInParseUser = [[NSUserDefaults standardUserDefaults] boolForKey:UserDefaultsInfoSavedInParseUser];
     
     /* Only if the ParseUser has already been saved in the cloud and got an ObjectId.
        and only if the user info has been copied from NSUserDefaults to the Parse User, 
@@ -188,13 +189,13 @@
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    if (![[defaults objectForKey:UserDefaultsInfoSavedInParseUser] boolValue]) {
+    if (![defaults boolForKey:UserDefaultsInfoSavedInParseUser]) {
         
         [self copyUserDefaultsToParseUser];
         [self deleteUserDefaultsAlreadyInParseUser];
         [self updateGuestSavedGameInfoManagedObjectsWithNewParseObjectId];
         
-        [defaults setObject:@(YES) forKey:UserDefaultsInfoSavedInParseUser];
+        [defaults setBool:YES forKey:UserDefaultsInfoSavedInParseUser];
     }
 }
 
@@ -226,6 +227,8 @@
     [defaults removeObjectForKey:ParseUserAverageReturns];
     [defaults removeObjectForKey:ParseUserLowestReturns];
     [defaults removeObjectForKey:ParseUserHighestReturns];
+    
+    [defaults synchronize];
 }
 
 // Update the GameInfo saved games userId from Guest, to new parse user objectId
@@ -262,6 +265,7 @@
     [defaults removeObjectForKey:UserDefaultsInfoSavedInParseUser];
     [defaults removeObjectForKey:UserDefaultsFriendsFacebookIds];
     
+    [defaults synchronize];
 }
 
 - (void)deleteAllGameInfoManagedObjects
@@ -400,7 +404,7 @@
 {
     NSString *selectedFilename = [[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsSelectedScenarioFilenameKey];
     
-    return selectedFilename ? selectedFilename : @"DEMO_001A";
+    return selectedFilename ? selectedFilename : ScenarioFilenameDEMO_001A;
 }
 
 - (double)simulatorInitialCash // No guardar en parse user
@@ -421,7 +425,7 @@
 {
     PFUser *user = [PFUser currentUser];
     
-    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsInfoSavedInParseUser] boolValue];
+    BOOL infoSavedInParseUser = [[NSUserDefaults standardUserDefaults] boolForKey:UserDefaultsInfoSavedInParseUser];
     
     NSDictionary *succesfulQuizzesCount;
     
@@ -441,7 +445,7 @@
 {
     PFUser *user = [PFUser currentUser];
     
-    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsInfoSavedInParseUser] boolValue];
+    BOOL infoSavedInParseUser = [[NSUserDefaults standardUserDefaults] boolForKey:UserDefaultsInfoSavedInParseUser];
     
     NSDictionary *finishedScenariosCount;
     
@@ -461,7 +465,7 @@
 {
     PFUser *user = [PFUser currentUser];
     
-    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsInfoSavedInParseUser] boolValue];
+    BOOL infoSavedInParseUser = [[NSUserDefaults standardUserDefaults] boolForKey:UserDefaultsInfoSavedInParseUser];
     
     NSDictionary *averageReturns;
     
@@ -481,7 +485,7 @@
 {
     PFUser *user = [PFUser currentUser];
     
-    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsInfoSavedInParseUser] boolValue];
+    BOOL infoSavedInParseUser = [[NSUserDefaults standardUserDefaults] boolForKey:UserDefaultsInfoSavedInParseUser];
     
     NSDictionary *lowestReturns;
     
@@ -501,7 +505,7 @@
 {
     PFUser *user = [PFUser currentUser];
     
-    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsInfoSavedInParseUser] boolValue];
+    BOOL infoSavedInParseUser = [[NSUserDefaults standardUserDefaults] boolForKey:UserDefaultsInfoSavedInParseUser];
     
     NSDictionary *highestReturns;
     
@@ -548,28 +552,28 @@
         // DEMO SCENARIO
         ScenarioPurchaseInfo *scenarioPurchaseInfoDemo = [[ScenarioPurchaseInfo alloc] init];
         scenarioPurchaseInfoDemo.name = @"DEMO";
-        scenarioPurchaseInfoDemo.filename = @"DEMO_001A";
+        scenarioPurchaseInfoDemo.filename = ScenarioFilenameDEMO_001A;
         scenarioPurchaseInfoDemo.descriptionForScenario = @"Scenario Demo";
         scenarioPurchaseInfoDemo.initialDate = [dateFormatter dateFromString:@"8/20/2014"];
         scenarioPurchaseInfoDemo.endingDate = [dateFormatter dateFromString:@"12/19/2014"];
         scenarioPurchaseInfoDemo.numberOfCompanies = 5;
         scenarioPurchaseInfoDemo.numberOfDays = 122;
         scenarioPurchaseInfoDemo.withAdds = NO;
-        scenarioPurchaseInfoDemo.price = 0.0; // Free Demo
-        scenarioPurchaseInfoDemo.sizeInMegas = [ManagedObjectContextCreator sizeInMegabytesOfDatabaseWithFilename:@"DEMO_001A"];
+        scenarioPurchaseInfoDemo.price = 0; // Free Demo
+        scenarioPurchaseInfoDemo.sizeInMegas = [ManagedObjectContextCreator sizeInMegabytesOfDatabaseWithFilename:ScenarioFilenameDEMO_001A];
         
         // DEFAULT DOW JONES SCENARIO
         ScenarioPurchaseInfo *scenarioPurchaseInfo1 = [[ScenarioPurchaseInfo alloc] init];
         scenarioPurchaseInfo1.name = @"DOW JONES 30";
-        scenarioPurchaseInfo1.filename = @"DJI_001A";
+        scenarioPurchaseInfo1.filename = ScenarioFilenameDJI_001A;
         scenarioPurchaseInfo1.descriptionForScenario = @"Dow Jones Industrial Average Companies.";
         scenarioPurchaseInfo1.initialDate = [dateFormatter dateFromString:@"12/20/2010"];
         scenarioPurchaseInfo1.endingDate = [dateFormatter dateFromString:@"12/19/2014"];
         scenarioPurchaseInfo1.numberOfCompanies = 30;
         scenarioPurchaseInfo1.numberOfDays = 1461;
         scenarioPurchaseInfo1.withAdds = NO;
-        scenarioPurchaseInfo1.price = 0.99;
-        scenarioPurchaseInfo1.sizeInMegas = [ManagedObjectContextCreator sizeInMegabytesOfDatabaseWithFilename:@"DJI_001A"];
+        scenarioPurchaseInfo1.price = 1;
+        scenarioPurchaseInfo1.sizeInMegas = [ManagedObjectContextCreator sizeInMegabytesOfDatabaseWithFilename:ScenarioFilenameDJI_001A];
         
         _availableScenarios = @[scenarioPurchaseInfoDemo, scenarioPurchaseInfo1];
     }
@@ -665,13 +669,27 @@
 }
    
    
+#pragma mark - In-App Purchases
+
+// Return YES if the scenario for the given filename is available (Free or already Purchased)
+- (BOOL)isAccessOpenToScenarioWithFilename:(NSString *)filename
+{
+    if ([filename isEqualToString:ScenarioFilenameDEMO_001A]) { // Free scenarios
+        return YES;
+    }
+    
+    return [[NSUserDefaults standardUserDefaults] boolForKey:[self scenarioAccessKeyForFilename:filename]];
+}
    
+- (void)setAccessOpenToScenarioWithFilename:(NSString *)filename
+{
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[self scenarioAccessKeyForFilename:filename]];
+}
    
-   
-   
-   
-   
-   
+- (NSString *)scenarioAccessKeyForFilename:(NSString *)filename
+{
+    return [NSString stringWithFormat:@"%@%@", UserDefaultsScenarioAccessPrefix, filename];
+}
    
    
    

@@ -16,6 +16,7 @@
 #import "LeftMenuViewController.h"
 #import "TimeSimulationViewController.h"
 #import "SimulatorInfoViewController.h"
+#import "PurchaseScenarioViewController.h"
 #import "FriendStore.h"
 #import "UserDefaultsKeys.h"
 #import "ParseUserKeys.h"
@@ -23,6 +24,7 @@
 #import <Parse/Parse.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <StoreKit/StoreKit.h>
 
 @interface SideMenuRootViewController ()
 
@@ -373,6 +375,14 @@
             CompaniesViewController *companiesViewController = (CompaniesViewController *)contentViewController;
             NSString *selectedIdentifier = selectOrderingValueViewController.selectedIdentifier;
             companiesViewController.sortingValueId = selectedIdentifier;
+        }
+    }
+    
+    // UNWIND FROM PurchaseScenarioViewController
+    if ([unwindSegue.sourceViewController isKindOfClass:[PurchaseScenarioViewController class]]) {
+        if ([contentViewController isKindOfClass:[UserAccountViewController class]]) {
+            UserAccountViewController *userAccountViewController = (UserAccountViewController *)contentViewController;
+            [userAccountViewController purchaseSelectedProduct];
         }
     }
     

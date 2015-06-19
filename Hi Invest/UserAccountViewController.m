@@ -15,18 +15,24 @@
 #import "ScenarioPurchaseInfo.h"
 #import "ScenarioInfoViewController.h"
 #import "UserDefaultsKeys.h"
+#import "ScenariosKeys.h"
 #import "UserInfoViewController.h"
+#import "PurchaseScenarioViewController.h"
 
 #import <Parse/Parse.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 
-@interface UserAccountViewController () <UITableViewDataSource, UITableViewDelegate>
+#import <StoreKit/StoreKit.h>
+
+@interface UserAccountViewController () <UITableViewDataSource, UITableViewDelegate, SKProductsRequestDelegate, SKPaymentTransactionObserver>
 
 @property (weak, nonatomic) IBOutlet UIView *backgroundUserView;
 @property (weak, nonatomic) IBOutlet UIImageView *userImageView;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+
+@property (strong, nonatomic) SKProduct *productSelected;
 
 @end
 
@@ -112,14 +118,15 @@
     
     // Purchase Button
     NSString *priceStr;
-    if (scenarioPurchaseInfo.price == 0) {
-        priceStr = scenarioPurchaseInfo.withAdds ? @"Ads" : @"Free";
+    
+    if ([self.userAccount isAccessOpenToScenarioWithFilename:scenarioPurchaseInfo.filename]) {
+        priceStr = @"Select";
         
     } else {
-        priceStr = [NSString stringWithFormat:@"$%.2f", scenarioPurchaseInfo.price];
-        
+        priceStr = [NSString stringWithFormat:@"Buy"];
     }
     [scenarioCell.purchaseButton setTitle:priceStr forState:UIControlStateNormal];
+    
     
     // Scenario Selection
     if ([self.userAccount.selectedScenarioFilename isEqualToString:scenarioPurchaseInfo.filename]) {
@@ -201,12 +208,18 @@
 
 - (IBAction)purchaseButtonPressed:(UIButton *)sender
 {
-    // TODO: Connect with appstore to check if already purchased
-    ScenarioPurchaseInfo *scenarioInfo = self.userAccount.availableScenarios[sender.tag];
-    self.userAccount.selectedScenarioFilename = scenarioInfo.filename;
     
-    [self.userAccount exitCurrentInvestingGame];
-
+    ScenarioPurchaseInfo *scenarioInfo = self.userAccount.availableScenarios[sender.tag];
+    NSString *scenarioFilename = scenarioInfo.filename;
+    
+    if ([self.userAccount isAccessOpenToScenarioWithFilename:scenarioFilename]) {
+        self.userAccount.selectedScenarioFilename = scenarioFilename;
+        [self.userAccount exitCurrentInvestingGame];
+        
+    } else {
+        [self purchaseRequestWithProductId:scenarioFilename];
+    }
+    
     [self updateUI];
 }
 
@@ -240,6 +253,122 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
+#pragma mark - In-App Purchases
+
+// Scenario filename is the same as the product Id in iTunes Connect
+- (void)purchaseRequestWithProductId:(NSString *)productId
+{
+    if([SKPaymentQueue canMakePayments]) {
+
+        SKProductsRequest *productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:[NSSet setWithObject:productId]];
+        productsRequest.delegate = self;
+        [productsRequest start];
+        
+    }
+    else {
+        //this is called the user cannot make payments, most likely due to parental controls
+        // TODO: alert could not make payments
+    }
+}
+
+- (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
+{
+    SKProduct *validProduct = nil;
+    NSInteger count = [response.products count];
+    if(count > 0){
+        validProduct = [response.products objectAtIndex:0];
+        NSLog(@"Products Available!");
+//        [self purchase:validProduct];
+        
+        self.productSelected = validProduct;
+        [self performSegueWithIdentifier:@"Purchase Scenario" sender:self];
+        
+    }
+    else if(!validProduct){
+        NSLog(@"No products available");
+        //this is called if your product id is not valid, this shouldn't be called unless that happens.
+        // TODO: NO INFO AVAILABLE FOR PRODUCT OR NO VALID PRODUCT ALERT
+    }
+}
+
+- (void)purchaseSelectedProduct
+{
+    if (self.productSelected) {
+        [self purchase:self.productSelected];
+    }
+}
+
+- (IBAction)purchase:(SKProduct *)product
+{
+    SKPayment *payment = [SKPayment paymentWithProduct:product];
+    
+    [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
+    [[SKPaymentQueue defaultQueue] addPayment:payment];
+}
+
+// TODO: hook restore method with a button
+- (IBAction)restore
+{
+    [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
+    //this is called when the user restores purchases
+    [[SKPaymentQueue defaultQueue] restoreCompletedTransactions];
+}
+
+- (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue
+{
+    for(SKPaymentTransaction *transaction in queue.transactions){
+        if(transaction.transactionState == SKPaymentTransactionStateRestored){
+            //called when the user successfully restores a purchase
+            
+            NSString *productId = transaction.payment.productIdentifier; // same as scenario filename
+            [self.userAccount setAccessOpenToScenarioWithFilename:productId];
+            
+            [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+            break;
+        }
+    }
+    
+    // TODO: Alert, if one transaction has been restored or none.
+    
+    [self updateUI];
+}
+
+- (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions{
+    for(SKPaymentTransaction *transaction in transactions){
+        switch(transaction.transactionState){
+            case SKPaymentTransactionStatePurchasing: NSLog(@"Transaction state -> Purchasing");
+                //called when the user is in the process of purchasing, do not add any of your own code here.
+                break;
+            case SKPaymentTransactionStatePurchased:
+                //this is called when the user has successfully purchased the package (Cha-Ching!)
+                //you can add your code for what you want to happen when the user buys the purchase here.
+                [self.userAccount setAccessOpenToScenarioWithFilename:transaction.payment.productIdentifier];
+                
+                [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+                NSLog(@"Transaction state -> Purchased");
+                break;
+            case SKPaymentTransactionStateRestored:
+                NSLog(@"Transaction state -> Restored");
+                //add the same code as you did from SKPaymentTransactionStatePurchased here
+                [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+                break;
+            case SKPaymentTransactionStateFailed:
+                //called when the transaction does not finish
+                if(transaction.error.code == SKErrorPaymentCancelled){
+                    NSLog(@"Transaction state -> Cancelled");
+                    //the user cancelled the payment ;(
+                }
+                [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+                break;
+            default: // TODO: SKPaymentTransactionStateDeferred (ask parents?...)
+                break;
+        }
+    }
+    
+    [self updateUI];
+}
+
+
 #pragma mark - Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -255,6 +384,10 @@
     
     if ([segue.destinationViewController isKindOfClass:[UserInfoViewController class]]) {
         [self prepareUserInfoViewController:segue.destinationViewController withUserAccount:self.userAccount];
+    }
+    
+    if ([segue.destinationViewController isKindOfClass:[PurchaseScenarioViewController class]]) {
+        ((PurchaseScenarioViewController *)segue.destinationViewController).product = self.productSelected;
     }
 }
 

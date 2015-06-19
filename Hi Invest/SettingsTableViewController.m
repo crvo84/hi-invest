@@ -144,7 +144,7 @@
         
     } else { // Parse user already in the cloud
         
-        if (![[[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsInfoSavedInParseUser] boolValue]) {
+        if (![[NSUserDefaults standardUserDefaults] boolForKey:UserDefaultsInfoSavedInParseUser]) {
             [self.userAccount migrateUserInfoToParseUser];
         }
         

@@ -77,5 +77,9 @@
 // Remove current investing game, if there is one.
 - (void)deleteCurrentInvestingGame;
 
+#pragma mark - In-App Purchases
+// Return YES if the scenario for the given filename is available (Free or already Purchased)
+- (BOOL)isAccessOpenToScenarioWithFilename:(NSString *)filename;
+- (void)setAccessOpenToScenarioWithFilename:(NSString *)filename;
 
 @end

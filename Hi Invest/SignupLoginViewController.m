@@ -62,14 +62,14 @@
 
     PFUser *user = [PFUser currentUser];
     
-    BOOL infoSavedInParseUser = [[[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsInfoSavedInParseUser] boolValue];
+    BOOL infoSavedInParseUser = [[NSUserDefaults standardUserDefaults] boolForKey:UserDefaultsInfoSavedInParseUser];
     
     if ([PFFacebookUtils isLinkedWithUser:user] || (user.objectId  && infoSavedInParseUser)) {
         // If current user is linked to facebook, or guest is already saved in the cloud
         
         [self performSegueWithIdentifier:@"Login" sender:self];
         
-    } else if ([[[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsGuestAutomaticLogin] boolValue]) {
+    } else if ([[NSUserDefaults standardUserDefaults] boolForKey:UserDefaultsGuestAutomaticLogin]) {
         
         [self pauseUI];
         
@@ -148,7 +148,7 @@
             
             [self.userAccount deleteAllUserDefaults];
             
-            [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:UserDefaultsInfoSavedInParseUser];
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:UserDefaultsInfoSavedInParseUser];
             
             [self unpauseUI];
             
@@ -171,8 +171,8 @@
             // User Info will be saved locally
             NSLog(@"Anonymous login failed.");
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            [defaults setObject:@(YES) forKey:UserDefaultsGuestAutomaticLogin];
-            [defaults setObject:@(NO) forKey:UserDefaultsInfoSavedInParseUser];
+            [defaults setBool:YES forKey:UserDefaultsGuestAutomaticLogin];
+            [defaults setBool:NO forKey:UserDefaultsInfoSavedInParseUser];
             
         } else {
             // Anonymous user saved in the cloud

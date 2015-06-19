@@ -20,4 +20,7 @@
 #define UserDefaultsGuestAutomaticLogin @"guestAutomaticLogin"
 #define UserDefaultsInfoSavedInParseUser @"infoSavedInParseUser"
 
+// In-App Purchases
+#define UserDefaultsScenarioAccessPrefix @"scenarioAccess"
+
 #endif

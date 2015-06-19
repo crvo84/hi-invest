@@ -9,9 +9,13 @@
 #import <UIKit/UIKit.h>
 
 @class UserAccount;
+@class SKProduct;
 
 @interface UserAccountViewController : UIViewController
 
 @property (strong, nonatomic) UserAccount *userAccount;
+
+- (void)purchaseSelectedProduct;
+
 
 @end
