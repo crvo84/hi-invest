@@ -60,22 +60,26 @@
 
 - (void)updateUI
 {
+    NSInteger userLevel = [self.userAccount userLevel];
+    
     // If facebook user image available set is as user image. If not, user ninjaImage;
     NSData *pictureData = [[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsProfilePictureKey];
+    
     if (pictureData) {
+        
         UIImageView *pictureImageView = [[UIImageView alloc] initWithFrame:self.userImageBackgroundView.bounds];
         pictureImageView.image = [UIImage imageWithData:pictureData];
         pictureImageView.contentMode = UIViewContentModeScaleAspectFill;
         [self.userImageBackgroundView addSubview:pictureImageView];
         self.guestUserImageView.alpha = 0.0;
-    } else {
+        self.userImageBackgroundView.layer.borderWidth = 0;
+        
+    } else { // Guest User
         self.guestUserImageView.alpha = 1.0;
+        self.userImageBackgroundView.layer.borderWidth = userLevel == 7 ? 1 : 0;
+        self.userImageBackgroundView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+        self.userImageBackgroundView.backgroundColor = [DefaultColors userLevelColorForLevel:userLevel];
     }
-    
-    // Provisional: only ninja for the moment
-    [self.userImageButton setImage:[UIImage imageNamed:@"ninjaIconClear64x54"] forState:UIControlStateNormal];
-    
-    self.userImageBackgroundView.backgroundColor = [DefaultColors userLevelColorForLevel:[self.userAccount userLevel]];
     
     [self.userNameButton setTitle:[self.userAccount userName] forState:UIControlStateNormal];
     

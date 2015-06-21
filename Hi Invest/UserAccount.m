@@ -542,8 +542,6 @@
 
 - (NSArray *)availableScenarios
 {
-    // TODO: implemente in app purchases system here
-    
     if (!_availableScenarios) {
         
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];

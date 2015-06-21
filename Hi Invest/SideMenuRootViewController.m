@@ -381,8 +381,17 @@
     // UNWIND FROM PurchaseScenarioViewController
     if ([unwindSegue.sourceViewController isKindOfClass:[PurchaseScenarioViewController class]]) {
         if ([contentViewController isKindOfClass:[UserAccountViewController class]]) {
+            
+            PurchaseScenarioViewController *purchaseScenarioViewController = (PurchaseScenarioViewController *)unwindSegue.sourceViewController;
+            
             UserAccountViewController *userAccountViewController = (UserAccountViewController *)contentViewController;
-            [userAccountViewController purchaseSelectedProduct];
+            
+            if (purchaseScenarioViewController.restoreSelected) {
+                [userAccountViewController restore];
+                
+            } else {
+                [userAccountViewController purchaseSelectedProduct];
+            }
         }
     }
     

@@ -26,7 +26,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
+
     [self updateUI]; // Done here for progress bar animation
 }
 

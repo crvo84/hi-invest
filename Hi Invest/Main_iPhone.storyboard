@@ -350,22 +350,22 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pq7-3g-BCn" userLabel="Subview">
-                                <rect key="frame" x="150" y="226" width="300" height="148"/>
+                                <rect key="frame" x="158" y="210" width="284" height="180"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="DOW JONES 30" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.75" translatesAutoresizingMaskIntoConstraints="NO" id="JF3-EI-c0Z">
-                                        <rect key="frame" x="8" y="16" width="284" height="21"/>
+                                        <rect key="frame" x="8" y="16" width="268" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.1764705882" blue="0.37647058820000001" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Scenario description, can contain multiple lines and increase its height." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.59999999999999987" translatesAutoresizingMaskIntoConstraints="NO" id="yGw-ju-6SQ">
-                                        <rect key="frame" x="8" y="45" width="284" height="39"/>
+                                        <rect key="frame" x="8" y="45" width="268" height="39"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ykL-1J-oaK">
-                                        <rect key="frame" x="120" y="100" width="60" height="32"/>
+                                        <rect key="frame" x="112" y="100" width="60" height="32"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="60" id="qRb-sa-fDc"/>
                                         </constraints>
@@ -377,20 +377,32 @@
                                             <action selector="purchase:" destination="mUo-21-RvA" eventType="touchUpInside" id="6W7-38-DWw"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aOa-IS-Djc">
+                                        <rect key="frame" x="87" y="145" width="111" height="27"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <state key="normal" title="Already purchased?">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="restore:" destination="mUo-21-RvA" eventType="touchUpInside" id="p4v-x7-bjK"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="JF3-EI-c0Z" firstAttribute="leading" secondItem="Pq7-3g-BCn" secondAttribute="leading" constant="8" id="1mr-b2-GZ9"/>
                                     <constraint firstAttribute="trailing" secondItem="JF3-EI-c0Z" secondAttribute="trailing" constant="8" id="6He-hV-f4l"/>
                                     <constraint firstAttribute="centerX" secondItem="ykL-1J-oaK" secondAttribute="centerX" id="9ry-vT-Eea"/>
+                                    <constraint firstAttribute="bottom" secondItem="aOa-IS-Djc" secondAttribute="bottom" constant="8" id="KSt-bH-jhR"/>
                                     <constraint firstItem="yGw-ju-6SQ" firstAttribute="top" secondItem="JF3-EI-c0Z" secondAttribute="bottom" constant="8" id="McX-QX-r5e"/>
                                     <constraint firstItem="yGw-ju-6SQ" firstAttribute="top" secondItem="JF3-EI-c0Z" secondAttribute="bottom" constant="8" id="XMw-0z-RWp"/>
+                                    <constraint firstAttribute="centerX" secondItem="aOa-IS-Djc" secondAttribute="centerX" id="bum-5m-ldL"/>
                                     <constraint firstAttribute="trailing" secondItem="yGw-ju-6SQ" secondAttribute="trailing" constant="8" id="cTL-lb-MVu"/>
                                     <constraint firstItem="yGw-ju-6SQ" firstAttribute="leading" secondItem="Pq7-3g-BCn" secondAttribute="leading" constant="8" id="lV5-gw-VFS"/>
-                                    <constraint firstAttribute="width" constant="300" id="pCG-Cv-ssu"/>
+                                    <constraint firstAttribute="width" constant="284" id="pCG-Cv-ssu"/>
                                     <constraint firstItem="JF3-EI-c0Z" firstAttribute="top" secondItem="Pq7-3g-BCn" secondAttribute="top" constant="16" id="rH3-Pa-9Dt"/>
                                     <constraint firstItem="ykL-1J-oaK" firstAttribute="top" secondItem="yGw-ju-6SQ" secondAttribute="bottom" constant="16" id="vAf-d1-Jjf"/>
-                                    <constraint firstAttribute="height" constant="148" id="zcw-s0-Hm2"/>
+                                    <constraint firstAttribute="height" constant="180" id="zcw-s0-Hm2"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -777,7 +789,7 @@
                                 </constraints>
                             </view>
                             <tableView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="77" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="Y57-77-4JP">
-                                <rect key="frame" x="0.0" y="194" width="600" height="377"/>
+                                <rect key="frame" x="0.0" y="194" width="600" height="406"/>
                                 <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="Scenario Cell" id="Ka3-UE-hiN" customClass="ScenarioTableViewCell">
@@ -867,27 +879,15 @@
                                 <color key="textColor" red="0.23529411764705882" green="0.23529411764705882" blue="0.23529411764705882" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e4Z-9E-Wmq">
-                                <rect key="frame" x="240" y="571" width="121" height="29"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <state key="normal" title="Restore purchases">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="restore" destination="rbu-72-z7u" eventType="touchUpInside" id="w1k-yd-3tz"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="e4Z-9E-Wmq" firstAttribute="top" secondItem="Y57-77-4JP" secondAttribute="bottom" id="4rp-eF-eza"/>
                             <constraint firstItem="Y57-77-4JP" firstAttribute="top" secondItem="GyF-SO-PLu" secondAttribute="bottom" constant="16" id="5AU-5I-nQF"/>
+                            <constraint firstItem="HQ2-HQ-6NP" firstAttribute="top" secondItem="Y57-77-4JP" secondAttribute="bottom" id="5Qb-uO-d64"/>
                             <constraint firstItem="Y57-77-4JP" firstAttribute="leading" secondItem="nIy-Wd-CUJ" secondAttribute="leadingMargin" constant="-16" id="Ksb-7o-m1s"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Y57-77-4JP" secondAttribute="trailing" constant="-16" id="NKv-85-7q4"/>
                             <constraint firstItem="GyF-SO-PLu" firstAttribute="top" secondItem="Hhz-Lb-rx1" secondAttribute="bottom" constant="8" id="OxM-Ij-kpz"/>
-                            <constraint firstItem="HQ2-HQ-6NP" firstAttribute="top" secondItem="e4Z-9E-Wmq" secondAttribute="bottom" id="SIY-29-fBn"/>
                             <constraint firstAttribute="trailingMargin" secondItem="GyF-SO-PLu" secondAttribute="trailing" constant="16" id="YeG-8L-vcJ"/>
-                            <constraint firstAttribute="centerX" secondItem="e4Z-9E-Wmq" secondAttribute="centerX" id="jBA-Pt-Yrl"/>
                             <constraint firstItem="Hhz-Lb-rx1" firstAttribute="top" secondItem="Zcx-wV-KGw" secondAttribute="bottom" constant="16" id="sAW-Kv-1xr"/>
                             <constraint firstAttribute="centerX" secondItem="Hhz-Lb-rx1" secondAttribute="centerX" id="sMk-ob-yxJ"/>
                             <constraint firstItem="GyF-SO-PLu" firstAttribute="leading" secondItem="nIy-Wd-CUJ" secondAttribute="leadingMargin" constant="16" id="z6R-LY-zIa"/>
@@ -907,6 +907,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="backgroundUserView" destination="Hhz-Lb-rx1" id="Fut-uG-3oW"/>
+                        <outlet property="friendsBarButtonItem" destination="Y1h-MR-Szh" id="FC6-tW-asd"/>
                         <outlet property="tableView" destination="Y57-77-4JP" id="YzN-Np-TQH"/>
                         <outlet property="userImageView" destination="Cho-NZ-epH" id="if6-dp-8G7"/>
                         <outlet property="userNameLabel" destination="GyF-SO-PLu" id="7zl-iJ-fUf"/>
@@ -1542,7 +1543,7 @@
         <!--Quizzes-->
         <scene sceneID="umq-RB-yJm">
             <objects>
-                <viewController id="lgH-TR-uiC" customClass="QuizSelectionViewController" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="lgH-TR-uiC" customClass="QuizSelectionViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="pny-Hf-n4M"/>
                         <viewControllerLayoutGuide type="bottom" id="H3c-KS-txe"/>
@@ -1552,7 +1553,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="58" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="CzO-wD-hCj">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Quiz Cell" id="as6-m2-FZK" customClass="QuizTableViewCell">
@@ -1598,10 +1599,10 @@
                         </subviews>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="CzO-wD-hCj" firstAttribute="top" secondItem="GAI-qO-qBK" secondAttribute="topMargin" id="LbN-K0-jg2"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="CzO-wD-hCj" secondAttribute="trailing" constant="-16" id="RKD-Vg-Gwi"/>
-                            <constraint firstItem="CzO-wD-hCj" firstAttribute="leading" secondItem="GAI-qO-qBK" secondAttribute="leadingMargin" constant="-16" id="hek-iG-43z"/>
-                            <constraint firstItem="H3c-KS-txe" firstAttribute="top" secondItem="CzO-wD-hCj" secondAttribute="bottom" id="jub-3l-rDJ"/>
+                            <constraint firstItem="CzO-wD-hCj" firstAttribute="top" secondItem="pny-Hf-n4M" secondAttribute="bottom" id="4ks-WC-rjj"/>
+                            <constraint firstItem="CzO-wD-hCj" firstAttribute="leading" secondItem="GAI-qO-qBK" secondAttribute="leadingMargin" constant="-16" id="6ch-zz-ECh"/>
+                            <constraint firstItem="H3c-KS-txe" firstAttribute="top" secondItem="CzO-wD-hCj" secondAttribute="bottom" id="fxi-IA-OLL"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="CzO-wD-hCj" secondAttribute="trailing" constant="-16" id="uTC-9s-9kR"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Quizzes" id="G0z-zx-HSD">

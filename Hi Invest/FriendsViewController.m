@@ -36,17 +36,13 @@
     [self refreshFriendsInfo];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-
-}
-
 - (void)updateUI
 {
     self.friends = nil;
 
-    self.noFriendsLabel.hidden = YES; // TODO: manage no friends info
+    NSInteger numberOfFriends = [self.friends count];
+    self.noFriendsLabel.hidden = numberOfFriends > 0;
+    self.tableView.hidden = numberOfFriends == 0;
     
     [self.tableView reloadData];
 }
@@ -77,8 +73,8 @@
             [self fetchFriendsParseUsers];
             
         } else {
-            // TODO: alert could not update friends info. Maybe no internet connection. From error.
             NSLog(@"Facebook Graph Friends Request. Error: %@", [error localizedDescription]);
+            [self updateUI];
         }
         
     }];
@@ -88,7 +84,10 @@
 {
     NSArray *friendsFacebookIds = [[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsFriendsFacebookIds];
     
-    if (!friendsFacebookIds) return;
+    if (!friendsFacebookIds) {
+        [self updateUI];
+        return;
+    }
     
     // Construct a PFUser query that will find friends whose facebook ids
     // are contained in the current user's friend list.
@@ -101,11 +100,11 @@
         
         if (!error) {
             [[FriendStore sharedStore] updateFriendsWithParseUsers:objects];
-            [self updateUI];
         } else {
-            // TODO: alert could not update friends info. Maybe no internet connection. From error.
             NSLog(@"Friends parse users fetch. Error: %@", [error localizedDescription]);
         }
+        
+        [self updateUI];
     }];
 }
 
@@ -138,7 +137,6 @@
     if (pictureData) {
         cell.userProfileImageView.image = [UIImage imageWithData:pictureData];
     } else {
-        // TODO: Add unknown image
         cell.userProfileImageView.image = nil;
         
         // Downloading facebook profile picture (in jpg)

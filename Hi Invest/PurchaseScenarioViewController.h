@@ -14,4 +14,6 @@
 
 @property (strong, nonatomic) SKProduct *product;
 
+@property (nonatomic) BOOL restoreSelected;
+
 @end

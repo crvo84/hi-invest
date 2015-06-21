@@ -43,10 +43,18 @@
     self.purchaseButton.layer.borderColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0].CGColor;
     self.purchaseButton.layer.cornerRadius = 5;
     self.purchaseButton.layer.masksToBounds = YES;
+    
+    self.restoreSelected = NO;
 }
 
 - (IBAction)purchase:(id)sender
 {
+    [self performSegueWithIdentifier:@"Purchase" sender:self];
+}
+
+- (IBAction)restore:(id)sender
+{
+    self.restoreSelected = YES;
     [self performSegueWithIdentifier:@"Purchase" sender:self];
 }
 
