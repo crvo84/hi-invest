@@ -15,9 +15,4 @@
 
 @property (strong, nonatomic) UserAccount *userAccount;
 
-- (void)purchaseSelectedProduct;
-
-- (void)restore;
-
-
 @end

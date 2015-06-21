@@ -17,7 +17,6 @@
 		734A86BA1B3383A700D1D60E /* LevelUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 734A86B91B3383A700D1D60E /* LevelUpViewController.m */; };
 		734A86C01B33B62200D1D60E /* AboutTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 734A86BF1B33B62200D1D60E /* AboutTableViewController.m */; };
 		734A86C31B33CEC900D1D60E /* LicensesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 734A86C21B33CEC900D1D60E /* LicensesViewController.m */; };
-		734A86CA1B3490A300D1D60E /* PurchaseScenarioViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 734A86C91B3490A300D1D60E /* PurchaseScenarioViewController.m */; };
 		739ABCB61B0162F6009EFC0E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABCB51B0162F6009EFC0E /* main.m */; };
 		739ABCD01B0162F6009EFC0E /* Hi_InvestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABCCF1B0162F6009EFC0E /* Hi_InvestTests.m */; };
 		739ABCDE1B016390009EFC0E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABCDD1B016390009EFC0E /* AppDelegate.m */; };
@@ -150,8 +149,6 @@
 		734A86C11B33CEC900D1D60E /* LicensesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LicensesViewController.h; sourceTree = "<group>"; };
 		734A86C21B33CEC900D1D60E /* LicensesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LicensesViewController.m; sourceTree = "<group>"; };
 		734A86C41B347B0600D1D60E /* ScenariosKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScenariosKeys.h; sourceTree = "<group>"; };
-		734A86C81B3490A300D1D60E /* PurchaseScenarioViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PurchaseScenarioViewController.h; sourceTree = "<group>"; };
-		734A86C91B3490A300D1D60E /* PurchaseScenarioViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PurchaseScenarioViewController.m; sourceTree = "<group>"; };
 		739ABCB01B0162F6009EFC0E /* Hi Invest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hi Invest.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		739ABCB41B0162F6009EFC0E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		739ABCB51B0162F6009EFC0E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -732,8 +729,6 @@
 				73DEE4D71B2170E6007B533C /* FriendsViewController.m */,
 				73DEE4DF1B218240007B533C /* ScenarioInfoViewController.h */,
 				73DEE4E01B218240007B533C /* ScenarioInfoViewController.m */,
-				734A86C81B3490A300D1D60E /* PurchaseScenarioViewController.h */,
-				734A86C91B3490A300D1D60E /* PurchaseScenarioViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -1034,7 +1029,6 @@
 				739ABD8F1B01671E009EFC0E /* SimulatorInfoViewController.m in Sources */,
 				739ABD351B016505009EFC0E /* FinancialDatabaseManager.m in Sources */,
 				739ABD471B0165A8009EFC0E /* InitialViewController.m in Sources */,
-				734A86CA1B3490A300D1D60E /* PurchaseScenarioViewController.m in Sources */,
 				739ABD591B01660D009EFC0E /* Portfolio.m in Sources */,
 				739ABD501B0165E6009EFC0E /* LeftMenuViewController.m in Sources */,
 				73BFF3531B27E6740010F9E9 /* HistoricalValue.m in Sources */,

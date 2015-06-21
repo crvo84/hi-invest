@@ -17,7 +17,6 @@
 #import "UserDefaultsKeys.h"
 #import "ScenariosKeys.h"
 #import "UserInfoViewController.h"
-#import "PurchaseScenarioViewController.h"
 
 #import <Parse/Parse.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
@@ -32,8 +31,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *friendsBarButtonItem;
-
-@property (strong, nonatomic) SKProduct *productSelected;
+@property (weak, nonatomic) IBOutlet UIButton *restorePurchasesButton;
 
 @end
 
@@ -48,6 +46,11 @@
     self.backgroundUserView.layer.cornerRadius = 8;
     self.backgroundUserView.layer.masksToBounds = YES;
     self.backgroundUserView.backgroundColor = [DefaultColors userLevelColorForLevel:[self.userAccount userLevel]];
+    
+    if (!self.userAccount.products) {
+        [self requestScenarioProducts];
+    }
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -86,6 +89,14 @@
     self.userNameLabel.text = [self.userAccount userName];
     
     [self.tableView reloadData];
+    
+    // Restore Purchases Button
+    self.restorePurchasesButton.hidden = YES;
+    for (ScenarioPurchaseInfo *scenarioInfo in self.userAccount.availableScenarios) {
+        if (![self.userAccount isAccessOpenToScenarioWithFilename:scenarioInfo.filename]) {
+            self.restorePurchasesButton.hidden = NO;
+        }
+    }
 }
 
 
@@ -124,10 +135,21 @@
         priceStr = @"Select";
         
     } else {
-        priceStr = [NSString stringWithFormat:@"Buy"];
+        SKProduct *product = self.userAccount.products[scenarioPurchaseInfo.filename];
+        
+        if (product) {
+            
+            NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+            numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
+            numberFormatter.maximumFractionDigits = 2;
+            numberFormatter.locale = product.priceLocale;
+            priceStr = [numberFormatter stringFromNumber:product.price];
+            
+        } else {
+            priceStr = [NSString stringWithFormat:@"Buy"];
+        }
     }
     [scenarioCell.purchaseButton setTitle:priceStr forState:UIControlStateNormal];
-    
     
     // Scenario Selection
     if ([self.userAccount.selectedScenarioFilename isEqualToString:scenarioPurchaseInfo.filename]) {
@@ -249,6 +271,49 @@
 
 #pragma mark - In-App Purchases
 
+// Scenario filename is the same as the product Id in iTunes Connect
+- (void)requestScenarioProducts
+{
+    if([SKPaymentQueue canMakePayments]) {
+        
+        NSMutableSet *scenariosSet = [[NSMutableSet alloc] init];
+        for (ScenarioPurchaseInfo *scenarioInfo in self.userAccount.availableScenarios) {
+            if (![scenarioInfo.filename isEqualToString:ScenarioFilenameDEMO_001A]) {
+                [scenariosSet addObject:scenarioInfo.filename];
+            }
+        }
+        
+        SKProductsRequest *productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:scenariosSet];
+        productsRequest.delegate = self;
+        [productsRequest start];
+        
+    }
+    else {
+        //this is called the user cannot make payments, most likely due to parental controls
+        [self presentAlertViewWithTitle:@"In-App Purchases Disabled" withMessage:nil withActionTitle:@"Dismiss"];
+    }
+}
+
+
+- (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
+{
+    if([response.products count] > 0){
+        NSLog(@"Products Available!");
+        
+        NSMutableDictionary *products = [[NSMutableDictionary alloc] init];
+        for (SKProduct *product in response.products) {
+            [products setObject:product forKey:product.productIdentifier];
+        }
+        
+        self.userAccount.products = products;
+        [self updateUI];
+        
+    } else {
+//        NSLog(@"No products available");
+//        [self presentAlertViewWithTitle:@"No Product Information" withMessage:@"Please try again." withActionTitle:@"Dismiss"];
+    }
+}
+
 // Called from ScenarioTableViewCell Button. Select scenario or purchase it.
 - (IBAction)purchaseButtonPressed:(UIButton *)sender
 {
@@ -260,29 +325,16 @@
         [self.userAccount exitCurrentInvestingGame];
         
     } else {
-        [self purchaseRequestWithProductId:scenarioFilename];
+        SKProduct *product = self.userAccount.products[scenarioFilename];
+        if (product) {
+            [self purchase:product];
+        }
     }
     
     [self updateUI];
 }
 
-// Scenario filename is the same as the product Id in iTunes Connect
-- (void)purchaseRequestWithProductId:(NSString *)productId
-{
-    if([SKPaymentQueue canMakePayments]) {
-        
-        SKProductsRequest *productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:[NSSet setWithObject:productId]];
-        productsRequest.delegate = self;
-        [productsRequest start];
-        
-    }
-    else {
-        //this is called the user cannot make payments, most likely due to parental controls
-        [self presentAlertViewWithTitle:@"In-App Purchases Disabled" withMessage:nil withActionTitle:@"Dismiss"];
-    }
-}
-
-- (IBAction)purchase:(SKProduct *)product
+- (void)purchase:(SKProduct *)product
 {
     SKPayment *payment = [SKPayment paymentWithProduct:product];
     
@@ -290,37 +342,11 @@
     [[SKPaymentQueue defaultQueue] addPayment:payment];
 }
 
-// To be called from SideMenuRootViewController when unwinding from PurchaseScenarioViewController
-- (void)purchaseSelectedProduct
-{
-    if (self.productSelected) {
-        [self purchase:self.productSelected];
-    }
-}
-
-- (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
-{
-    SKProduct *validProduct = nil;
-    NSInteger count = [response.products count];
-    if(count > 0){
-        validProduct = [response.products objectAtIndex:0];
-        NSLog(@"Products Available!");
-
-        self.productSelected = validProduct;
-        [self performSegueWithIdentifier:@"Purchase Scenario" sender:self];
-        
-    }
-    else if(!validProduct){
-        NSLog(@"No products available");
-        //this is called if your product id is not valid, this shouldn't be called unless that happens.
-        [self presentAlertViewWithTitle:@"No Product Information" withMessage:@"Please try again." withActionTitle:@"Dismiss"];
-    }
-}
-
 #pragma mark - Restoring Purchases
 
-- (void)restore
+- (IBAction)restorePurchases
 {
+    // Need to add self as observer for the delegate to be called. Must be removed in dealloc.
     [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
     
     //this is called when the user restores purchases
@@ -401,10 +427,10 @@
     if ([segue.destinationViewController isKindOfClass:[UserInfoViewController class]]) {
         [self prepareUserInfoViewController:segue.destinationViewController withUserAccount:self.userAccount];
     }
-    
-    if ([segue.destinationViewController isKindOfClass:[PurchaseScenarioViewController class]]) {
-        ((PurchaseScenarioViewController *)segue.destinationViewController).product = self.productSelected;
-    }
+//    
+//    if ([segue.destinationViewController isKindOfClass:[PurchaseScenarioViewController class]]) {
+//        ((PurchaseScenarioViewController *)segue.destinationViewController).product = self.productSelected;
+//    }
 }
 
 - (void)prepareScenarioInfoViewController:(ScenarioInfoViewController *)scenarioInfoViewController withUserAccount:(UserAccount *)userAccount scenarioPurchaseInfo:(ScenarioPurchaseInfo *)scenarioPurchaseInfo locale:(NSLocale *)locale isFileInBundle:(BOOL)isFileInBundle
@@ -426,7 +452,7 @@
         if ([PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]) {
             return YES;
         } else {
-            [self presentAlertViewWithTitle:@"No Information Available" withMessage:@"Please log in with Facebook and try again." withActionTitle:@"Dismiss"];
+            [self presentAlertViewWithTitle:@"Friends not available" withMessage:@"Please log in with Facebook and try again." withActionTitle:@"Dismiss"];
             return NO;
         }
     }

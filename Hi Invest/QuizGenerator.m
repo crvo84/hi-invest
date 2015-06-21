@@ -286,6 +286,8 @@
 {
     NSUInteger num = 0;
     
+    // TODO: number of questions
+    
 //    switch (difficultyLevel) {
 //        case 0:
 //            num = 5;

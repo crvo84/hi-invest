@@ -25,7 +25,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *initialCashLabel;
 @property (weak, nonatomic) IBOutlet UIStepper *initialCashStepper;
-@property (weak, nonatomic) IBOutlet UISwitch *disguiseCompaniesSwitch;
+//@property (weak, nonatomic) IBOutlet UISwitch *disguiseCompaniesSwitch;
 
 @property (strong, nonatomic) NSNumberFormatter *numberFormatter;
 @property (strong, nonatomic) UIActivityIndicatorView *activityIndicator;
@@ -44,7 +44,7 @@
     self.initialCashStepper.maximumValue = 1000000000;
     self.initialCashStepper.value = self.userAccount.simulatorInitialCash;
     
-    self.disguiseCompaniesSwitch.on = self.userAccount.disguiseCompanies;
+//    self.disguiseCompaniesSwitch.on = self.userAccount.disguiseCompanies;
 
     self.isAnonymousUser = [PFAnonymousUtils isLinkedWithUser:[PFUser currentUser]];
     
@@ -70,16 +70,16 @@
 }
 
 
-- (IBAction)disguiseCompaniesSwitchValueChanged:(UISwitch *)sender
-{
-    if (!sender.isOn) {
-        [self presentAlertViewWithTitle:@"Disguise disabled" withMessage:@"Simulator results will not be recorded." withActionTitle:@"Dismiss"];
-    }
-    
-    self.userAccount.disguiseCompanies = self.disguiseCompaniesSwitch.isOn;
-    
-    [self updateUI];
-}
+//- (IBAction)disguiseCompaniesSwitchValueChanged:(UISwitch *)sender
+//{
+//    if (!sender.isOn) {
+//        [self presentAlertViewWithTitle:@"Disguise disabled" withMessage:@"Simulator results will not be recorded." withActionTitle:@"Dismiss"];
+//    }
+//    
+//    self.userAccount.disguiseCompanies = self.disguiseCompaniesSwitch.isOn;
+//    
+//    [self updateUI];
+//}
 
 
 #pragma mark - User Login/Logout
@@ -228,9 +228,9 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     if (self.isAnonymousUser) {
-        return 4;
-    } else {
         return 3;
+    } else {
+        return 2;
     }
 }
 

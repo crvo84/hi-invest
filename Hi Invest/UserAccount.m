@@ -32,6 +32,7 @@
 @property (strong, nonatomic, readwrite) NSMutableDictionary *lowestReturns; // @{ scenarioFilename : @(lowestReturn) }
 @property (strong, nonatomic, readwrite) NSMutableDictionary *highestReturns; // @{ scenarioFilename : @(highestReturn) }
 
+
 @end
 
 

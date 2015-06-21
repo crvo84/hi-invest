@@ -59,14 +59,15 @@
     self.priceNumber = nil;
     
     // Ticker Button Text
-    [self.tickerButton setTitle:[self.game UITickerForTicker:self.ticker] forState:UIControlStateNormal];
     if ([self.ticker isEqualToString:CashTicker]) {
+        [self.tickerButton setTitle:CashTicker forState:UIControlStateNormal];
         // Disabled button so Buy Sell segue cannot ve performed when Cash is selected
         self.tickerButton.enabled = NO;
         // Hide addButton
         self.addButton.hidden = YES;
         [self.tickerButton setTitleColor:[UIColor colorWithRed:32.0/255.0 green:32.0/255.0 blue:32.0/255.0 alpha:1] forState:UIControlStateDisabled];
     } else {
+        [self.tickerButton setTitle:[self.game UITickerForTicker:self.ticker] forState:UIControlStateNormal];
         // Enabled for tickers of companies that can be bought/sold
         self.tickerButton.enabled = YES;
         // Show addButton

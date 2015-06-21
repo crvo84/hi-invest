@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UIView *initialSubview;
 @property (weak, nonatomic) IBOutlet UILabel *initialInfoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *initialCountdownLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *ninjaImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *quizAlreadyDoneImageView;
 // Final Subview Outlets
 @property (weak, nonatomic) IBOutlet UIView *finalSubview;
@@ -42,6 +43,7 @@
 
 @implementation QuizViewController
 
+#define QuizNinjaImageFilenames @[@"ninjaD", @"ninjaE", @"ninjaH"]
 
 - (void)viewDidLoad
 {
@@ -51,6 +53,8 @@
     [self.navigationController.navigationBar setBarTintColor:[[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]]];
     
     // INITIAL SUBVIEW SETUP
+    NSInteger randomIndex = arc4random() % [QuizNinjaImageFilenames count];
+    [self.ninjaImageView setImage:[UIImage imageNamed:QuizNinjaImageFilenames[randomIndex]]];
     self.initialSubview.hidden = NO;
     self.initialSubview.alpha = 1.0;
     self.initialSubview.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]];

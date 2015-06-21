@@ -16,7 +16,6 @@
 #import "LeftMenuViewController.h"
 #import "TimeSimulationViewController.h"
 #import "SimulatorInfoViewController.h"
-#import "PurchaseScenarioViewController.h"
 #import "FriendStore.h"
 #import "UserDefaultsKeys.h"
 #import "ParseUserKeys.h"
@@ -375,23 +374,6 @@
             CompaniesViewController *companiesViewController = (CompaniesViewController *)contentViewController;
             NSString *selectedIdentifier = selectOrderingValueViewController.selectedIdentifier;
             companiesViewController.sortingValueId = selectedIdentifier;
-        }
-    }
-    
-    // UNWIND FROM PurchaseScenarioViewController
-    if ([unwindSegue.sourceViewController isKindOfClass:[PurchaseScenarioViewController class]]) {
-        if ([contentViewController isKindOfClass:[UserAccountViewController class]]) {
-            
-            PurchaseScenarioViewController *purchaseScenarioViewController = (PurchaseScenarioViewController *)unwindSegue.sourceViewController;
-            
-            UserAccountViewController *userAccountViewController = (UserAccountViewController *)contentViewController;
-            
-            if (purchaseScenarioViewController.restoreSelected) {
-                [userAccountViewController restore];
-                
-            } else {
-                [userAccountViewController purchaseSelectedProduct];
-            }
         }
     }
     

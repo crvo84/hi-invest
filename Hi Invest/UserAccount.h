@@ -36,6 +36,9 @@
 @property (strong, nonatomic, readonly) NSMutableDictionary *lowestReturns; // @{ scenarioFilename : @(lowest Return) }
 @property (strong, nonatomic, readonly) NSMutableDictionary *highestReturns; // @{ scenarioFilename : @(highest Return) }
 
+// In-App Purchases
+@property (strong, nonatomic) NSDictionary *products; // @{ scenarioFilename : SKProduct }
+
 #pragma mark - Class Methods
 
 // Return the user ninja level (0 is the lowest) depending on answered quizzes from the given dictionary
