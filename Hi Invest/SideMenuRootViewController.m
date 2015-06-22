@@ -229,7 +229,8 @@
 
 
 - (IBAction)presentTimeSimulationMenu:(id)sender
-{
+{ // TODO: only day, week and month
+    
     InvestingGame *game = self.userAccount.currentInvestingGame;
     
     NSInteger initialDay = [game currentDay];

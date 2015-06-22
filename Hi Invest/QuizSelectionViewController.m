@@ -13,11 +13,13 @@
 #import "LevelUpViewController.h"
 #import "UserAccount.h"
 #import "DefaultColors.h"
+#import "UserInfoViewController.h"
 #import "Quiz.h"
 
 @interface QuizSelectionViewController () <UITableViewDataSource, UITableViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIView *navigationBarButtonBackgroundView;
 
 @end
 
@@ -32,6 +34,13 @@
 
 - (void)updateUI
 {
+    self.navigationBarButtonBackgroundView.layer.cornerRadius = 5;
+    self.navigationBarButtonBackgroundView.layer.masksToBounds = YES;
+    self.navigationBarButtonBackgroundView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    self.navigationBarButtonBackgroundView.layer.borderWidth = [self.userAccount userLevel] == 4 ? 1.0 : 0.0;
+
+    self.navigationBarButtonBackgroundView.backgroundColor = [DefaultColors userLevelColorForLevel:[self.userAccount userLevel]];
+    
     [self.tableView reloadData];
 }
 
@@ -133,8 +142,13 @@
         }
     }
     
-    if ([viewController isKindOfClass:[LevelUpViewController class]]) {
-        [self prepareLevelUpViewController:(LevelUpViewController *)viewController withNewLevel:[self.userAccount userLevel]];
+    
+    if ([segue.destinationViewController isKindOfClass:[LevelUpViewController class]]) {
+        [self prepareLevelUpViewController:segue.destinationViewController withNewLevel:[self.userAccount userLevel]];
+    }
+    
+    if ([segue.destinationViewController isKindOfClass:[UserInfoViewController class]]) {
+        [self prepareUserInfoViewController:segue.destinationViewController withUserAccount:self.userAccount];
     }
 }
 
@@ -186,10 +200,10 @@
     levelUpViewController.newLevel = newLevel;
 }
 
-#pragma mark - Getters
-
-
-
+- (void)prepareUserInfoViewController:(UserInfoViewController *)userInfoViewController withUserAccount:(UserAccount *)userAccount
+{
+    userInfoViewController.userAccount = userAccount;
+}
 
 
 
