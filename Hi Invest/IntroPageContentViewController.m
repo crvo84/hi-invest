@@ -31,7 +31,7 @@
         self.textLabel.text = @"Stock market simulator with real historical data!";
         
     } else if (self.pageIndex == 2) {
-        self.textLabel.text = @"Become an expert in fundamental analysis!";
+        self.textLabel.text = @"Become a financial analyst expert!";
         
     }
     

@@ -357,7 +357,26 @@
 
 #pragma mark - Restoring Purchases
 
-- (IBAction)restorePurchases
+- (IBAction)restorePurchasesButtonPressed
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Restore previous purchases?"
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *continueAction = [UIAlertAction actionWithTitle:@"Restore" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+
+        [self restorePurchases];
+    }];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+    
+    [alert addAction:cancelAction];
+    [alert addAction:continueAction];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+
+}
+
+- (void)restorePurchases
 {
     // Need to add self as observer for the delegate to be called. Must be removed in dealloc.
     [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
