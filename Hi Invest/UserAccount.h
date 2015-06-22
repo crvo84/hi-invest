@@ -62,6 +62,11 @@
 // Delete all GameInfo managed objects existing in database
 - (void)deleteAllGameInfoManagedObjects;
 
+#pragma mark - Tutorial
+- (void)resetTutorialsPresentedCount;
+- (void)setTutorialPresented:(NSString *)tutorialPresented;
+- (BOOL)wasTutorialPresented:(NSString *)tutorial;
+
 #pragma mark - Quizzes
 // Increase the number of successful quizzes finished for the given quizType and save it to the user info
 - (void)increaseSuccessfulQuizzesForQuizType:(QuizType)quizType;

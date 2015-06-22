@@ -228,7 +228,6 @@
                                      withTicker:self.ticker
                                andInvestingGame:self.game];
     }
-    
 }
 
 - (void)prepareBuySellTableViewController:(BuySellTableViewController *)buySellTableViewController withTicker:(NSString *)ticker andInvestingGame:(InvestingGame *)game

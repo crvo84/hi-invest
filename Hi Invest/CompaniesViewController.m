@@ -51,6 +51,7 @@
     [self updateUI]; // Updating UI is done here to update when switching tabs
 }
 
+
 #pragma mark - Updating UI and Data
 
 - (void)updateUI

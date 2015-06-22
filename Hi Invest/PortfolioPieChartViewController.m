@@ -167,13 +167,6 @@
 {
     _ticker = ticker;
     
-    if ([ticker isEqualToString:CashTicker]) {
-        self.title = CashTicker;
-        
-    } else {
-        self.title = [self.game UITickerForTicker:ticker];
-    }
-    
     [self updateUI];
 }
 

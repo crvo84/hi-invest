@@ -14,6 +14,9 @@
 @interface SideMenuRootViewController : RESideMenu <RESideMenuDelegate>
 
 @property (strong, nonatomic) UserAccount *userAccount;
+// Tutorial
+@property (copy, nonatomic) NSString *tutorialMessage;
+@property (copy, nonatomic) NSString *tutorialImageFilaneme;
 
 - (void)loadFacebookUserInfo;
 

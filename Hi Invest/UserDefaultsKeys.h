@@ -20,6 +20,19 @@
 #define UserDefaultsGuestAutomaticLogin @"guestAutomaticLogin"
 #define UserDefaultsInfoSavedInParseUser @"infoSavedInParseUser"
 
+// Tutorial
+#define UserDefaultsTutorialsPresentedCount @"TutorialPresented"
+#define UserDefaultsTutorialPresentedWelcome @"TutorialWelcome"
+#define UserDefaultsTutorialPresentedSimulator @"TutorialSimulator"
+#define UserDefaultsTutorialPresentedQuizzes @"TutorialQuizzes"
+#define UserDefaultsTutorialPresentedGlossary @"Tutorial Glossary"
+#define UserDefaultsTutorialPresentedSimulatorCompanies @"TutorialSimulatorCompanies"
+#define UserDefaultsTutorialPresentedSimulatorCompanyInfo @"TutorialSimulatorCompanyInfo"
+#define UserDefaultsTutorialPresentedSimulatorRatioInfo @"TutorialSimulatorRatioInfo"
+#define UserDefaultsTutorialPresentedSimulatorActivity @"TutorialSimulatorActivity"
+
+
+
 // In-App Purchases
 #define UserDefaultsScenarioAccessPrefix @"scenarioAccess"
 

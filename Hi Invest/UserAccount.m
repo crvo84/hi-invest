@@ -15,6 +15,7 @@
 #import "GameInfo+Create.h"
 #import "ParseUserKeys.h"
 #import "UserDefaultsKeys.h"
+#import "TutorialKeys.h"
 #import "ScenariosKeys.h"
 #import <Parse/Parse.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
@@ -265,6 +266,7 @@
     [defaults removeObjectForKey:UserDefaultsGuestAutomaticLogin];
     [defaults removeObjectForKey:UserDefaultsInfoSavedInParseUser];
     [defaults removeObjectForKey:UserDefaultsFriendsFacebookIds];
+    [self resetTutorialsPresentedCount];
     
     [defaults synchronize];
 }
@@ -274,6 +276,40 @@
     [GameInfo removeExistingGameInfoWithScenarioFilename:nil withUserId:nil intoManagedObjectContext:self.gameInfoContext];
 }
 
+#pragma mark - Tutorial
+
+- (void)resetTutorialsPresentedCount
+{
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:UserDefaultsTutorialsPresentedCount];
+}
+
+- (void)setTutorialPresented:(NSString *)tutorialPresented
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    NSMutableDictionary *tutorialsPresentedCount = [[defaults objectForKey:UserDefaultsTutorialsPresentedCount] mutableCopy];
+    
+    if (!tutorialsPresentedCount) {
+        tutorialsPresentedCount = [[NSMutableDictionary alloc] init];
+    }
+    
+    tutorialsPresentedCount[tutorialPresented] = @(YES);
+    
+    [defaults setObject:tutorialsPresentedCount forKey:UserDefaultsTutorialsPresentedCount];
+}
+
+- (BOOL)wasTutorialPresented:(NSString *)tutorial
+{
+    NSDictionary *tutorialsPresentedCount = [[NSUserDefaults standardUserDefaults] objectForKey:UserDefaultsTutorialsPresentedCount];
+    
+    NSNumber *wasPresentedBoolNumber = tutorialsPresentedCount ? tutorialsPresentedCount[tutorial] : nil;
+    
+    if (wasPresentedBoolNumber) {
+        return [wasPresentedBoolNumber boolValue];
+    } else {
+        return NO;
+    }
+}
 
 #pragma mark - Quizzes
 

@@ -16,6 +16,10 @@
 #import "LeftMenuViewController.h"
 #import "TimeSimulationViewController.h"
 #import "SimulatorInfoViewController.h"
+#import "QuizSelectionViewController.h"
+#import "GlossarySelectionViewController.h"
+#import "TutorialScreenViewController.h"
+#import "TutorialKeys.h"
 #import "FriendStore.h"
 #import "UserDefaultsKeys.h"
 #import "ParseUserKeys.h"
@@ -225,11 +229,12 @@
 
 }
 
+
 #pragma mark - Time Simulation Menu
 
 
 - (IBAction)presentTimeSimulationMenu:(id)sender
-{ // TODO: only day, week and month
+{
     
     InvestingGame *game = self.userAccount.currentInvestingGame;
     
@@ -277,45 +282,46 @@
         }
     }];
     
-    UIAlertAction *sixMonthsAction = [UIAlertAction actionWithTitle:@"Six Months" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        if ([game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:6 andDays:0]) {
-            
-            [self updateUserSimulatorInfoFromInvestingGame:game];
-            
-            NSInteger newDay = [game currentDay];
-            [self performSegueWithIdentifier:@"Time Simulation" sender:@(newDay - initialDay)];
-        }
-    }];
-    
-    UIAlertAction *yearAction = [UIAlertAction actionWithTitle:@"Year" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        if ([game changeCurrentDateToDateWithTimeDifferenceInYears:1 months:0 andDays:0]) {
-            
-            [self updateUserSimulatorInfoFromInvestingGame:game];
-            
-            NSInteger newDay = [game currentDay];
-            [self performSegueWithIdentifier:@"Time Simulation" sender:@(newDay - initialDay)];
-        }
-    }];
-    
     // FOR DEBUGGING
-    UIAlertAction *tenYearsAction = [UIAlertAction actionWithTitle:@"10 Years" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        if ([game changeCurrentDateToDateWithTimeDifferenceInYears:10 months:0 andDays:0]) {
-            
-            [self updateUserSimulatorInfoFromInvestingGame:game];
-            
-            NSInteger newDay = [game currentDay];
-            [self performSegueWithIdentifier:@"Time Simulation" sender:@(newDay - initialDay)];
-        }
-    }];
+//    UIAlertAction *sixMonthsAction = [UIAlertAction actionWithTitle:@"Six Months" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+//        if ([game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:6 andDays:0]) {
+//            
+//            [self updateUserSimulatorInfoFromInvestingGame:game];
+//            
+//            NSInteger newDay = [game currentDay];
+//            [self performSegueWithIdentifier:@"Time Simulation" sender:@(newDay - initialDay)];
+//        }
+//    }];
+//    
+//    UIAlertAction *yearAction = [UIAlertAction actionWithTitle:@"Year" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+//        if ([game changeCurrentDateToDateWithTimeDifferenceInYears:1 months:0 andDays:0]) {
+//            
+//            [self updateUserSimulatorInfoFromInvestingGame:game];
+//            
+//            NSInteger newDay = [game currentDay];
+//            [self performSegueWithIdentifier:@"Time Simulation" sender:@(newDay - initialDay)];
+//        }
+//    }];
+//    
+//    
+//    UIAlertAction *tenYearsAction = [UIAlertAction actionWithTitle:@"10 Years" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+//        if ([game changeCurrentDateToDateWithTimeDifferenceInYears:10 months:0 andDays:0]) {
+//            
+//            [self updateUserSimulatorInfoFromInvestingGame:game];
+//            
+//            NSInteger newDay = [game currentDay];
+//            [self performSegueWithIdentifier:@"Time Simulation" sender:@(newDay - initialDay)];
+//        }
+//    }];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
     
     [alert addAction:dayAction];
     [alert addAction:weekAction];
     [alert addAction:monthAction];
-    [alert addAction:sixMonthsAction];
-    [alert addAction:yearAction];
-    [alert addAction:tenYearsAction];
+//    [alert addAction:sixMonthsAction];
+//    [alert addAction:yearAction];
+//    [alert addAction:tenYearsAction];
     [alert addAction:cancelAction];
     
     [self presentViewController:alert animated:YES completion:nil];
@@ -393,14 +399,17 @@
     });
 }
 
+
 #pragma mark - Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    // Simulator Info
     if ([segue.destinationViewController isKindOfClass:[SimulatorInfoViewController class]]) {
         [self prepareSimulatorInfoViewController:segue.destinationViewController withInvestingGame:[self.userAccount currentInvestingGame]];
     }
     
+    // Time Simulation
     if ([segue.destinationViewController isKindOfClass:[TimeSimulationViewController class]]) {
         if ([sender isKindOfClass:[NSNumber class]]) {
             NSNumber *senderNumber = (NSNumber *)sender;
@@ -408,6 +417,26 @@
             [self prepareTimeSimulationViewController:segue.destinationViewController withNumberOfDays:numberOfDays];
         }
     }
+    
+    // Tutorial
+    UIViewController *contentViewController = self.contentViewController;
+    if ([contentViewController isKindOfClass:[UINavigationController class]]) {
+        contentViewController = [((UINavigationController *)contentViewController).viewControllers firstObject];
+    }
+    
+    if ([segue.destinationViewController isKindOfClass:[TutorialScreenViewController class]]) {
+        
+        [self prepareTutorialScreenViewController:segue.destinationViewController
+                                      withMessage:self.tutorialMessage
+                                withImageFilename:self.tutorialImageFilaneme];
+    }
+    
+}
+
+- (void)prepareTutorialScreenViewController:(TutorialScreenViewController *)tutorialScreenViewController withMessage:(NSString *)message withImageFilename:(NSString *)imageFilename
+{
+    tutorialScreenViewController.message = message;
+    tutorialScreenViewController.imageFilename = imageFilename;
 }
 
 - (void)prepareSimulatorInfoViewController:(SimulatorInfoViewController *)simulatorInfoViewController withInvestingGame:(InvestingGame *)game

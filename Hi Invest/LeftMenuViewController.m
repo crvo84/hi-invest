@@ -8,12 +8,14 @@
 
 #import "LeftMenuViewController.h"
 #import "RESideMenu.h"
+#import "SideMenuRootViewController.h"
 #import "SimulatorTabBarController.h"
 #import "UserAccountViewController.h"
 #import "GlossarySelectionViewController.h"
 #import "QuizSelectionViewController.h"
 #import "SettingsTableViewController.h"
 #import "UserDefaultsKeys.h"
+#import "TutorialKeys.h"
 #import "UserAccount.h"
 #import "InvestingGame.h"
 #import "DefaultColors.h"
@@ -172,6 +174,8 @@
 {
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     
+    SideMenuRootViewController *sideMenuRootViewController = (SideMenuRootViewController *)self.sideMenuViewController;
+    
     UIViewController *currentContentViewController = self.sideMenuViewController.contentViewController;
     if ([currentContentViewController isKindOfClass:[UINavigationController class]]) {
         currentContentViewController = [((UINavigationController *)currentContentViewController).viewControllers firstObject];
@@ -184,8 +188,19 @@
                 SimulatorTabBarController *simulatorTabBarController = [self.storyboard instantiateViewControllerWithIdentifier:@"SimulatorTabBarController"];
                 simulatorTabBarController.userAccount = self.userAccount;
                 [self.sideMenuViewController setContentViewController:simulatorTabBarController animated:YES];
-                [self.sideMenuViewController performSegueWithIdentifier:@"Simulator Info" sender:self];
+                
+                if (![self.userAccount wasTutorialPresented:UserDefaultsTutorialPresentedSimulator]) {
+                    
+                    sideMenuRootViewController.tutorialMessage = TutorialMessageSimulator;
+                    sideMenuRootViewController.tutorialImageFilaneme = @"ninjaH";
+                    [sideMenuRootViewController performSegueWithIdentifier:@"Tutorial" sender:self];
+                    [self.userAccount setTutorialPresented:UserDefaultsTutorialPresentedSimulator];
+                    
+                } else {
+                    [sideMenuRootViewController performSegueWithIdentifier:@"Simulator Info" sender:self];
+                }
             }
+            
             break;
             
         case 1:
@@ -195,7 +210,16 @@
                 QuizSelectionViewController *quizSelectionViewController = [quizNavigationController.viewControllers firstObject];
                 quizSelectionViewController.userAccount = self.userAccount;
                 [self.sideMenuViewController setContentViewController:quizNavigationController animated:YES];
+                
+                if (![self.userAccount wasTutorialPresented:UserDefaultsTutorialPresentedQuizzes]) {
+
+                    sideMenuRootViewController.tutorialMessage = TutorialMessageQuizzes;
+                    sideMenuRootViewController.tutorialImageFilaneme = @"ninjaB";
+                    [sideMenuRootViewController performSegueWithIdentifier:@"Tutorial" sender:self];
+                    [self.userAccount setTutorialPresented:UserDefaultsTutorialPresentedQuizzes];
+                }
             }
+            
             break;
             
         case 2:
@@ -205,16 +229,28 @@
                 GlossarySelectionViewController *glossarySelectionViewController = [glossaryNavigationController.viewControllers firstObject];
                 glossarySelectionViewController.userAccount = self.userAccount;
                 [self.sideMenuViewController setContentViewController:glossaryNavigationController animated:YES];
+                
+                if (![self.userAccount wasTutorialPresented:UserDefaultsTutorialPresentedGlossary]) {
+                    
+                    sideMenuRootViewController.tutorialMessage = TutorialMessageGlossary;
+                    sideMenuRootViewController.tutorialImageFilaneme = @"ninjaC";
+                    [sideMenuRootViewController performSegueWithIdentifier:@"Tutorial" sender:self];
+                    [self.userAccount setTutorialPresented:UserDefaultsTutorialPresentedGlossary];
+                }
             }
+                    
             break;
             
         case 3:
+                    
             if (![currentContentViewController isKindOfClass:[SettingsTableViewController class]]) {
                 UINavigationController *settingsNavigationController = [self.storyboard instantiateViewControllerWithIdentifier:@"Settings UINavigationController"];
                 SettingsTableViewController *settingsSelectionViewController = [settingsNavigationController.viewControllers firstObject];
                 settingsSelectionViewController.userAccount = self.userAccount;
                 [self.sideMenuViewController setContentViewController:settingsNavigationController animated:YES];
+                
             }
+                    
             break;
 
         default:

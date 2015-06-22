@@ -17,6 +17,9 @@
 #import "UserDefaultsKeys.h"
 #import "ScenariosKeys.h"
 #import "UserInfoViewController.h"
+#import "TutorialScreenViewController.h"
+#import "TutorialKeys.h"
+#import "IntroViewController.h"
 
 #import <Parse/Parse.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
@@ -58,6 +61,16 @@
     [super viewWillAppear:animated];
     
     [self updateUI];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    if (![self.userAccount wasTutorialPresented:UserDefaultsTutorialPresentedWelcome]) {
+        [self performSegueWithIdentifier:@"Intro" sender:self];
+        [self.userAccount setTutorialPresented:UserDefaultsTutorialPresentedWelcome];
+    }
 }
 
 - (void)updateUI
@@ -427,10 +440,15 @@
     if ([segue.destinationViewController isKindOfClass:[UserInfoViewController class]]) {
         [self prepareUserInfoViewController:segue.destinationViewController withUserAccount:self.userAccount];
     }
-//    
-//    if ([segue.destinationViewController isKindOfClass:[PurchaseScenarioViewController class]]) {
-//        ((PurchaseScenarioViewController *)segue.destinationViewController).product = self.productSelected;
-//    }
+    
+    if ([segue.destinationViewController isKindOfClass:[TutorialScreenViewController class]]) {
+        NSString *message = [NSString stringWithFormat:TutorialMessageWelcome, [self.userAccount userName]];
+        ((TutorialScreenViewController *)segue.destinationViewController).message = message;
+    }
+    
+    if ([segue.destinationViewController isKindOfClass:[IntroViewController class]]) {
+        ((IntroViewController *)segue.destinationViewController).userAccount = self.userAccount;
+    }
 }
 
 - (void)prepareScenarioInfoViewController:(ScenarioInfoViewController *)scenarioInfoViewController withUserAccount:(UserAccount *)userAccount scenarioPurchaseInfo:(ScenarioPurchaseInfo *)scenarioPurchaseInfo locale:(NSLocale *)locale isFileInBundle:(BOOL)isFileInBundle

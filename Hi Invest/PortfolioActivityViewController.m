@@ -29,6 +29,7 @@
     [self updateUI];
 }
 
+
 - (void)updateUI
 {
     self.transactions = nil;
@@ -178,9 +179,6 @@
     
     return _numberFormatter;
 }
-
-
-
 
 
 

@@ -12,6 +12,7 @@
 #import "ManagedObjectContextCreator.h"
 #import "InvestingGame.h"
 #import "SideMenuRootViewController.h"
+#import "IntroViewController.h"
 #import "Scenario.h"
 #import "GameInfo+Create.h"
 #import "FriendStore.h"
@@ -88,17 +89,21 @@
         }];
         
     } else {
-        [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
-            self.facebookBackgroundView.alpha = 1.0;
-            self.facebookLoginButton.alpha = 1.0;
-            self.skipLoginButton.alpha = 1.0;
-        } completion:^(BOOL finished) {
-
-        }];
+        [self UIInitialSetup];
     }
 
 }
 
+- (void)UIInitialSetup
+{
+    [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+        self.facebookBackgroundView.alpha = 1.0;
+        self.facebookLoginButton.alpha = 1.0;
+        self.skipLoginButton.alpha = 1.0;
+    } completion:^(BOOL finished) {
+        
+    }];
+}
 
 //- (void)moveLogoToFinalPosition
 //{
@@ -268,10 +273,9 @@
 
 #pragma mark - Unwind Segues
 
-// Use it when login out the user account
+
 - (IBAction)unwindToSignupViewController:(UIStoryboardSegue *)unwindSegue
 {
-    
     [[FriendStore sharedStore] removeAllFriends];
     [self.userAccount deleteAllGameInfoManagedObjects];
     [self.userAccount deleteAllUserDefaults];

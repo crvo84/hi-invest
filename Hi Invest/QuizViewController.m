@@ -43,7 +43,7 @@
 
 @implementation QuizViewController
 
-#define QuizNinjaImageFilenames @[@"ninjaD", @"ninjaE", @"ninjaH"]
+#define QuizNinjaImageFilenames @[@"ninjaD", @"ninjaE", @"ninjaH", @"ninjaF"]
 
 - (void)viewDidLoad
 {
@@ -73,7 +73,7 @@
     self.succesfulQuiz = NO;
     // Mistake count
     self.mistakeCount = 0;
-    // Image will take UIImageView tint color. Set on interface builder
+    // Image will take UIImageView tint color.
     for (UIImageView *imageView in self.mistakeLeftImageViews) {
         
         [imageView setImage:[[UIImage imageNamed:@"ninjaEmoticon22x22"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
@@ -86,7 +86,7 @@
     // Answer Buttons
     for (UIButton *answerButton in self.answerButtons) {
         
-        answerButton.layer.cornerRadius = 3;
+        answerButton.layer.cornerRadius = 12;
         answerButton.layer.masksToBounds = YES;
         answerButton.titleLabel.minimumScaleFactor = 0.7;
         answerButton.titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -195,6 +195,7 @@
         
         for (UIButton *button in self.answerButtons) {
             button.backgroundColor = [[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:[DefaultColors UIElementsBackgroundAlpha]];
+//            button.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]];
         }
         
         BOOL showQuestionLabel;
@@ -224,6 +225,7 @@
         //Create Timer Bar
         self.timerBarView = [[UIView alloc] initWithFrame:self.timerBarSuperview.bounds];
         self.timerBarView.backgroundColor = [[DefaultColors UIElementsBackgroundColor] colorWithAlphaComponent:[DefaultColors UIElementsBackgroundAlpha]];
+//        self.timerBarView.backgroundColor = [[DefaultColors speechBubbleBackgroundColor] colorWithAlphaComponent:[DefaultColors speechBubbleBackgroundAlpha]];
         self.timerBarView.alpha = 0.0;
         [self.timerBarSuperview addSubview:self.timerBarView];
         
