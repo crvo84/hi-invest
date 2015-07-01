@@ -392,12 +392,12 @@
 		73442DDC1B166D4400F3A7ED /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				734A86C11B33CEC900D1D60E /* LicensesViewController.h */,
-				734A86C21B33CEC900D1D60E /* LicensesViewController.m */,
-				734A86BE1B33B62200D1D60E /* AboutTableViewController.h */,
-				734A86BF1B33B62200D1D60E /* AboutTableViewController.m */,
 				73442DE01B1672E800F3A7ED /* SettingsTableViewController.h */,
 				73442DE11B1672E800F3A7ED /* SettingsTableViewController.m */,
+				734A86BE1B33B62200D1D60E /* AboutTableViewController.h */,
+				734A86BF1B33B62200D1D60E /* AboutTableViewController.m */,
+				734A86C11B33CEC900D1D60E /* LicensesViewController.h */,
+				734A86C21B33CEC900D1D60E /* LicensesViewController.m */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -1179,7 +1179,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1216,7 +1216,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

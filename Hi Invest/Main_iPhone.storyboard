@@ -3247,7 +3247,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <sections>
-                            <tableViewSection headerTitle="Simulator Initial Cash" footerTitle="Changes will apply for new games only." id="8S7-uj-azb">
+                            <tableViewSection headerTitle="Initial Cash" footerTitle="Changes will apply for new games only." id="8S7-uj-azb">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="44" id="2jp-58-3R1">
                                         <autoresizingMask key="autoresizingMask"/>
@@ -3272,6 +3272,37 @@
                                                 <constraint firstItem="dCa-RW-yWl" firstAttribute="leading" secondItem="Oxv-7B-pcb" secondAttribute="leadingMargin" id="7A2-R3-nRW"/>
                                                 <constraint firstItem="eZX-qI-DQ5" firstAttribute="trailing" secondItem="Oxv-7B-pcb" secondAttribute="trailingMargin" id="Vzb-5O-4lV"/>
                                                 <constraint firstAttribute="centerY" secondItem="dCa-RW-yWl" secondAttribute="centerY" id="yn5-H9-3zt"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Companies" id="HuJ-qo-lfN">
+                                <string key="footerTitle">Fictional names and tickers. Prices will be modified without affecting real financial information. Changes will apply for new games only.</string>
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="fdL-oG-ana">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fdL-oG-ana" id="7xD-ud-y3W">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Disguise" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tdC-Y9-ghr">
+                                                    <rect key="frame" x="8" y="11" width="66" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.23529411764705882" green="0.23529411764705882" blue="0.23529411764705882" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ue9-a6-YqX">
+                                                    <rect key="frame" x="543" y="6" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="disguiseCompaniesSwitchValueChanged:" destination="7jf-qE-hmF" eventType="valueChanged" id="3sw-qg-h25"/>
+                                                    </connections>
+                                                </switch>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="centerY" secondItem="Ue9-a6-YqX" secondAttribute="centerY" id="ByU-UZ-1eh"/>
+                                                <constraint firstItem="tdC-Y9-ghr" firstAttribute="leading" secondItem="7xD-ud-y3W" secondAttribute="leadingMargin" id="Elg-vq-kX6"/>
+                                                <constraint firstItem="Ue9-a6-YqX" firstAttribute="trailing" secondItem="7xD-ud-y3W" secondAttribute="trailingMargin" id="bda-aD-jWo"/>
+                                                <constraint firstAttribute="centerY" secondItem="tdC-Y9-ghr" secondAttribute="centerY" id="p9M-On-gTK"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -3352,6 +3383,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="disguiseCompaniesSwitch" destination="Ue9-a6-YqX" id="sSW-3g-cpG"/>
                         <outlet property="initialCashLabel" destination="dCa-RW-yWl" id="Sf2-0c-vbJ"/>
                         <outlet property="initialCashStepper" destination="eZX-qI-DQ5" id="Z3t-of-4NJ"/>
                         <segue destination="MV3-rW-KuB" kind="unwind" identifier="logout" unwindAction="unwindToSignupViewController:" id="FNd-2V-UJc"/>
