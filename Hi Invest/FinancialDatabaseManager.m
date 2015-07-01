@@ -69,7 +69,7 @@
         NSLog(@"Error fetching Price managed objects from database with array of tickers. %@", [error localizedDescription]);
         return nil;
     } else if ([matches count] == 0){
-        NSLog(@"Price fetch from database returned no matches");
+//        NSLog(@"Price fetch from database returned no matches");
     } else if ([matches count] > [tickers count]) {
         NSLog(@"Price fetch from database with array of tickers returned more matches than tickers.");
         return nil;
