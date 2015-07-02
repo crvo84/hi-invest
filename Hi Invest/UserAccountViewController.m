@@ -243,7 +243,7 @@
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
     if (section == 0) {
-        return @"More coming soon...";
+        return @"\"Practice makes perfect\"";
     }
     
     return nil;
