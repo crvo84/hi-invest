@@ -8,6 +8,7 @@
 
 #import "SimulatorInfoViewController.h"
 #import "InfoPageContentViewController.h"
+#import "UserAccount.h"
 #import "GameInfo.h"
 #import "InvestingGame.h"
 #import "SpeechBubbleView.h"
@@ -194,8 +195,6 @@
 {
     [self performSegueWithIdentifier:@"Reset Game" sender:self];
 }
-
-
 
 
 

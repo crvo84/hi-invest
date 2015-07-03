@@ -701,7 +701,7 @@
                                 </constraints>
                             </view>
                             <tableView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="77" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="Y57-77-4JP">
-                                <rect key="frame" x="0.0" y="194" width="600" height="377"/>
+                                <rect key="frame" x="0.0" y="194" width="600" height="391"/>
                                 <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="Scenario Cell" id="Ka3-UE-hiN" customClass="ScenarioTableViewCell">
@@ -734,6 +734,9 @@
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RVR-5N-1zg">
                                                     <rect key="frame" x="490" y="22" width="102" height="32"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="64" id="27k-W3-wnY"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <inset key="contentEdgeInsets" minX="8" minY="6" maxX="8" maxY="6"/>
                                                     <state key="normal" title="MXN$13.00">
@@ -790,29 +793,25 @@
                                 <color key="textColor" red="0.23529411764705882" green="0.23529411764705882" blue="0.23529411764705882" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lD1-rp-8jR">
-                                <rect key="frame" x="240" y="571" width="121" height="29"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <state key="normal" title="Restore purchases">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="restorePurchasesButtonPressed" destination="rbu-72-z7u" eventType="touchUpInside" id="F6U-KE-fne"/>
-                                </connections>
-                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ads will be removed after any purchase." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NQ8-AF-dNA">
+                                <rect key="frame" x="188" y="585" width="224" height="15"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" red="0.47058823529411764" green="0.47058823529411764" blue="0.47058823529411764" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="Y57-77-4JP" firstAttribute="top" secondItem="GyF-SO-PLu" secondAttribute="bottom" constant="16" id="5AU-5I-nQF"/>
-                            <constraint firstItem="HQ2-HQ-6NP" firstAttribute="top" secondItem="lD1-rp-8jR" secondAttribute="bottom" id="6GA-wB-uaG"/>
-                            <constraint firstItem="lD1-rp-8jR" firstAttribute="top" secondItem="Y57-77-4JP" secondAttribute="bottom" id="HIj-AO-79h"/>
+                            <constraint firstItem="Y57-77-4JP" firstAttribute="top" secondItem="GyF-SO-PLu" secondAttribute="bottom" constant="16" id="HTJ-LA-S7f"/>
                             <constraint firstItem="Y57-77-4JP" firstAttribute="leading" secondItem="nIy-Wd-CUJ" secondAttribute="leadingMargin" constant="-16" id="Ksb-7o-m1s"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Y57-77-4JP" secondAttribute="trailing" constant="-16" id="NKv-85-7q4"/>
                             <constraint firstItem="GyF-SO-PLu" firstAttribute="top" secondItem="Hhz-Lb-rx1" secondAttribute="bottom" constant="8" id="OxM-Ij-kpz"/>
+                            <constraint firstAttribute="centerX" secondItem="NQ8-AF-dNA" secondAttribute="centerX" id="UzV-7P-DUp"/>
                             <constraint firstAttribute="trailingMargin" secondItem="GyF-SO-PLu" secondAttribute="trailing" constant="16" id="YeG-8L-vcJ"/>
-                            <constraint firstAttribute="centerX" secondItem="lD1-rp-8jR" secondAttribute="centerX" id="ji3-JR-NcB"/>
                             <constraint firstItem="Hhz-Lb-rx1" firstAttribute="top" secondItem="Zcx-wV-KGw" secondAttribute="bottom" constant="16" id="sAW-Kv-1xr"/>
                             <constraint firstAttribute="centerX" secondItem="Hhz-Lb-rx1" secondAttribute="centerX" id="sMk-ob-yxJ"/>
+                            <constraint firstItem="NQ8-AF-dNA" firstAttribute="top" secondItem="Y57-77-4JP" secondAttribute="bottom" id="sZ9-vP-AMm"/>
+                            <constraint firstItem="HQ2-HQ-6NP" firstAttribute="top" secondItem="NQ8-AF-dNA" secondAttribute="bottom" id="wih-kp-Pr2"/>
                             <constraint firstItem="GyF-SO-PLu" firstAttribute="leading" secondItem="nIy-Wd-CUJ" secondAttribute="leadingMargin" constant="16" id="z6R-LY-zIa"/>
                         </constraints>
                     </view>
@@ -829,9 +828,9 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="adsWillBeRemovedLabel" destination="NQ8-AF-dNA" id="8hu-Mb-rrm"/>
                         <outlet property="backgroundUserView" destination="Hhz-Lb-rx1" id="Fut-uG-3oW"/>
                         <outlet property="friendsBarButtonItem" destination="Y1h-MR-Szh" id="FC6-tW-asd"/>
-                        <outlet property="restorePurchasesButton" destination="lD1-rp-8jR" id="DVf-bp-ark"/>
                         <outlet property="tableView" destination="Y57-77-4JP" id="YzN-Np-TQH"/>
                         <outlet property="userImageView" destination="Cho-NZ-epH" id="if6-dp-8G7"/>
                         <outlet property="userNameLabel" destination="GyF-SO-PLu" id="7zl-iJ-fUf"/>
@@ -890,13 +889,10 @@
                                             <constraint firstItem="ll4-Ui-1hW" firstAttribute="top" secondItem="w3n-Y4-2fK" secondAttribute="top" id="z7S-PM-zd4"/>
                                         </constraints>
                                     </view>
-                                    <tableView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="54" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="4L5-VC-1gt">
-                                        <rect key="frame" x="20" y="88" width="568" height="216"/>
+                                    <tableView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="54" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="4L5-VC-1gt">
+                                        <rect key="frame" x="20" y="88" width="568" height="512"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="216" id="OdD-eY-ZHW"/>
-                                        </constraints>
                                         <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <color key="sectionIndexTrackingBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <prototypes>
@@ -968,6 +964,7 @@
                                     <constraint firstItem="w3n-Y4-2fK" firstAttribute="leading" secondItem="0UV-0I-rad" secondAttribute="leading" constant="27" id="NZj-1M-fnv"/>
                                     <constraint firstItem="7cy-ru-d7Z" firstAttribute="centerY" secondItem="w3n-Y4-2fK" secondAttribute="centerY" id="ZO1-hz-JTa"/>
                                     <constraint firstItem="w3n-Y4-2fK" firstAttribute="top" secondItem="0UV-0I-rad" secondAttribute="top" constant="32" id="bJF-Sb-Feh"/>
+                                    <constraint firstAttribute="bottom" secondItem="4L5-VC-1gt" secondAttribute="bottom" id="kCO-pz-IZw"/>
                                     <constraint firstItem="7cy-ru-d7Z" firstAttribute="leading" secondItem="w3n-Y4-2fK" secondAttribute="trailing" constant="8" id="pQW-BN-Z3R"/>
                                     <constraint firstItem="7cy-ru-d7Z" firstAttribute="height" secondItem="w3n-Y4-2fK" secondAttribute="height" id="wP8-a4-lbT"/>
                                 </constraints>
@@ -3247,7 +3244,36 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <sections>
-                            <tableViewSection headerTitle="Initial Cash" footerTitle="Changes will apply for new games only." id="8S7-uj-azb">
+                            <tableViewSection headerTitle="Scenario Purchases" id="S7D-fl-45U">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="7uU-0C-Hh2">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7uU-0C-Hh2" id="kBG-yx-E1A">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QBC-UC-6Fs">
+                                                    <rect key="frame" x="8" y="0.0" width="584" height="43"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <state key="normal" title="Restore previous purchases">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="connectToFacebook:" destination="7jf-qE-hmF" eventType="touchUpInside" id="8ZK-NY-e5g"/>
+                                                        <action selector="restorePurchasesButtonPressed" destination="7jf-qE-hmF" eventType="touchUpInside" id="TNf-yF-d7m"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottomMargin" secondItem="QBC-UC-6Fs" secondAttribute="bottom" constant="-8" id="4Ks-Lr-vo8"/>
+                                                <constraint firstItem="QBC-UC-6Fs" firstAttribute="top" secondItem="kBG-yx-E1A" secondAttribute="topMargin" constant="-8" id="HzV-h1-dRd"/>
+                                                <constraint firstItem="QBC-UC-6Fs" firstAttribute="leading" secondItem="kBG-yx-E1A" secondAttribute="leadingMargin" id="UPY-aM-BWm"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="QBC-UC-6Fs" secondAttribute="trailing" id="zGx-Xc-YNW"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Initial Cash" id="8S7-uj-azb">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="44" id="2jp-58-3R1">
                                         <autoresizingMask key="autoresizingMask"/>

@@ -18,6 +18,7 @@
 #import <Parse/Parse.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <iAd/iAd.h>
 
 @interface FriendsViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -32,6 +33,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    self.canDisplayBannerAds = [self.userAccount shouldPresentAds];
     
     [self refreshFriendsInfo];
 }

@@ -13,6 +13,8 @@
 #import "RatiosKeys.h"
 #import "GlossaryKeys.h"
 
+#import <iAd/iAd.h>
+
 @interface GlossarySelectionViewController () <UITableViewDataSource, UITableViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -20,6 +22,13 @@
 @end
 
 @implementation GlossarySelectionViewController
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    self.canDisplayBannerAds = [self.userAccount shouldPresentAds];
+}
 
 - (void)updateUI
 {
@@ -94,13 +103,14 @@
     
     if ([segue.destinationViewController isKindOfClass:[GlossaryViewController class]]) {
         if (senderIndexPath) {
-            [self prepareGlossaryViewController:segue.destinationViewController withGlossaryId:GlossaryTypesArray[senderIndexPath.row]];
+            [self prepareGlossaryViewController:segue.destinationViewController withUserAccount:self.userAccount withGlossaryId:GlossaryTypesArray[senderIndexPath.row]];
         }
     }
 }
 
-- (void)prepareGlossaryViewController:(GlossaryViewController *)glossaryViewController withGlossaryId:(NSString *)glossaryId
+- (void)prepareGlossaryViewController:(GlossaryViewController *)glossaryViewController withUserAccount:(UserAccount *)userAccount withGlossaryId:(NSString *)glossaryId
 {
+    glossaryViewController.userAccount = userAccount;
     glossaryViewController.glossaryId = glossaryId;
     glossaryViewController.title = glossaryId;
 }

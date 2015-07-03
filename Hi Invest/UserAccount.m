@@ -725,7 +725,28 @@
 {
     return [NSString stringWithFormat:@"%@%@", UserDefaultsScenarioAccessPrefix, filename];
 }
-   
-   
+
+- (BOOL)shouldPresentAds
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    if (![defaults objectForKey:UserDefaultsShouldPresentAds]) {
+        
+        BOOL initialValue = YES;
+        
+        if ([self isAccessOpenToScenarioWithFilename:ScenarioFilenameDJI_001A]) {
+            initialValue = NO;
+        }
+        
+        [defaults setBool:initialValue forKey:UserDefaultsShouldPresentAds];
+    }
+     
+    return [[NSUserDefaults standardUserDefaults] boolForKey:UserDefaultsShouldPresentAds];
+}
+
+- (void)removeAds
+{
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:UserDefaultsShouldPresentAds];
+}
    
 @end

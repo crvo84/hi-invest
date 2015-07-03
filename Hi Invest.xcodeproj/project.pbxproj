@@ -114,6 +114,7 @@
 		73E660681B37EFB5003C7C91 /* IntroPageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73E660671B37EFB5003C7C91 /* IntroPageContentViewController.m */; };
 		73E6606C1B37F09D003C7C91 /* IntroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73E6606B1B37F09D003C7C91 /* IntroViewController.m */; };
 		73E966D21B10EA5600431AAC /* PortfolioActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73E966D11B10EA5600431AAC /* PortfolioActivityViewController.m */; };
+		73EAB5AA1B45B7E900EE2AD3 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73EAB5A71B45A44B00EE2AD3 /* iAd.framework */; };
 		73EEB9351B31E4C7009D9D2F /* FriendStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 73EEB9341B31E4C7009D9D2F /* FriendStore.m */; };
 		73EEB9381B31E958009D9D2F /* Friend.m in Sources */ = {isa = PBXBuildFile; fileRef = 73EEB9371B31E958009D9D2F /* Friend.m */; };
 		73EEC57C1B040E9300FAA1FE /* UserAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 73EEC57B1B040E9300FAA1FE /* UserAccount.m */; };
@@ -330,6 +331,7 @@
 		73E6606B1B37F09D003C7C91 /* IntroViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntroViewController.m; sourceTree = "<group>"; };
 		73E966D01B10EA5600431AAC /* PortfolioActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PortfolioActivityViewController.h; sourceTree = "<group>"; };
 		73E966D11B10EA5600431AAC /* PortfolioActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PortfolioActivityViewController.m; sourceTree = "<group>"; };
+		73EAB5A71B45A44B00EE2AD3 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		73EEB9331B31E4C7009D9D2F /* FriendStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendStore.h; sourceTree = "<group>"; };
 		73EEB9341B31E4C7009D9D2F /* FriendStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendStore.m; sourceTree = "<group>"; };
 		73EEB9361B31E958009D9D2F /* Friend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Friend.h; sourceTree = "<group>"; };
@@ -348,6 +350,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73EAB5AA1B45B7E900EE2AD3 /* iAd.framework in Frameworks */,
 				73BFF3D51B2898690010F9E9 /* FBSDKCoreKit.framework in Frameworks */,
 				73BFF3ED1B289F0C0010F9E9 /* FBSDKLoginKit.framework in Frameworks */,
 				73BFF4001B29534E0010F9E9 /* ParseFacebookUtilsV4.framework in Frameworks */,
@@ -424,9 +427,9 @@
 			isa = PBXGroup;
 			children = (
 				739ABD511B0165EE009EFC0E /* Main_iPhone.storyboard */,
-				73E660691B37EFB9003C7C91 /* Intro */,
 				739ABCDC1B016390009EFC0E /* AppDelegate.h */,
 				739ABCDD1B016390009EFC0E /* AppDelegate.m */,
+				73E660691B37EFB9003C7C91 /* Intro */,
 				73D7C3751B0AD36E00653A4C /* User Info */,
 				73E660651B3790F3003C7C91 /* Tutorial */,
 				73D7C37B1B0AD49B00653A4C /* Menu */,
@@ -614,6 +617,7 @@
 		73BFF3D11B2897AA0010F9E9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				73EAB5A91B45B7BC00EE2AD3 /* iAd */,
 				73BFF3D41B2897C40010F9E9 /* Others */,
 				73BFF3D31B2897BE0010F9E9 /* Parse */,
 				73BFF3D21B2897B60010F9E9 /* Facebook */,
@@ -929,6 +933,14 @@
 				73E660671B37EFB5003C7C91 /* IntroPageContentViewController.m */,
 			);
 			name = Intro;
+			sourceTree = "<group>";
+		};
+		73EAB5A91B45B7BC00EE2AD3 /* iAd */ = {
+			isa = PBXGroup;
+			children = (
+				73EAB5A71B45A44B00EE2AD3 /* iAd.framework */,
+			);
+			name = iAd;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

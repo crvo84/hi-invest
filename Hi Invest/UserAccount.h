@@ -89,5 +89,7 @@
 // Return YES if the scenario for the given filename is available (Free or already Purchased)
 - (BOOL)isAccessOpenToScenarioWithFilename:(NSString *)filename;
 - (void)setAccessOpenToScenarioWithFilename:(NSString *)filename;
+- (BOOL)shouldPresentAds;
+- (void)removeAds;
 
 @end

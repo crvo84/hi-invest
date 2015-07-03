@@ -20,12 +20,14 @@
 #import "TutorialScreenViewController.h"
 #import "TutorialKeys.h"
 #import "IntroViewController.h"
+#import "FriendsViewController.h"
 
 #import <Parse/Parse.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 
 #import <StoreKit/StoreKit.h>
+#import <iAd/iAd.h>
 
 @interface UserAccountViewController () <UITableViewDataSource, UITableViewDelegate, SKProductsRequestDelegate, SKPaymentTransactionObserver>
 
@@ -34,7 +36,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *friendsBarButtonItem;
-@property (weak, nonatomic) IBOutlet UIButton *restorePurchasesButton;
+@property (weak, nonatomic) IBOutlet UILabel *adsWillBeRemovedLabel;
+//@property (weak, nonatomic) IBOutlet UIButton *restorePurchasesButton;
 
 @end
 
@@ -45,6 +48,9 @@
     
     [super viewDidLoad];
     
+    // iAds
+    self.canDisplayBannerAds = [self.userAccount shouldPresentAds];
+    
     // Background User View Setup
     self.backgroundUserView.layer.cornerRadius = 8;
     self.backgroundUserView.layer.masksToBounds = YES;
@@ -53,7 +59,6 @@
     if (!self.userAccount.products) {
         [self requestScenarioProducts];
     }
-
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -103,13 +108,16 @@
     
     [self.tableView reloadData];
     
-    // Restore Purchases Button
-    self.restorePurchasesButton.hidden = YES;
-    for (ScenarioPurchaseInfo *scenarioInfo in self.userAccount.availableScenarios) {
-        if (![self.userAccount isAccessOpenToScenarioWithFilename:scenarioInfo.filename]) {
-            self.restorePurchasesButton.hidden = NO;
-        }
-    }
+//    // Restore Purchases Button
+//    self.restorePurchasesButton.hidden = YES;
+//    for (ScenarioPurchaseInfo *scenarioInfo in self.userAccount.availableScenarios) {
+//        if (![self.userAccount isAccessOpenToScenarioWithFilename:scenarioInfo.filename]) {
+//            self.restorePurchasesButton.hidden = NO;
+//        }
+//    }
+    
+    // Ads will be removed label
+    self.adsWillBeRemovedLabel.hidden = ![self.userAccount shouldPresentAds];
 }
 
 
@@ -243,7 +251,8 @@
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
     if (section == 0) {
-        return @"\"Practice makes perfect\"";
+        NSInteger randomIndex = arc4random() % 2;
+        return randomIndex == 0 ? @"More coming soon!" : @"Practice makes perfect!";
     }
     
     return nil;
@@ -396,6 +405,7 @@
                 //this is called when the user has successfully purchased the package (Cha-Ching!)
                 //you can add your code for what you want to happen when the user buys the purchase here.
                 [self.userAccount setAccessOpenToScenarioWithFilename:transaction.payment.productIdentifier];
+                [self.userAccount removeAds];
                 
                 [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
                 NSLog(@"Transaction state -> Purchased");
@@ -404,6 +414,7 @@
                 NSLog(@"Transaction state -> Restored");
                 //add the same code as you did from SKPaymentTransactionStatePurchased here
                 [self.userAccount setAccessOpenToScenarioWithFilename:transaction.payment.productIdentifier];
+                [self.userAccount removeAds];
                 
                 [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
                 break;
@@ -420,6 +431,7 @@
         }
     }
     
+    self.canDisplayBannerAds = [self.userAccount shouldPresentAds];
     [self updateUI];
 }
 
@@ -468,6 +480,11 @@
     if ([segue.destinationViewController isKindOfClass:[IntroViewController class]]) {
         ((IntroViewController *)segue.destinationViewController).userAccount = self.userAccount;
     }
+    
+    if ([segue.destinationViewController isKindOfClass:[FriendsViewController class]]) {
+        ((FriendsViewController *)segue.destinationViewController).userAccount = self.userAccount;
+    }
+    
 }
 
 - (void)prepareScenarioInfoViewController:(ScenarioInfoViewController *)scenarioInfoViewController withUserAccount:(UserAccount *)userAccount scenarioPurchaseInfo:(ScenarioPurchaseInfo *)scenarioPurchaseInfo locale:(NSLocale *)locale isFileInBundle:(BOOL)isFileInBundle

@@ -8,8 +8,11 @@
 
 #import "GlossaryViewController.h"
 #import "DefinitionViewController.h"
+#import "UserAccount.h"
 #import "RatiosKeys.h"
 #import "GlossaryKeys.h"
+
+#import <iAd/iAd.h>
 
 @interface GlossaryViewController () <UITableViewDataSource, UITabBarDelegate>
 
@@ -20,6 +23,13 @@
 @end
 
 @implementation GlossaryViewController
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    self.canDisplayBannerAds = [self.userAccount shouldPresentAds];
+}
 
 
 - (void)updateUI

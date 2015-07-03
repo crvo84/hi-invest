@@ -28,6 +28,7 @@
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <StoreKit/StoreKit.h>
+#import <iAd/iAd.h>
 
 @interface SideMenuRootViewController ()
 
@@ -407,6 +408,11 @@
     // Simulator Info
     if ([segue.destinationViewController isKindOfClass:[SimulatorInfoViewController class]]) {
         [self prepareSimulatorInfoViewController:segue.destinationViewController withInvestingGame:[self.userAccount currentInvestingGame]];
+        
+        if ([self.userAccount shouldPresentAds]) {
+            UIViewController *destinationVC = (UIViewController *)segue.destinationViewController;
+            destinationVC.interstitialPresentationPolicy = ADInterstitialPresentationPolicyAutomatic;
+        }
     }
     
     // Time Simulation
@@ -415,6 +421,7 @@
             NSNumber *senderNumber = (NSNumber *)sender;
             NSInteger numberOfDays = [senderNumber integerValue];
             [self prepareTimeSimulationViewController:segue.destinationViewController withNumberOfDays:numberOfDays];
+            
         }
     }
     

@@ -15,7 +15,6 @@
 #import "CompanyInfoViewController.h"
 #import "PortfolioPieChartViewController.h"
 
-
 @interface BuySellTableViewController () <UITextFieldDelegate>
 
 @property (strong, nonatomic) NSNumber *priceNumber;
@@ -88,7 +87,6 @@
     [self.tableView addGestureRecognizer:gestureRecognizer];
     
     [self initialUIConfiguration];
-    
 }
 
 // Method called from gesture recognizer added to tableView. 

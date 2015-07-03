@@ -32,8 +32,8 @@
 #define UserDefaultsTutorialPresentedSimulatorActivity @"TutorialSimulatorActivity"
 
 
-
 // In-App Purchases
 #define UserDefaultsScenarioAccessPrefix @"scenarioAccess"
+#define UserDefaultsShouldPresentAds @"presentAds"
 
 #endif

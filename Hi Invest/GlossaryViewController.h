@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+@class UserAccount;
+
 @interface GlossaryViewController : UIViewController
 
+@property (strong, nonatomic) UserAccount *userAccount;
 @property (copy, nonatomic) NSString *glossaryId;
 
 @end

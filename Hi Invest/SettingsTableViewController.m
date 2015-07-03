@@ -20,8 +20,11 @@
 
 #import "SideMenuRootViewController.h"
 
+#import <StoreKit/StoreKit.h>
+#import <iAd/iAd.h>
 
-@interface SettingsTableViewController ()
+
+@interface SettingsTableViewController () <SKPaymentTransactionObserver>
 
 @property (weak, nonatomic) IBOutlet UILabel *initialCashLabel;
 @property (weak, nonatomic) IBOutlet UIStepper *initialCashStepper;
@@ -39,6 +42,8 @@
 {
     [super viewDidLoad];
     
+    self.canDisplayBannerAds = [self.userAccount shouldPresentAds];
+    
     self.initialCashStepper.stepValue = 50000;
     self.initialCashStepper.minimumValue = 50000;
     self.initialCashStepper.maximumValue = 1000000000;
@@ -50,7 +55,6 @@
     
     [self updateUI];
 }
-
 
 - (void)updateUI
 {
@@ -223,16 +227,115 @@
     }
 }
 
+#pragma mark - In-App Purchases Restoring
+
+- (IBAction)restorePurchasesButtonPressed
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Restore previous purchases?"
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *continueAction = [UIAlertAction actionWithTitle:@"Restore" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        
+        [self restorePurchases];
+    }];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+    
+    [alert addAction:cancelAction];
+    [alert addAction:continueAction];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+    
+}
+
+- (void)restorePurchases
+{
+    // Need to add self as observer for the delegate to be called. Must be removed in dealloc.
+    [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
+    
+    //this is called when the user restores purchases
+    [[SKPaymentQueue defaultQueue] restoreCompletedTransactions];
+}
+
+- (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions
+{
+    for(SKPaymentTransaction *transaction in transactions) {
+        switch(transaction.transactionState) {
+            case SKPaymentTransactionStatePurchasing: NSLog(@"Transaction state -> Purchasing");
+                //called when the user is in the process of purchasing, do not add any of your own code here.
+                break;
+            case SKPaymentTransactionStatePurchased:
+                //this is called when the user has successfully purchased the package (Cha-Ching!)
+                //you can add your code for what you want to happen when the user buys the purchase here.
+                [self.userAccount setAccessOpenToScenarioWithFilename:transaction.payment.productIdentifier];
+                [self.userAccount removeAds];
+                
+                [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+                NSLog(@"Transaction state -> Purchased");
+                break;
+            case SKPaymentTransactionStateRestored:
+                NSLog(@"Transaction state -> Restored");
+                //add the same code as you did from SKPaymentTransactionStatePurchased here
+                [self.userAccount setAccessOpenToScenarioWithFilename:transaction.payment.productIdentifier];
+                [self.userAccount removeAds];
+                
+                [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+                break;
+            case SKPaymentTransactionStateFailed:
+                //called when the transaction does not finish
+                if(transaction.error.code == SKErrorPaymentCancelled) {
+                    NSLog(@"Transaction state -> Cancelled");
+                    //the user cancelled the payment ;(
+                }
+                [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+                break;
+            default:
+                break;
+        }
+    }
+    
+    self.canDisplayBannerAds = [self.userAccount shouldPresentAds];
+    [self updateUI];
+}
+
+- (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue
+{
+    // Do not need to do anything here, just alert the user that the purchases have been restored
+    for(SKPaymentTransaction *transaction in queue.transactions){
+        if(transaction.transactionState == SKPaymentTransactionStateRestored){
+            //called when the user successfully restores a purchase
+            
+            [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+            break;
+        }
+    }
+    
+    [self presentAlertViewWithTitle:@"Purchases restored" withMessage:@"Your previously purchased products have been restored." withActionTitle:@"Dismiss"];
+}
+
+- (void)dealloc
+{
+    [[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
+}
+
+
 #pragma mark - UITableView Data Source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     if (self.isAnonymousUser) {
-        return 4;
+        return 5;
     } else {
-        return 3;
+        return 4;
     }
 }
+
+#pragma mark - UITableView Delegate
+//
+//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+//{
+//    return 35;
+//}
 
 
 #pragma mark - Getters

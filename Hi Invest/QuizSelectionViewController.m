@@ -16,6 +16,8 @@
 #import "UserInfoViewController.h"
 #import "Quiz.h"
 
+#import <iAd/iAd.h>
+
 @interface QuizSelectionViewController () <UITableViewDataSource, UITableViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -24,6 +26,13 @@
 @end
 
 @implementation QuizSelectionViewController
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    self.canDisplayBannerAds = [self.userAccount shouldPresentAds];
+}
 
 - (void)viewDidAppear:(BOOL)animated
 {

@@ -13,6 +13,8 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 
+#import <iAd/iAd.h>
+
 
 @interface AppDelegate ()
 
@@ -26,6 +28,9 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     [self setDefaultUIColors];
+    
+    // Prepare for interstitial iAds
+    [UIViewController prepareInterstitialAds];
     
     // [Optional] Power your app with Local Datastore.
 //    [Parse enableLocalDatastore];
