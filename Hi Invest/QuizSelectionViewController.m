@@ -17,6 +17,7 @@
 #import "Quiz.h"
 
 #import <iAd/iAd.h>
+#import "Reachability.h"
 
 @interface QuizSelectionViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -118,6 +119,21 @@
 
 #pragma mark - Navigation
 
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
+{
+    if ([identifier isEqualToString:@"Quiz"]) {
+        
+        if ([self.userAccount shouldPresentAds] && ![self isInternetAvailable]) {
+            
+            [self presentAlertViewWithTitle:@"No internet connection" withMessage:@"Remove ads to continue offline." withActionTitle:@"Dismiss"];
+            
+            return NO;
+        }
+    }
+    
+    return YES;
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     UIViewController *viewController = segue.destinationViewController;
@@ -214,9 +230,26 @@
     userInfoViewController.userAccount = userAccount;
 }
 
+#pragma mark - Internet Connection
 
+- (BOOL)isInternetAvailable
+{
+    Reachability *reachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [reachability currentReachabilityStatus];
+    return networkStatus != NotReachable;
+}
 
-
+- (void)presentAlertViewWithTitle:(NSString *)title withMessage:(NSString *)message withActionTitle:(NSString *)actionTitle
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                   message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *continueAction = [UIAlertAction actionWithTitle:actionTitle style:UIAlertActionStyleDefault handler:nil];
+    
+    [alert addAction:continueAction];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+}
 
 
 

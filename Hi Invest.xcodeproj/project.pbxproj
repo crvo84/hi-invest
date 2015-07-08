@@ -17,6 +17,7 @@
 		734A86BA1B3383A700D1D60E /* LevelUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 734A86B91B3383A700D1D60E /* LevelUpViewController.m */; };
 		734A86C01B33B62200D1D60E /* AboutTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 734A86BF1B33B62200D1D60E /* AboutTableViewController.m */; };
 		734A86C31B33CEC900D1D60E /* LicensesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 734A86C21B33CEC900D1D60E /* LicensesViewController.m */; };
+		738419211B4D9DD100EE23D2 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 738419201B4D9DD100EE23D2 /* Reachability.m */; };
 		739ABCB61B0162F6009EFC0E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABCB51B0162F6009EFC0E /* main.m */; };
 		739ABCD01B0162F6009EFC0E /* Hi_InvestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABCCF1B0162F6009EFC0E /* Hi_InvestTests.m */; };
 		739ABCDE1B016390009EFC0E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABCDD1B016390009EFC0E /* AppDelegate.m */; };
@@ -153,6 +154,8 @@
 		734A86C11B33CEC900D1D60E /* LicensesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LicensesViewController.h; sourceTree = "<group>"; };
 		734A86C21B33CEC900D1D60E /* LicensesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LicensesViewController.m; sourceTree = "<group>"; };
 		734A86C41B347B0600D1D60E /* ScenariosKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScenariosKeys.h; sourceTree = "<group>"; };
+		7384191F1B4D9DD100EE23D2 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		738419201B4D9DD100EE23D2 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		739ABCB01B0162F6009EFC0E /* Hi Invest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hi Invest.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		739ABCB41B0162F6009EFC0E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		739ABCB51B0162F6009EFC0E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -405,6 +408,15 @@
 			name = Settings;
 			sourceTree = "<group>";
 		};
+		7384191E1B4D9D2100EE23D2 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				7384191F1B4D9DD100EE23D2 /* Reachability.h */,
+				738419201B4D9DD100EE23D2 /* Reachability.m */,
+			);
+			name = Reachability;
+			sourceTree = "<group>";
+		};
 		739ABCA71B0162F6009EFC0E = {
 			isa = PBXGroup;
 			children = (
@@ -511,6 +523,7 @@
 		739ABCEA1B0163EF009EFC0E /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				7384191E1B4D9D2100EE23D2 /* Reachability */,
 				739ABCEB1B0163EF009EFC0E /* BEMAnalogClock */,
 				739ABCF01B0163EF009EFC0E /* BEMSimpleLineGraph */,
 				739ABCFB1B0163EF009EFC0E /* RESideMenu */,
@@ -1104,6 +1117,7 @@
 				739ABD071B0163EF009EFC0E /* BEMAverageLine.m in Sources */,
 				739ABD701B016661009EFC0E /* Price.m in Sources */,
 				73E660681B37EFB5003C7C91 /* IntroPageContentViewController.m in Sources */,
+				738419211B4D9DD100EE23D2 /* Reachability.m in Sources */,
 				734A86C01B33B62200D1D60E /* AboutTableViewController.m in Sources */,
 				739ABD441B01656B009EFC0E /* InfoPageContentViewController.m in Sources */,
 				739ABD151B01644B009EFC0E /* CompaniesViewController.m in Sources */,

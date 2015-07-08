@@ -3499,7 +3499,7 @@
                                                     <color key="textColor" red="0.12549019610000001" green="0.12549019610000001" blue="0.12549019610000001" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="1.1" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="mUK-7Z-ISq">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="1.2" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="mUK-7Z-ISq">
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.23529411764705882" green="0.23529411764705882" blue="0.23529411764705882" alpha="1" colorSpace="calibratedRGB"/>
@@ -3958,10 +3958,10 @@
         <image name="villouLogo40x40" width="40" height="40"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="tfw-51-WHM"/>
+        <segue reference="gkb-Hc-YAC"/>
+        <segue reference="YrX-rJ-xWb"/>
         <segue reference="rIA-0l-D5Y"/>
-        <segue reference="nDu-Zt-ke5"/>
         <segue reference="POh-4Z-rKn"/>
-        <segue reference="kGY-5h-Y80"/>
+        <segue reference="tfw-51-WHM"/>
     </inferredMetricsTieBreakers>
 </document>

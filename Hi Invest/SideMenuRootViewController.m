@@ -29,6 +29,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <StoreKit/StoreKit.h>
 #import <iAd/iAd.h>
+#import "Reachability.h"
 
 @interface SideMenuRootViewController ()
 
@@ -254,7 +255,12 @@
                                                             preferredStyle:UIAlertControllerStyleActionSheet];
     
     UIAlertAction *dayAction = [UIAlertAction actionWithTitle:@"Day" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        if ([game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:0 andDays:1]) {
+        
+        if ([self.userAccount shouldPresentAds] && ![self isInternetAvailable]) {
+            
+            [self presentAlertViewWithTitle:@"No internet connection" withMessage:@"Remove ads to continue offline." withActionTitle:@"Dismiss"];
+            
+        } else if ([game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:0 andDays:1]) {
             
             [self updateUserSimulatorInfoFromInvestingGame:game];
             
@@ -264,7 +270,12 @@
     }];
     
     UIAlertAction *weekAction = [UIAlertAction actionWithTitle:@"Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        if ([game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:0 andDays:7]) {
+        
+        if ([self.userAccount shouldPresentAds] && ![self isInternetAvailable]) {
+            
+            [self presentAlertViewWithTitle:@"No internet connection" withMessage:@"Remove ads to continue offline." withActionTitle:@"Dismiss"];
+            
+        } else if ([game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:0 andDays:7]) {
             
             [self updateUserSimulatorInfoFromInvestingGame:game];
             
@@ -274,7 +285,12 @@
     }];
     
     UIAlertAction *monthAction = [UIAlertAction actionWithTitle:@"Month" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        if ([game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:1 andDays:0]) {
+        
+        if ([self.userAccount shouldPresentAds] && ![self isInternetAvailable]) {
+            
+            [self presentAlertViewWithTitle:@"No internet connection" withMessage:@"Remove ads to continue offline." withActionTitle:@"Dismiss"];
+            
+        } else if ([game changeCurrentDateToDateWithTimeDifferenceInYears:0 months:1 andDays:0]) {
             
             [self updateUserSimulatorInfoFromInvestingGame:game];
             
@@ -456,5 +472,25 @@
     timeSimulationViewController.daysNum = numberOfDays;
 }
 
+#pragma mark - Internet Connection
+
+- (BOOL)isInternetAvailable
+{
+    Reachability *reachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [reachability currentReachabilityStatus];
+    return networkStatus != NotReachable;
+}
+
+- (void)presentAlertViewWithTitle:(NSString *)title withMessage:(NSString *)message withActionTitle:(NSString *)actionTitle
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                   message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *continueAction = [UIAlertAction actionWithTitle:actionTitle style:UIAlertActionStyleDefault handler:nil];
+    
+    [alert addAction:continueAction];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+}
 
 @end

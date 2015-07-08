@@ -12,5 +12,4 @@
 #define ScenarioFilenameDJI_001A @"DJI_001A"
 #define ScenarioFilenameDEMO_001A @"DEMO_001A"
 
-
 #endif
