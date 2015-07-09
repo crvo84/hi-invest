@@ -123,7 +123,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="IrU-di-6Kh">
-                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <rect key="frame" x="8" y="64" width="584" height="536"/>
                                 <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Friend Cell" rowHeight="76" id="NHs-q3-BpH" customClass="FriendTableViewCell">
@@ -160,7 +160,7 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Carlos Rogelio" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nik-Lj-tDJ">
-                                                    <rect key="frame" x="75" y="12" width="517" height="20"/>
+                                                    <rect key="frame" x="75" y="12" width="501" height="20"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.23529411764705882" green="0.23529411764705882" blue="0.23529411764705882" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -201,8 +201,8 @@
                         </subviews>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="IrU-di-6Kh" secondAttribute="trailing" constant="-16" id="22d-52-jBH"/>
-                            <constraint firstItem="IrU-di-6Kh" firstAttribute="leading" secondItem="iIQ-X6-1NA" secondAttribute="leadingMargin" constant="-16" id="6aX-Nr-dut"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="IrU-di-6Kh" secondAttribute="trailing" constant="-8" id="22d-52-jBH"/>
+                            <constraint firstItem="IrU-di-6Kh" firstAttribute="leading" secondItem="iIQ-X6-1NA" secondAttribute="leadingMargin" constant="-8" id="6aX-Nr-dut"/>
                             <constraint firstItem="IrU-di-6Kh" firstAttribute="top" secondItem="CIX-Wi-tHI" secondAttribute="bottom" id="i1C-x7-Uwj"/>
                             <constraint firstAttribute="centerX" secondItem="xkA-Ip-SAd" secondAttribute="centerX" id="iht-dH-nSY"/>
                             <constraint firstAttribute="centerY" secondItem="xkA-Ip-SAd" secondAttribute="centerY" id="sPp-yW-x1k"/>
@@ -701,7 +701,7 @@
                                 </constraints>
                             </view>
                             <tableView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="77" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="Y57-77-4JP">
-                                <rect key="frame" x="0.0" y="194" width="600" height="391"/>
+                                <rect key="frame" x="8" y="194" width="584" height="391"/>
                                 <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="Scenario Cell" id="Ka3-UE-hiN" customClass="ScenarioTableViewCell">
@@ -733,7 +733,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RVR-5N-1zg">
-                                                    <rect key="frame" x="490" y="22" width="102" height="32"/>
+                                                    <rect key="frame" x="474" y="22" width="102" height="32"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="64" id="27k-W3-wnY"/>
                                                     </constraints>
@@ -803,8 +803,8 @@
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="Y57-77-4JP" firstAttribute="top" secondItem="GyF-SO-PLu" secondAttribute="bottom" constant="16" id="HTJ-LA-S7f"/>
-                            <constraint firstItem="Y57-77-4JP" firstAttribute="leading" secondItem="nIy-Wd-CUJ" secondAttribute="leadingMargin" constant="-16" id="Ksb-7o-m1s"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Y57-77-4JP" secondAttribute="trailing" constant="-16" id="NKv-85-7q4"/>
+                            <constraint firstItem="Y57-77-4JP" firstAttribute="leading" secondItem="nIy-Wd-CUJ" secondAttribute="leadingMargin" constant="-8" id="Ksb-7o-m1s"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Y57-77-4JP" secondAttribute="trailing" constant="-8" id="NKv-85-7q4"/>
                             <constraint firstItem="GyF-SO-PLu" firstAttribute="top" secondItem="Hhz-Lb-rx1" secondAttribute="bottom" constant="8" id="OxM-Ij-kpz"/>
                             <constraint firstAttribute="centerX" secondItem="NQ8-AF-dNA" secondAttribute="centerX" id="UzV-7P-DUp"/>
                             <constraint firstAttribute="trailingMargin" secondItem="GyF-SO-PLu" secondAttribute="trailing" constant="16" id="YeG-8L-vcJ"/>
@@ -1520,10 +1520,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="58" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="CzO-wD-hCj">
-                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <rect key="frame" x="8" y="64" width="584" height="536"/>
                                 <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
-                                    <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Quiz Cell" id="as6-m2-FZK" customClass="QuizTableViewCell">
+                                    <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="default" indentationLevel="1" indentationWidth="10" reuseIdentifier="Quiz Cell" id="as6-m2-FZK" customClass="QuizTableViewCell">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="57"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="as6-m2-FZK" id="C4S-Nj-upa">
@@ -1537,7 +1537,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="N7G-6w-0tA">
-                                                    <rect key="frame" x="8" y="44" width="584" height="2"/>
+                                                    <rect key="frame" x="8" y="44" width="568" height="2"/>
                                                     <color key="progressTintColor" red="0.0" green="0.1764705882" blue="0.37647058820000001" alpha="1" colorSpace="calibratedRGB"/>
                                                     <color key="trackTintColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                                                 </progressView>
@@ -1567,9 +1567,9 @@
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="CzO-wD-hCj" firstAttribute="top" secondItem="pny-Hf-n4M" secondAttribute="bottom" id="4ks-WC-rjj"/>
-                            <constraint firstItem="CzO-wD-hCj" firstAttribute="leading" secondItem="GAI-qO-qBK" secondAttribute="leadingMargin" constant="-16" id="6ch-zz-ECh"/>
+                            <constraint firstItem="CzO-wD-hCj" firstAttribute="leading" secondItem="GAI-qO-qBK" secondAttribute="leadingMargin" constant="-8" id="6ch-zz-ECh"/>
                             <constraint firstItem="H3c-KS-txe" firstAttribute="top" secondItem="CzO-wD-hCj" secondAttribute="bottom" id="fxi-IA-OLL"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="CzO-wD-hCj" secondAttribute="trailing" constant="-16" id="uTC-9s-9kR"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="CzO-wD-hCj" secondAttribute="trailing" constant="-8" id="uTC-9s-9kR"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Quizzes" id="G0z-zx-HSD">
@@ -2876,7 +2876,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="72" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="Jje-Ee-yeh">
-                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <rect key="frame" x="8" y="64" width="584" height="536"/>
                                 <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Glossary Cell" textLabel="atD-Gl-NfR" rowHeight="52" style="IBUITableViewCellStyleDefault" id="ssZ-cw-9nC">
@@ -2906,10 +2906,10 @@
                         </subviews>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="Jje-Ee-yeh" secondAttribute="trailing" constant="-16" id="98t-HD-1Bc"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Jje-Ee-yeh" secondAttribute="trailing" constant="-8" id="98t-HD-1Bc"/>
                             <constraint firstItem="t6x-7J-R3E" firstAttribute="top" secondItem="Jje-Ee-yeh" secondAttribute="bottom" id="BrC-up-ulv"/>
                             <constraint firstItem="Jje-Ee-yeh" firstAttribute="top" secondItem="qD9-SO-pbA" secondAttribute="bottom" id="Wnj-0e-HZD"/>
-                            <constraint firstItem="Jje-Ee-yeh" firstAttribute="leading" secondItem="MU9-Q3-VJN" secondAttribute="leadingMargin" constant="-16" id="vDA-rM-ogK"/>
+                            <constraint firstItem="Jje-Ee-yeh" firstAttribute="leading" secondItem="MU9-Q3-VJN" secondAttribute="leadingMargin" constant="-8" id="vDA-rM-ogK"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Glossary" id="8VD-c7-Yj9">
@@ -2941,7 +2941,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="W2E-hR-ugl">
-                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <rect key="frame" x="8" y="64" width="584" height="536"/>
                                 <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Financial Term Cell" textLabel="fjM-UC-tvV" rowHeight="52" style="IBUITableViewCellStyleDefault" id="Gx2-io-cEZ">
@@ -2969,8 +2969,8 @@
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="bottomMargin" secondItem="W2E-hR-ugl" secondAttribute="bottom" id="ExS-Or-9zH"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="W2E-hR-ugl" secondAttribute="trailing" constant="-16" id="IyL-yf-SBM"/>
-                            <constraint firstItem="W2E-hR-ugl" firstAttribute="leading" secondItem="8wK-fa-Ets" secondAttribute="leadingMargin" constant="-16" id="j5T-QP-Brm"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="W2E-hR-ugl" secondAttribute="trailing" constant="-8" id="IyL-yf-SBM"/>
+                            <constraint firstItem="W2E-hR-ugl" firstAttribute="leading" secondItem="8wK-fa-Ets" secondAttribute="leadingMargin" constant="-8" id="j5T-QP-Brm"/>
                             <constraint firstItem="W2E-hR-ugl" firstAttribute="top" secondItem="tkp-rs-yo7" secondAttribute="bottom" id="yPr-lu-agB"/>
                         </constraints>
                     </view>
@@ -3958,10 +3958,10 @@
         <image name="villouLogo40x40" width="40" height="40"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="gkb-Hc-YAC"/>
-        <segue reference="YrX-rJ-xWb"/>
-        <segue reference="rIA-0l-D5Y"/>
+        <segue reference="6tH-vs-IV0"/>
         <segue reference="POh-4Z-rKn"/>
         <segue reference="tfw-51-WHM"/>
+        <segue reference="gkb-Hc-YAC"/>
+        <segue reference="kGY-5h-Y80"/>
     </inferredMetricsTieBreakers>
 </document>
