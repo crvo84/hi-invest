@@ -11,6 +11,7 @@
 #import "InvestingGame.h"
 #import "UserDefaultsKeys.h"
 #import "ParseUserKeys.h"
+#import "ScenariosKeys.h"
 #import "GameInfo+Create.h"
 #import "ManagedObjectContextCreator.h"
 
@@ -34,6 +35,8 @@
 @property (strong, nonatomic) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic) BOOL isAnonymousUser;
 
+@property (weak, nonatomic) IBOutlet UIButton *removeAdsPurchaseButton;
+
 @end
 
 @implementation SettingsTableViewController
@@ -41,8 +44,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.canDisplayBannerAds = [self.userAccount shouldPresentAds];
     
     self.initialCashStepper.stepValue = 50000;
     self.initialCashStepper.minimumValue = 50000;
@@ -52,6 +53,16 @@
     self.disguiseCompaniesSwitch.on = self.userAccount.disguiseCompanies;
 
     self.isAnonymousUser = [PFAnonymousUtils isLinkedWithUser:[PFUser currentUser]];
+    
+    SKProduct *removeAdsProduct = self.userAccount.products[RemoveAdsInAppPurchase];
+    if (removeAdsProduct) {
+        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+        numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
+        numberFormatter.maximumFractionDigits = 2;
+        numberFormatter.locale = removeAdsProduct.priceLocale;
+        NSString *priceStr = [numberFormatter stringFromNumber:removeAdsProduct.price];
+        [self.removeAdsPurchaseButton setTitle:priceStr forState:UIControlStateNormal];
+    }
     
     [self updateUI];
 }
@@ -227,7 +238,24 @@
     }
 }
 
-#pragma mark - In-App Purchases Restoring
+#pragma mark - In-App Purchases
+
+- (IBAction)removeAdsPurchaseButtonPressed
+{
+    SKProduct *removeAdsProduct = self.userAccount.products[RemoveAdsInAppPurchase];
+    
+    if (removeAdsProduct) {
+        [self purchase:removeAdsProduct];
+    }
+}
+
+- (void)purchase:(SKProduct *)product
+{
+    SKPayment *payment = [SKPayment paymentWithProduct:product];
+    
+    [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
+    [[SKPaymentQueue defaultQueue] addPayment:payment];
+}
 
 - (IBAction)restorePurchasesButtonPressed
 {
@@ -267,8 +295,10 @@
             case SKPaymentTransactionStatePurchased:
                 //this is called when the user has successfully purchased the package (Cha-Ching!)
                 //you can add your code for what you want to happen when the user buys the purchase here.
-                [self.userAccount setAccessOpenToScenarioWithFilename:transaction.payment.productIdentifier];
-                [self.userAccount removeAds];
+                //                [self.userAccount setAccessOpenToScenarioWithFilename:transaction.payment.productIdentifier];
+                if ([transaction.payment.productIdentifier isEqualToString:RemoveAdsInAppPurchase]) {
+                    [self.userAccount removeAds];
+                }
                 
                 [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
                 NSLog(@"Transaction state -> Purchased");
@@ -276,8 +306,10 @@
             case SKPaymentTransactionStateRestored:
                 NSLog(@"Transaction state -> Restored");
                 //add the same code as you did from SKPaymentTransactionStatePurchased here
-                [self.userAccount setAccessOpenToScenarioWithFilename:transaction.payment.productIdentifier];
-                [self.userAccount removeAds];
+                //                [self.userAccount setAccessOpenToScenarioWithFilename:transaction.payment.productIdentifier];
+                if ([transaction.payment.productIdentifier isEqualToString:RemoveAdsInAppPurchase]) {
+                    [self.userAccount removeAds];
+                }
                 
                 [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
                 break;
@@ -318,7 +350,6 @@
     [[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
 }
 
-
 #pragma mark - UITableView Data Source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -330,12 +361,43 @@
     }
 }
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if (section == 0 && ![self.userAccount shouldPresentAds]) {
+        return 0;
+    }
+    
+    return 1;
+}
+
 #pragma mark - UITableView Delegate
-//
-//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-//{
-//    return 35;
-//}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if (section == 0 && ![self.userAccount shouldPresentAds]) {
+        return 0.1;
+    }
+    
+    return 35;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    if (section == 0 && [self.userAccount shouldPresentAds]) {
+        return @"Remove Ads (One-Time Payment)";
+        
+    } else if (section == 1) {
+        return @"Initial Cash";
+        
+    } else if (section == 2) {
+        return @"Companies";
+        
+    } else if (section == 3) {
+        return @"User Account";
+    }
+    
+    return nil;
+}
 
 
 #pragma mark - Getters

@@ -163,6 +163,11 @@
     return managedObjectModel;
 }
 
++ (BOOL)databaseExistsAtDocumentsDirectoryOrBundleWithFilename:(NSString *)databaseFilename
+{
+    return [self databaseExistsAtDocumentsDirectoryWithFilename:databaseFilename] || [self databaseExistsAtBundleWithFilename:databaseFilename];
+}
+
 + (BOOL)databaseExistsAtDocumentsDirectoryWithFilename:(NSString *)databaseFilename
 {
     NSString *databasePathComponent = [NSString stringWithFormat:@"%@.%@", databaseFilename, DatabaseFileExtension];

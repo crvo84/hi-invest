@@ -17,19 +17,19 @@
 /*
     DIFFICULTY LEVES. Are the same for all QuizTypes. New quiz types can be added.
  
-    Difficulty Level 0: 05 questions | 2 mistakes allowed (40%) | 20 seconds
+    Difficulty Level 0: 05 questions | 2 mistakes allowed (40%) | 30 seconds
  
-    Difficulty Level 1: 10 questions | 2 mistakes allowed (20%) | 20 seconds
+    Difficulty Level 1: 10 questions | 2 mistakes allowed (20%) | 30 seconds
  
-    Difficulty Level 2: min(15, count) questions | 3 mistakes allowed (20%) | 15 seconds
+    Difficulty Level 2: min(15, count) questions | 3 mistakes allowed (20%) | 25 seconds
  
-    Difficulty Level 3: min(20, count) questions | 2 mistakes allowed (10%) | 15 seconds
+    Difficulty Level 3: min(20, count) questions | 2 mistakes allowed (10%) | 25 seconds
  
-    Difficulty Level 4: min(30, count) questions | 3 mistakes allowed (10%) | 10 seconds
+    Difficulty Level 4: min(30, count) questions | 3 mistakes allowed (10%) | 20 seconds
  
-    Difficulty Level 5: min(40, count) questions | 2 mistakes allowed (05%) | 10 seconds
+    Difficulty Level 5: min(40, count) questions | 2 mistakes allowed (05%) | 20 seconds
  
-    Difficulty Level 6: min(50, count) questions | 2 mistakes allowed (04%) | 5 seconds
+    Difficulty Level 6: min(50, count) questions | 2 mistakes allowed (04%) | 15 seconds
  
  */
 
@@ -355,25 +355,25 @@
     NSUInteger seconds = 0;
     switch (difficultyLevel) {
         case 0:
-            seconds = 20;
+            seconds = 30;
             break;
         case 1:
-            seconds = 20;
+            seconds = 30;
             break;
         case 2:
-            seconds = 15;
+            seconds = 25;
             break;
         case 3:
-            seconds = 15;
+            seconds = 25;
             break;
         case 4:
-            seconds = 10;
+            seconds = 20;
             break;
         case 5:
-            seconds = 10;
+            seconds = 20;
             break;
         case 6:
-            seconds = 5;
+            seconds = 15;
             break;
         default:
             break;

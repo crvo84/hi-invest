@@ -12,4 +12,6 @@
 #define ScenarioFilenameDJI_001A @"DJI_001A"
 #define ScenarioFilenameDEMO_001A @"DEMO_001A"
 
+#define RemoveAdsInAppPurchase @"DJI_001A" // Using DJI_001A to use already existing in-app purchase and to give ad removal for free to people who purchased this scenario.
+
 #endif

@@ -36,7 +36,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *friendsBarButtonItem;
-@property (weak, nonatomic) IBOutlet UILabel *adsWillBeRemovedLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *adsWillBeRemovedLabel;
 //@property (weak, nonatomic) IBOutlet UIButton *restorePurchasesButton;
 
 @end
@@ -117,7 +117,7 @@
 //    }
     
     // Ads will be removed label
-    self.adsWillBeRemovedLabel.hidden = ![self.userAccount shouldPresentAds];
+//    self.adsWillBeRemovedLabel.hidden = ![self.userAccount shouldPresentAds];
 }
 
 
@@ -167,7 +167,7 @@
             priceStr = [numberFormatter stringFromNumber:product.price];
             
         } else {
-            priceStr = [NSString stringWithFormat:@"Buy"];
+            priceStr = [NSString stringWithFormat:@"Get"];
         }
     }
     [scenarioCell.purchaseButton setTitle:priceStr forState:UIControlStateNormal];
@@ -251,8 +251,9 @@
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
     if (section == 0) {
-        NSInteger randomIndex = arc4random() % 2;
-        return randomIndex == 0 ? @"More coming soon!" : @"Practice makes perfect!";
+//        NSInteger randomIndex = arc4random() % 2;
+//        return randomIndex == 0 ? @"More coming soon!" : @"Practice makes perfect!";
+        return @"More coming soon!";
     }
     
     return nil;
@@ -304,6 +305,8 @@
                 [scenariosSet addObject:scenarioInfo.filename];
             }
         }
+        // Also request remove Adds SKProduct
+        [scenariosSet addObject:RemoveAdsInAppPurchase];
         
         SKProductsRequest *productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:scenariosSet];
         productsRequest.delegate = self;
@@ -404,8 +407,10 @@
             case SKPaymentTransactionStatePurchased:
                 //this is called when the user has successfully purchased the package (Cha-Ching!)
                 //you can add your code for what you want to happen when the user buys the purchase here.
-                [self.userAccount setAccessOpenToScenarioWithFilename:transaction.payment.productIdentifier];
-                [self.userAccount removeAds];
+//                [self.userAccount setAccessOpenToScenarioWithFilename:transaction.payment.productIdentifier];
+                if ([transaction.payment.productIdentifier isEqualToString:RemoveAdsInAppPurchase]) {
+                    [self.userAccount removeAds];
+                }
                 
                 [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
                 NSLog(@"Transaction state -> Purchased");
@@ -413,8 +418,10 @@
             case SKPaymentTransactionStateRestored:
                 NSLog(@"Transaction state -> Restored");
                 //add the same code as you did from SKPaymentTransactionStatePurchased here
-                [self.userAccount setAccessOpenToScenarioWithFilename:transaction.payment.productIdentifier];
-                [self.userAccount removeAds];
+//                [self.userAccount setAccessOpenToScenarioWithFilename:transaction.payment.productIdentifier];
+                if ([transaction.payment.productIdentifier isEqualToString:RemoveAdsInAppPurchase]) {
+                    [self.userAccount removeAds];
+                }
                 
                 [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
                 break;

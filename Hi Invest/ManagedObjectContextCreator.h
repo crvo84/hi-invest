@@ -41,6 +41,8 @@
 
 #pragma mark - File managing
 
++ (BOOL)databaseExistsAtDocumentsDirectoryOrBundleWithFilename:(NSString *)databaseFilename;
+
 + (BOOL)databaseExistsAtDocumentsDirectoryWithFilename:(NSString *)databaseFilename;
 
 + (BOOL)databaseExistsAtBundleWithFilename:(NSString *)databaseFilename;

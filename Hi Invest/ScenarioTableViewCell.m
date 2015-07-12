@@ -13,12 +13,12 @@
 - (void)awakeFromNib {
     // Initialization code
     
-    // Purchase Button Setup
-    self.purchaseButton.layer.borderWidth = 1;
-    self.purchaseButton.layer.borderColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0].CGColor;
-    self.purchaseButton.layer.cornerRadius = 5;
-    self.purchaseButton.layer.masksToBounds = YES;
-    self.purchaseButton.titleLabel.minimumScaleFactor = 0.7;
+//    // Purchase Button Setup
+//    self.purchaseButton.layer.borderWidth = 1;
+//    self.purchaseButton.layer.borderColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0].CGColor;
+//    self.purchaseButton.layer.cornerRadius = 5;
+//    self.purchaseButton.layer.masksToBounds = YES;
+//    self.purchaseButton.titleLabel.minimumScaleFactor = 0.7;
     
     // Delete Button Setup
     UIImage *deleteImage = [[UIImage imageNamed:@"delete16x16"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];

@@ -709,11 +709,13 @@
 // Return YES if the scenario for the given filename is available (Free or already Purchased)
 - (BOOL)isAccessOpenToScenarioWithFilename:(NSString *)filename
 {
-    if ([filename isEqualToString:ScenarioFilenameDEMO_001A]) { // Free scenarios
-        return YES;
-    }
+    return YES;
     
-    return [[NSUserDefaults standardUserDefaults] boolForKey:[self scenarioAccessKeyForFilename:filename]];
+//    if ([filename isEqualToString:ScenarioFilenameDEMO_001A]) { // Free scenarios
+//        return YES;
+//    }
+//    
+//    return [[NSUserDefaults standardUserDefaults] boolForKey:[self scenarioAccessKeyForFilename:filename]];
 }
    
 - (void)setAccessOpenToScenarioWithFilename:(NSString *)filename
@@ -732,13 +734,7 @@
     
     if (![defaults objectForKey:UserDefaultsShouldPresentAds]) {
         
-        BOOL initialValue = YES;
-        
-        if ([self isAccessOpenToScenarioWithFilename:ScenarioFilenameDJI_001A]) {
-            initialValue = NO;
-        }
-        
-        [defaults setBool:initialValue forKey:UserDefaultsShouldPresentAds];
+        [defaults setBool:YES forKey:UserDefaultsShouldPresentAds];
     }
      
     return [[NSUserDefaults standardUserDefaults] boolForKey:UserDefaultsShouldPresentAds];

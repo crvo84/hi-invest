@@ -69,6 +69,7 @@
 		739ABD931B016740009EFC0E /* SpeechBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABD921B016740009EFC0E /* SpeechBubbleView.m */; };
 		739ABD961B01674E009EFC0E /* StockInvestment.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABD951B01674E009EFC0E /* StockInvestment.m */; };
 		739ABD991B01675C009EFC0E /* TimeSimulationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 739ABD981B01675C009EFC0E /* TimeSimulationViewController.m */; };
+		739F1D3F1B53174000322B67 /* PurchaseUIButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 739F1D3E1B53174000322B67 /* PurchaseUIButton.m */; };
 		73BFF3441B2672270010F9E9 /* GameTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 73BFF3431B2672270010F9E9 /* GameTableViewCell.m */; };
 		73BFF34A1B2683EF0010F9E9 /* UserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73BFF3491B2683EF0010F9E9 /* UserInfoViewController.m */; };
 		73BFF34D1B27E6730010F9E9 /* Transaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 73BFF34C1B27E6730010F9E9 /* Transaction.m */; };
@@ -260,6 +261,8 @@
 		739ABD951B01674E009EFC0E /* StockInvestment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StockInvestment.m; sourceTree = "<group>"; };
 		739ABD971B01675C009EFC0E /* TimeSimulationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeSimulationViewController.h; sourceTree = "<group>"; };
 		739ABD981B01675C009EFC0E /* TimeSimulationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeSimulationViewController.m; sourceTree = "<group>"; };
+		739F1D3D1B53174000322B67 /* PurchaseUIButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PurchaseUIButton.h; sourceTree = "<group>"; };
+		739F1D3E1B53174000322B67 /* PurchaseUIButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PurchaseUIButton.m; sourceTree = "<group>"; };
 		73BFF3421B2672270010F9E9 /* GameTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameTableViewCell.h; sourceTree = "<group>"; };
 		73BFF3431B2672270010F9E9 /* GameTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameTableViewCell.m; sourceTree = "<group>"; };
 		73BFF3481B2683EF0010F9E9 /* UserInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoViewController.h; sourceTree = "<group>"; };
@@ -491,6 +494,8 @@
 		739ABCD91B01635C009EFC0E /* VIEW */ = {
 			isa = PBXGroup;
 			children = (
+				739F1D3D1B53174000322B67 /* PurchaseUIButton.h */,
+				739F1D3E1B53174000322B67 /* PurchaseUIButton.m */,
 				73D7C3871B0AFAD900653A4C /* Custom Cells */,
 				739ABD901B01672D009EFC0E /* Speech Bubble */,
 				739ABD2C1B0164DB009EFC0E /* DefaultColors.h */,
@@ -1119,6 +1124,7 @@
 				73E660681B37EFB5003C7C91 /* IntroPageContentViewController.m in Sources */,
 				738419211B4D9DD100EE23D2 /* Reachability.m in Sources */,
 				734A86C01B33B62200D1D60E /* AboutTableViewController.m in Sources */,
+				739F1D3F1B53174000322B67 /* PurchaseUIButton.m in Sources */,
 				739ABD441B01656B009EFC0E /* InfoPageContentViewController.m in Sources */,
 				739ABD151B01644B009EFC0E /* CompaniesViewController.m in Sources */,
 				73D7C36F1B0A717F00653A4C /* UserAccountViewController.m in Sources */,
