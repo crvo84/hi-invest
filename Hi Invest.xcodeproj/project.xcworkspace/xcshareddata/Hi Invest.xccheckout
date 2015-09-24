@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>90101291-E48C-4186-9BBF-2209BAEC8B4D</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Hi Invest</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>E7BDF86B36E47858098B899EFFB8043D251761C9</key>
+		<string>https://github.com/crvo84/hi-invest.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Hi Invest.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>E7BDF86B36E47858098B899EFFB8043D251761C9</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/crvo84/hi-invest.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>E7BDF86B36E47858098B899EFFB8043D251761C9</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>E7BDF86B36E47858098B899EFFB8043D251761C9</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Hi%20Invest%201.2</string>
+		</dict>
+	</array>
+</dict>
+</plist>

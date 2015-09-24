@@ -453,9 +453,9 @@
 				739ABD711B016674009EFC0E /* Quizzes */,
 				73442DDC1B166D4400F3A7ED /* Settings */,
 				739ABD361B01650E009EFC0E /* Core Data */,
-				739ABCEA1B0163EF009EFC0E /* Classes */,
 				739ABD101B016409009EFC0E /* Keys Headers */,
 				739ABCD91B01635C009EFC0E /* VIEW */,
+				739ABCEA1B0163EF009EFC0E /* Classes */,
 				73BFF3D11B2897AA0010F9E9 /* Frameworks */,
 				739ABD3D1B016536009EFC0E /* Images.xcassets */,
 				739ABCB31B0162F6009EFC0E /* Supporting Files */,
@@ -1005,7 +1005,7 @@
 		739ABCA81B0162F6009EFC0E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Villou;
 				TargetAttributes = {
 					739ABCAF1B0162F6009EFC0E = {
@@ -1196,6 +1196,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1268,6 +1269,7 @@
 				);
 				INFOPLIST_FILE = "Hi Invest/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.villou.Hi-Invest";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -1286,6 +1288,7 @@
 				);
 				INFOPLIST_FILE = "Hi Invest/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.villou.Hi-Invest";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -1305,6 +1308,7 @@
 				);
 				INFOPLIST_FILE = "Hi InvestTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.villou.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Hi Invest.app/Hi Invest";
 			};
@@ -1320,6 +1324,7 @@
 				);
 				INFOPLIST_FILE = "Hi InvestTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.villou.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Hi Invest.app/Hi Invest";
 			};
